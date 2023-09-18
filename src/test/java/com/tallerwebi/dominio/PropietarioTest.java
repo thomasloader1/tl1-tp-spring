@@ -3,8 +3,6 @@ package com.tallerwebi.dominio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -34,7 +32,7 @@ public class PropietarioTest {
 
     @Test
     public void queSePuedaObtenerElNombreDelPropietario() {
-        String nombre = "Juan";
+        String nombre = "Bicicletería";
         when(propietario.getNombre()).thenReturn(nombre);
 
         assertEquals(nombre, propietario.getNombre());
@@ -42,25 +40,25 @@ public class PropietarioTest {
 
     @Test
     public void queSePuedaEstablecerElNombreDelPropietario() {
-        String nombre = "Juan";
+        String nombre = "Bicicletería";
         propietario.setNombre(nombre);
 
         verify(propietario).setNombre(nombre);
     }
 
     @Test
-    public void queSePuedaObtenerLaListaDeVehiculosDelPropietario() {
-        Vehiculo vehiculo = mock(Vehiculo.class);
-        when(propietario.getVehiculos()).thenReturn(List.of(vehiculo));
+    public void queSePuedaObtenerLaDireccionDelPropietario() {
+        String direccion = "Calle 123";
+        when(propietario.getDireccion()).thenReturn(direccion);
 
-        assertEquals(1, propietario.getVehiculos().size());
+        assertEquals(direccion, propietario.getDireccion());
     }
 
     @Test
-    public void queSePuedaEstablecerLaListaDeVehiculosDelPropietario() {
-        Vehiculo vehiculo = mock(Vehiculo.class);
-        propietario.setVehiculos(List.of(vehiculo));
+    public void queSePuedaEstablecerLaDireccionDelPropietario() {
+        String direccion = "Calle 123";
+        propietario.setDireccion(direccion);
 
-        verify(propietario).setVehiculos(List.of(vehiculo));
+        verify(propietario).setDireccion(direccion);
     }
 }

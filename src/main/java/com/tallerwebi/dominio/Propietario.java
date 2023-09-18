@@ -1,17 +1,17 @@
 package com.tallerwebi.dominio;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.List;
 
+@Entity
 public class Propietario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
     private String direccion;
-    private List<Vehiculo> vehiculos;
 
     public Long getId() {
         return id;
@@ -35,13 +35,5 @@ public class Propietario {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public List<Vehiculo> getVehiculos() {
-        return vehiculos;
-    }
-
-    public void setVehiculos(List<Vehiculo> vehiculos) {
-        this.vehiculos = vehiculos;
     }
 }
