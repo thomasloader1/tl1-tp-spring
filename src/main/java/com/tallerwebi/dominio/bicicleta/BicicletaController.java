@@ -6,7 +6,11 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class BicicletaController {
 
-    @Autowired
+
     private ServicioBicicleta servicioBicicleta;
+    @Autowired
+    public BicicletaController(ServicioBicicleta servicioBicicleta) {
+        this.servicioBicicleta = servicioBicicleta;
+    }
 
 }
