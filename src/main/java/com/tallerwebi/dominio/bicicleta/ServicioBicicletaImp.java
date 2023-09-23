@@ -1,10 +1,12 @@
 package com.tallerwebi.dominio.bicicleta;
 
 import com.tallerwebi.dominio.resenia.Resenia;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ServicioBicicletaImp implements ServicioBicicleta {
 
     private List<Bicicleta> bicicletas;
