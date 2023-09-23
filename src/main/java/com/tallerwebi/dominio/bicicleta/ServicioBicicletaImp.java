@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio.bicicleta;
 
+import com.tallerwebi.dominio.resenia.Resenia;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ public class ServicioBicicletaImp implements ServicioBicicleta {
     private List<Bicicleta> bicicletas;
 
     public ServicioBicicletaImp() {
+
         this.bicicletas = new ArrayList<>();
     }
 
@@ -46,6 +49,28 @@ public class ServicioBicicletaImp implements ServicioBicicleta {
             }
         }
         throw new BicicletaNoEncontradaException("No se encontró la bicicleta con el ID proporcionado.");
+    }
+
+    @Override
+    public List<Resenia> verReseniasDeBicicleta(Integer id) {
+        Bicicleta bicicleta = this.obtenerBicicletaPorId(id);
+        return bicicleta.getResenias();
+    }
+
+    @Override
+    public boolean agregarResenia(Resenia resenia) {
+        // Obtén la bicicleta asociada a la reseña por su ID
+        Bicicleta bicicleta = obtenerBicicletaPorId(resenia.getBicicletaId());
+
+        if (bicicleta != null) {
+            // Asocia la reseña a la bicicleta
+            List<Resenia> resenias = bicicleta.getResenias();
+            resenias.add(resenia);
+
+            return true;
+        }
+
+        return false; // La bicicleta no existe
     }
 
 }
