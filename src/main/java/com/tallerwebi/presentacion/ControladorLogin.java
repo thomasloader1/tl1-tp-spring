@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ControladorLogin {
@@ -68,8 +69,14 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
-    public ModelAndView irAHome() {
-        return new ModelAndView("home");
+    public ModelAndView irAHome(HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("home");
+        String userEmail = (String) session.getAttribute("email");
+
+        // Agregar el email al modelo
+        modelAndView.addObject("userEmail", userEmail);
+
+        return modelAndView;
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
