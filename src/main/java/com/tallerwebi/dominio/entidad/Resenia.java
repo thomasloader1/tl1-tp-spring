@@ -1,6 +1,4 @@
-package com.tallerwebi.dominio.resenia;
-
-import com.tallerwebi.dominio.bicicleta.Bicicleta;
+package com.tallerwebi.dominio.entidad;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,9 +16,10 @@ public class Resenia {
     @JoinColumn(name = "bicicleta_id")
     private Integer bicicletaId;
 
-    public Resenia(){}
+    public Resenia() {
+    }
 
-    public Resenia(Integer id, String comentario, Date fecha, Integer bicicletaId){
+    public Resenia(Integer id, String comentario, Date fecha, Integer bicicletaId) {
         this.id = id;
         this.comentario = comentario;
         this.fecha = fecha;
