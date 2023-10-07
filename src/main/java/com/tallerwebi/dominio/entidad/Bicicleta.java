@@ -1,40 +1,53 @@
 package com.tallerwebi.dominio.entidad;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Bicicleta {
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
     private EstadoBicicleta estadoBicicleta;
-    @OneToMany(mappedBy = "bicicleta", cascade = CascadeType.ALL)
+    private String descripcion;
+    @OneToMany
     private List<Resenia> resenias = new ArrayList<Resenia>();
+    @ManyToOne
+    private Usuario usuario;
 
-    public Bicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
-        this.id = id;
+    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
         this.estadoBicicleta = estadoBicicleta;
+        this.descripcion = descripcion;
+        this.usuario = usuario;
     }
 
-    public Bicicleta(Integer id, EstadoBicicleta estadoBicicleta, Resenia resenia) {
+    public Bicicleta(Long id, EstadoBicicleta estadoBicicleta, String descripcion, Resenia resenia, Usuario usuario) {
         this.id = id;
         this.estadoBicicleta = estadoBicicleta;
+        this.descripcion = descripcion;
         this.resenias.add(resenia);
+        this.usuario = usuario;
     }
 
-    public Integer getId() {
+    public Bicicleta() {
+
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public EstadoBicicleta getEstado() {
+    public EstadoBicicleta getEstadoBicicleta() {
         return estadoBicicleta;
     }
 
-    public void setEstado(EstadoBicicleta estadoBicicleta) {
+    public void setEstadoBicicleta(EstadoBicicleta estadoBicicleta) {
         this.estadoBicicleta = estadoBicicleta;
     }
 
@@ -44,5 +57,21 @@ public class Bicicleta {
 
     public void setResenias(List<Resenia> resenias) {
         this.resenias = resenias;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

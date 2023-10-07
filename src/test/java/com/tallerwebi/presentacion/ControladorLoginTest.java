@@ -45,7 +45,7 @@ public class ControladorLoginTest {
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("login"));
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Usuario o clave incorrecta"));
-        verify(sessionMock, times(0)).setAttribute("ROL", "");
+        verify(sessionMock, times(0)).setAttribute("usuario", null);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ControladorLoginTest {
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
-        verify(sessionMock, times(1)).setAttribute("ROL", usuarioEncontradoMock.getRol());
+        verify(sessionMock, times(1)).setAttribute("usuario", usuarioEncontradoMock);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ControladorLoginTest {
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
-        verify(sessionMock, times(1)).setAttribute("ROL", usuarioEncontradoMock.getRol());
+        verify(sessionMock, times(1)).setAttribute("usuario", usuarioEncontradoMock);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class ControladorLoginTest {
     @Test
     public void redirigirALoginSiNoHaySesion() {
         // preparacion
-        when(sessionMock.getAttribute("ROL")).thenReturn(null);
+        when(sessionMock.getAttribute("usuario")).thenReturn(null);
         when(requestMock.getSession()).thenReturn(sessionMock);
 
         // ejecucion
@@ -147,8 +147,9 @@ public class ControladorLoginTest {
     @Test
     public void redirigirAHomeSiHaySesion() {
         // preparacion
-        when(sessionMock.getAttribute("ROL")).thenReturn("Cliente");
+        sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
 
         // ejecucion
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
