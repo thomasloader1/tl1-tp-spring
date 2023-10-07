@@ -86,6 +86,7 @@ public class ControladorLogin {
         }
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("rol", usuario.getRol());
+
         return modelAndView;
     }
 
