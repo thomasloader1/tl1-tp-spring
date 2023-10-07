@@ -18,5 +18,3 @@ hs_err_pid*
 /.classpath
 /.idea/
 /.settings/
-
-/src/main/java/com/tallerwebi/config/HibernateConfig.java
