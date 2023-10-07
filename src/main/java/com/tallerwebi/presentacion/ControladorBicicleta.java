@@ -1,15 +1,17 @@
-package com.tallerwebi.dominio.bicicleta;
+package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.servicio.ServicioBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class BicicletaController {
+public class ControladorBicicleta {
 
 
     private ServicioBicicleta servicioBicicleta;
+
     @Autowired
-    public BicicletaController(ServicioBicicleta servicioBicicleta) {
+    public ControladorBicicleta(ServicioBicicleta servicioBicicleta) {
         this.servicioBicicleta = servicioBicicleta;
     }
 

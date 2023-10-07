@@ -1,25 +1,24 @@
-package com.tallerwebi.dominio.bicicleta;
+package com.tallerwebi.dominio.entidad;
 
-import com.tallerwebi.dominio.resenia.Resenia;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bicicleta {
     private Integer id;
-    private Estado estado;
+    private EstadoBicicleta estadoBicicleta;
     @OneToMany(mappedBy = "bicicleta", cascade = CascadeType.ALL)
     private List<Resenia> resenias = new ArrayList<Resenia>();
 
-    public Bicicleta(Integer id, Estado estado) {
+    public Bicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
         this.id = id;
-        this.estado = estado;
+        this.estadoBicicleta = estadoBicicleta;
     }
 
-    public Bicicleta(Integer id, Estado estado, Resenia resenia) {
+    public Bicicleta(Integer id, EstadoBicicleta estadoBicicleta, Resenia resenia) {
         this.id = id;
-        this.estado = estado;
+        this.estadoBicicleta = estadoBicicleta;
         this.resenias.add(resenia);
     }
 
@@ -31,12 +30,12 @@ public class Bicicleta {
         this.id = id;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public EstadoBicicleta getEstado() {
+        return estadoBicicleta;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
+    public void setEstado(EstadoBicicleta estadoBicicleta) {
+        this.estadoBicicleta = estadoBicicleta;
     }
 
     public List<Resenia> getResenias() {

@@ -1,25 +1,25 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.bicicleta.*;
-import com.tallerwebi.dominio.resenia.Resenia;
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
+import com.tallerwebi.dominio.entidad.Resenia;
+import com.tallerwebi.dominio.servicio.ServicioBicicleta;
+import com.tallerwebi.dominio.servicio.ServicioBicicletaImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.mockito.Mockito.*;
-
 public class ControladorBicicletaTest {
-    private BicicletaController controladorBicicleta;
+    private ControladorBicicleta controladorBicicleta;
     private ServicioBicicleta servicioBicicleta;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         servicioBicicleta = new ServicioBicicletaImp();
     }
 
@@ -27,7 +27,7 @@ public class ControladorBicicletaTest {
     @Test
     public void cuandoUnaBicicletaEsNuevaNoDeberiaTenerResenias() {
         // Preparación
-        Bicicleta bici = new Bicicleta(1, Estado.DISPONIBLE);
+        Bicicleta bici = new Bicicleta(1, EstadoBicicleta.DISPONIBLE);
 
         servicioBicicleta.agregarBicicleta(bici);
 
@@ -41,7 +41,7 @@ public class ControladorBicicletaTest {
     @Test
     public void cargoUnaReseniaAUnaBicileta() {
         // Preparación
-        Bicicleta bici = new Bicicleta(1, Estado.DISPONIBLE);
+        Bicicleta bici = new Bicicleta(1, EstadoBicicleta.DISPONIBLE);
 
         servicioBicicleta.agregarBicicleta(bici);
 

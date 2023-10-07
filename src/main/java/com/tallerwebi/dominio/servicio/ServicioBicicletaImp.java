@@ -1,6 +1,10 @@
-package com.tallerwebi.dominio.bicicleta;
+package com.tallerwebi.dominio.servicio;
 
-import com.tallerwebi.dominio.resenia.Resenia;
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
+import com.tallerwebi.dominio.entidad.Resenia;
+import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
+import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,25 +36,25 @@ public class ServicioBicicletaImp implements ServicioBicicleta {
     }
 
     @Override
-    public void actualizarEstadoBicicleta(Integer id, Estado estado) {
+    public void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
         Bicicleta bicicleta = obtenerBicicletaPorId(id);
         if (bicicleta != null) {
-            bicicleta.setEstado(estado);
+            bicicleta.setEstado(estadoBicicleta);
         }
     }
 
     @Override
-    public boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontradaException, BicicletaNoDisponibleException {
+    public boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
         for (Bicicleta bicicleta : bicicletas) {
             if (bicicleta.getId() == id) {
-                if (bicicleta.getEstado() == Estado.DISPONIBLE) {
+                if (bicicleta.getEstado() == EstadoBicicleta.DISPONIBLE) {
                     return true;
                 } else {
-                    throw new BicicletaNoDisponibleException("La bicicleta no está disponible.");
+                    throw new BicicletaNoDisponible("La bicicleta no está disponible.");
                 }
             }
         }
-        throw new BicicletaNoEncontradaException("No se encontró la bicicleta con el ID proporcionado.");
+        throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
     }
 
     @Override
