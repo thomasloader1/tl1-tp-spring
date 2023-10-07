@@ -13,4 +13,6 @@ public interface RepositorioBicicleta {
     void eliminarBicicleta(Bicicleta bicicleta);
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
+
+    List<Bicicleta> obtenerBicicletas();
 }

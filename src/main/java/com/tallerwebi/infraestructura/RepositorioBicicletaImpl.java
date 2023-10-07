@@ -42,4 +42,11 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         query.setParameter("usuario", usuario);
         return (List<Bicicleta>) query.list();
     }
+
+    @Override
+    public List<Bicicleta> obtenerBicicletas() {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b");
+        return (List<Bicicleta>) query.list();
+    }
 }

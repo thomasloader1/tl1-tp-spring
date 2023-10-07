@@ -20,7 +20,6 @@ import java.util.Objects;
 @Transactional
 public class ServicioBicicletaImpl implements ServicioBicicleta {
     private final RepositorioBicicleta repositorioBicicleta;
-    private List<Bicicleta> bicicletas;
 
     @Autowired
     public ServicioBicicletaImpl(RepositorioBicicleta repositorioBicicleta) {
@@ -48,52 +47,47 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
-    public Bicicleta obtenerBicicletaPorId(Integer id) {
-        for (Bicicleta bicicleta : bicicletas) {
-            if (Objects.equals(bicicleta.getId(), id)) {
-                return bicicleta;
-            }
-        }
-        return null;
+    public Bicicleta obtenerBicicletaPorId(Long id) {
+        return repositorioBicicleta.obtenerBicicletaPorId(id);
     }
 
     @Override
-    public void agregarBicicleta(Bicicleta bicicleta) {
-        bicicletas.add(bicicleta);
+    public List<Bicicleta> obtenerTodasLasBicicleta() {
+        return repositorioBicicleta.obtenerBicicletas();
     }
 
     @Override
     public void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
-        Bicicleta bicicleta = obtenerBicicletaPorId(id);
+        Bicicleta bicicleta = obtenerBicicletaPorId(id.longValue());
         if (bicicleta != null) {
             bicicleta.setEstadoBicicleta(estadoBicicleta);
         }
     }
 
     @Override
-    public boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
-        for (Bicicleta bicicleta : bicicletas) {
-            if (bicicleta.getId().equals(id)) {
-                if (bicicleta.getEstadoBicicleta() == EstadoBicicleta.DISPONIBLE) {
-                    return true;
-                } else {
-                    throw new BicicletaNoDisponible("La bicicleta no está disponible.");
-                }
+    public boolean verificarDisponibilidad(Long id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
+        if (bicicleta != null) {
+            if (bicicleta.getEstadoBicicleta() == EstadoBicicleta.DISPONIBLE) {
+                return true;
+            } else {
+                throw new BicicletaNoDisponible("La bicicleta no está disponible.");
             }
+        } else {
+            throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
         }
-        throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
     }
 
     @Override
     public List<Resenia> verReseniasDeBicicleta(Integer id) {
-        Bicicleta bicicleta = this.obtenerBicicletaPorId(id);
+        Bicicleta bicicleta = this.obtenerBicicletaPorId(id.longValue());
         return bicicleta.getResenias();
     }
 
     @Override
     public boolean agregarResenia(Resenia resenia) {
         // Obtén la bicicleta asociada a la reseña por su ID
-        Bicicleta bicicleta = obtenerBicicletaPorId(resenia.getBicicletaId());
+        Bicicleta bicicleta = obtenerBicicletaPorId(resenia.getBicicletaId().longValue());
 
         if (bicicleta != null) {
             // Asocia la reseña a la bicicleta

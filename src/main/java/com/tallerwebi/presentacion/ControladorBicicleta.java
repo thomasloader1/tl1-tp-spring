@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicio.ServicioBicicleta;
@@ -66,6 +67,17 @@ public class ControladorBicicleta {
     public ModelAndView darDeBajaUnaBicicleta(@PathVariable("id") Long id) {
         servicioBicicleta.darDeBajaUnaBicicleta(id);
         return new ModelAndView("redirect:/mis-bicicletas");
+    }
+
+    @RequestMapping(path = "/detalle/{id}", method = RequestMethod.GET)
+    public ModelAndView detalleBicicleta(@PathVariable("id") Integer id) {
+        Long biciId = id.longValue();
+        Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
+
+        ModelMap model = new ModelMap();
+        model.put("bicicleta", bicicleta);
+
+        return new ModelAndView("detalle-bicicleta", model);
     }
 
     private boolean verificarSiEsPropietario(Usuario usuario) {

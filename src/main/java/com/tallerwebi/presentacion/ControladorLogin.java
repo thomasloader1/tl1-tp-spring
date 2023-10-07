@@ -1,8 +1,10 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
+import com.tallerwebi.dominio.servicio.ServicioBicicleta;
 import com.tallerwebi.dominio.servicio.ServicioLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,14 +16,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ControladorLogin {
     private final ServicioLogin servicioLogin;
+    private final ServicioBicicleta servicioBicicleta;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin) {
+    public ControladorLogin(ServicioLogin servicioLogin,ServicioBicicleta servicioBicicleta) {
         this.servicioLogin = servicioLogin;
+        this.servicioBicicleta = servicioBicicleta;
     }
 
     @RequestMapping("/login")
@@ -40,8 +45,10 @@ public class ControladorLogin {
         ModelMap model = new ModelMap();
 
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
+        List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicleta();
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("usuario", usuarioBuscado);
+            request.getSession().setAttribute("bicicletas", bicicletas);
             return new ModelAndView("redirect:/home");
         } else {
             model.put("error", "Usuario o clave incorrecta");
@@ -81,11 +88,15 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        List<Bicicleta> bicicletas = (List<Bicicleta>) session.getAttribute("bicicletas");
+
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
+
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("rol", usuario.getRol());
+        modelAndView.addObject("bicicletas", bicicletas);
 
         return modelAndView;
     }
