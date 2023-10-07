@@ -75,4 +75,14 @@ public class ServicioBicicletaImp implements ServicioBicicleta {
         return false; // La bicicleta no existe
     }
 
+    @Override
+    public List<Bicicleta> getBicicletas() {
+        return null;
+    }
+
+    @Override
+    public Bicicleta getBicicleta() {
+        return null;
+    }
+
 }

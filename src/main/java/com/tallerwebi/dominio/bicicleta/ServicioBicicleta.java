@@ -16,4 +16,8 @@ public interface ServicioBicicleta {
     List<Resenia> verReseniasDeBicicleta(Integer id);
 
     boolean agregarResenia(Resenia resenia);
+
+    List<Bicicleta> getBicicletas();
+
+    Bicicleta getBicicleta();
 }
