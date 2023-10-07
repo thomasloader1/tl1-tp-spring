@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ControladorLogin {
-    private ServicioLogin servicioLogin;
+    private final ServicioLogin servicioLogin;
 
     @Autowired
     public ControladorLogin(ServicioLogin servicioLogin) {
@@ -26,7 +26,8 @@ public class ControladorLogin {
 
     @RequestMapping("/login")
     public ModelAndView irALogin(HttpSession session) {
-        if (session.getAttribute("ROL") != null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario != null) {
             return new ModelAndView("redirect:/home");
         }
         ModelMap modelo = new ModelMap();
@@ -40,7 +41,7 @@ public class ControladorLogin {
 
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         if (usuarioBuscado != null) {
-            request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
+            request.getSession().setAttribute("usuario", usuarioBuscado);
             return new ModelAndView("redirect:/home");
         } else {
             model.put("error", "Usuario o clave incorrecta");
@@ -68,7 +69,8 @@ public class ControladorLogin {
 
     @RequestMapping(path = "/nuevo-usuario", method = RequestMethod.GET)
     public ModelAndView nuevoUsuario(HttpSession session) {
-        if (session.getAttribute("ROL") != null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario != null) {
             return new ModelAndView("redirect:/home");
         }
         ModelMap model = new ModelMap();
@@ -78,18 +80,19 @@ public class ControladorLogin {
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
-        if (session.getAttribute("ROL") == null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
         ModelAndView modelAndView = new ModelAndView("home");
-        String userRol = (String) session.getAttribute("ROL");
-        modelAndView.addObject("rol", userRol);
+        modelAndView.addObject("rol", usuario.getRol());
         return modelAndView;
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView inicio(HttpSession session) {
-        if (session.getAttribute("ROL") != null) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario != null) {
             return new ModelAndView("redirect:/home");
         }
         return new ModelAndView("redirect:/login");

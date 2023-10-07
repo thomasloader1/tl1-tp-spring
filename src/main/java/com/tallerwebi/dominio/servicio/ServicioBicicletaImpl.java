@@ -3,27 +3,54 @@ package com.tallerwebi.dominio.servicio;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Resenia;
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
+import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
+import com.tallerwebi.dominio.repositorio.RepositorioBicicleta;
+import com.tallerwebi.presentacion.DatosBicicleta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
-@Service
-public class ServicioBicicletaImp implements ServicioBicicleta {
-
+@Service("servicioBicicleta")
+@Transactional
+public class ServicioBicicletaImpl implements ServicioBicicleta {
+    private final RepositorioBicicleta repositorioBicicleta;
     private List<Bicicleta> bicicletas;
 
-    public ServicioBicicletaImp() {
+    @Autowired
+    public ServicioBicicletaImpl(RepositorioBicicleta repositorioBicicleta) {
+        this.repositorioBicicleta = repositorioBicicleta;
+    }
 
-        this.bicicletas = new ArrayList<>();
+    @Override
+    public void darDeAltaUnaBicicleta(DatosBicicleta datosBicicleta) throws BicicletaValidacion {
+        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()) {
+            throw new BicicletaValidacion();
+        }
+        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario());
+        repositorioBicicleta.registrarBicicleta(bicicleta);
+    }
+
+    @Override
+    public void darDeBajaUnaBicicleta(Long id) {
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
+        repositorioBicicleta.eliminarBicicleta(bicicleta);
+    }
+
+    @Override
+    public List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario) {
+        return repositorioBicicleta.obtenerBicicletasDelUsuario(usuario);
     }
 
     @Override
     public Bicicleta obtenerBicicletaPorId(Integer id) {
         for (Bicicleta bicicleta : bicicletas) {
-            if (bicicleta.getId() == id) {
+            if (Objects.equals(bicicleta.getId(), id)) {
                 return bicicleta;
             }
         }
@@ -39,15 +66,15 @@ public class ServicioBicicletaImp implements ServicioBicicleta {
     public void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
         Bicicleta bicicleta = obtenerBicicletaPorId(id);
         if (bicicleta != null) {
-            bicicleta.setEstado(estadoBicicleta);
+            bicicleta.setEstadoBicicleta(estadoBicicleta);
         }
     }
 
     @Override
     public boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
         for (Bicicleta bicicleta : bicicletas) {
-            if (bicicleta.getId() == id) {
-                if (bicicleta.getEstado() == EstadoBicicleta.DISPONIBLE) {
+            if (bicicleta.getId().equals(id)) {
+                if (bicicleta.getEstadoBicicleta() == EstadoBicicleta.DISPONIBLE) {
                     return true;
                 } else {
                     throw new BicicletaNoDisponible("La bicicleta no está disponible.");

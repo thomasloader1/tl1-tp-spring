@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Taller Web I</title>
+    <title>Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -14,22 +14,19 @@
                 <div class="w-full md:block md:w-auto">
                     <ul class="flex font-medium mt-4 md:space-x-8 md:mt-0 md:border-0">
                         <li>
-                            <a href="#"
+                            <a th:href="@{'/home'}"
                                class="block p-2 text-blue-700 md:p-0"
                                aria-current="page">Home</a>
                         </li>
-                        <li>
-                            <a href="#"
-                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Services</a>
+                        <li th:if="${rol == 'Propietario'}">
+                            <a th:href="@{'/registrar-bicicleta'}"
+                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Registrar bicicleta</a>
                         </li>
-                        <li>
-                            <a href="#"
-                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Pricing</a>
+                        <li th:if="${rol == 'Propietario'}">
+                            <a th:href="@{'/mis-bicicletas'}"
+                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Mis bicicletas</a>
                         </li>
-                        <li>
-                            <a href="#"
-                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Contact</a>
-                        </li>
+
                     </ul>
                 </div>
                 <form action="#" th:action="@{/cerrar-sesion}" method="POST">
