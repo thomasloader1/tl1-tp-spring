@@ -78,12 +78,14 @@ public class ControladorLogin {
 
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
+
         if (session.getAttribute("ROL") == null) {
             return new ModelAndView("redirect:/login");
         }
         ModelAndView modelAndView = new ModelAndView("home");
         String userRol = (String) session.getAttribute("ROL");
         modelAndView.addObject("rol", userRol);
+
         return modelAndView;
     }
 
