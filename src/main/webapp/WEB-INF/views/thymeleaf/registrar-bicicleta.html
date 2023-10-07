@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Registrar bicicleta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center">
+    <div class="w-[90%] h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+        <nav class="w-full border-gray-200 bg-gray-50">
+            <div class="flex flex-col sm:flex-row items-center justify-between mx-auto p-4">
+                <div class="w-full md:block md:w-auto">
+                    <ul class="flex font-medium mt-4 md:space-x-8 md:mt-0 md:border-0">
+                        <li>
+                            <a th:href="@{'/home'}"
+                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0"
+                               aria-current="page">Home</a>
+                        </li>
+                        <li th:if="${usuario.getRol() == 'Propietario'}">
+                            <a th:href="@{'/registrar-bicicleta'}"
+                               class="block p-2 text-blue-700 md:p-0">Registrar bicicleta</a>
+                        </li>
+                        <li th:if="${usuario.getRol() == 'Propietario'}">
+                            <a th:href="@{'/mis-bicicletas'}"
+                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Mis bicicletas</a>
+                        </li>
+                    </ul>
+                </div>
+                <form action="#" th:action="@{/cerrar-sesion}" method="POST">
+                    <button type="submit" class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </nav>
+        <div class="my-5 sm:my-0 sm:h-full sm:flex sm:flex-col sm:items-center sm:justify-center">
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900">Registrá tu bicicleta</p>
+            <form class="w-full" action="#" th:action="@{/alta-bicicleta}" th:object="${datosBicicleta}" method="POST">
+                <div class="w-80 sm:w-96 mx-auto mb-6">
+                    <label for="estadoBicicleta"
+                           class="block mb-2 text-sm font-medium text-gray-900">Estado</label>
+                    <select th:field="*{estadoBicicleta}" id="estadoBicicleta" class="w-full p-2.5">
+                        <option value="">Estado de la bicicleta</option>
+                        <option th:value="DISPONIBLE">Disponible</option>
+                        <option th:value="EN_USO">En uso</option>
+                        <option th:value="REQUIERE_REPARACION">Requiere reparación</option>
+                    </select>
+                </div>
+                <div class="w-80 sm:w-96 mx-auto mb-6">
+                    <label for="descripcion"
+                           class="block mb-2 text-sm font-medium text-gray-900">Descripción</label>
+                    <textarea th:field="*{descripcion}" id="descripcion"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              autocomplete="off" rows="4" required></textarea>
+                </div>
+                <div th:if="${error != null}"
+                     class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
+                     role="alert">
+                    <span th:text="${error}" class="font-medium"></span>
+                </div>
+                <div class="text-center">
+                    <button type="submit"
+                            class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center">
+                        Registrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

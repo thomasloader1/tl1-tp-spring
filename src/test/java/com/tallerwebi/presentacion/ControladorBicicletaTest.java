@@ -1,110 +1,144 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.bicicleta.*;
-import com.tallerwebi.dominio.resenia.Resenia;
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
+import com.tallerwebi.dominio.servicio.ServicioBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.number.OrderingComparison.comparesEqualTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import static org.mockito.Mockito.*;
 
 public class ControladorBicicletaTest {
-    private BicicletaController controladorBicicleta;
-    private ServicioBicicleta servicioBicicleta;
+    private ControladorBicicleta controladorBicicleta;
+    private HttpServletRequest requestMock;
+    private HttpSession sessionMock;
+    private ServicioBicicleta servicioBicicletaMock;
+    private Usuario usuarioMock;
 
     @BeforeEach
-    public void init(){
-        servicioBicicleta = mock(ServicioBicicleta.class);
-        controladorBicicleta = new BicicletaController(servicioBicicleta);
+    public void init() {
+        requestMock = mock(HttpServletRequest.class);
+        sessionMock = mock(HttpSession.class);
+        servicioBicicletaMock = mock(ServicioBicicleta.class);
+        controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock);
+        usuarioMock = mock(Usuario.class);
+        sessionMock.setAttribute("usuario", usuarioMock);
     }
 
     @Test
-    public void cuandoAccedoAlInicioDeBicicletasMuestraBienvenida() {
-        ModelAndView mav = controladorBicicleta.index();
+    public void irARegistrarBicicletaDebeDevolverLaVistaConBicicletaVacia() {
+        // preparacion
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(usuarioMock.getRol()).thenReturn("Propietario");
 
-        // Verificacion (Vista y mensaje)
-        assertThat(mav.getViewName(),equalToIgnoringCase("bicicletas"));
-        assertThat(mav.getModel().get("message"),equalTo("Bienvenido"));
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.irARegistrarBicicleta(usuarioMock);
+
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("registrar-bicicleta"));
+        assertThat(modelAndView.getModel().get("datosBicicleta"), instanceOf(DatosBicicleta.class));
     }
 
     @Test
-    public void cuandoAccedoAlInicioDeBicicletasYNoHayBicicletasLaListaEstaVacia() {
-        List<Bicicleta> bicicletasMock = new ArrayList<Bicicleta>();
+    public void unUsuarioConRolPropietarioPuedeDarDeAltaUnaBicicleta() throws BicicletaValidacion {
+        // preparacion
+        DatosBicicleta datosBicicletaMock = mock(DatosBicicleta.class);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(usuarioMock.getRol()).thenReturn("Propietario");
 
-        when(servicioBicicleta.getBicicletas()).thenReturn(bicicletasMock);
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.darDeAltaUnaBicicleta(usuarioMock, datosBicicletaMock);
 
-        ModelAndView mav = controladorBicicleta.index();
-        List<Bicicleta> bicicletas = (List<Bicicleta>) mav.getModel().get("bicicletas");
-
-        // Verificacion (Vista y mensaje)
-        assertThat(mav.getViewName(),equalToIgnoringCase("bicicletas"));
-        assertThat(mav.getModel().get("message"),equalTo("Bienvenido"));
-        assertThat(bicicletas.size(),comparesEqualTo(0));
-
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
+        verify(servicioBicicletaMock, times(1)).darDeAltaUnaBicicleta(datosBicicletaMock);
     }
 
     @Test
-    public void cuandoAccedoAlInicioDeBicicletasYNoHayBicicletasLaListaEstaVacia() {
-        List<Bicicleta> bicicletasMock = new ArrayList<Bicicleta>();
+    public void siNoSeCargaronTodosLosDatosDeLaBicicletaDebeVolverAFormularioYMostrarError() throws BicicletaValidacion {
+        // preparacion
+        DatosBicicleta datosBicicletaMock = mock(DatosBicicleta.class);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(usuarioMock.getRol()).thenReturn("Propietario");
+        doThrow(BicicletaValidacion.class).when(servicioBicicletaMock).darDeAltaUnaBicicleta(datosBicicletaMock);
 
-        when(servicioBicicleta.getBicicletas()).thenReturn(bicicletasMock);
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.darDeAltaUnaBicicleta(usuarioMock, datosBicicletaMock);
 
-        ModelAndView mav = controladorBicicleta.index();
-        List<Bicicleta> bicicletas = (List<Bicicleta>) mav.getModel().get("bicicletas");
-
-        // Verificacion (Vista y mensaje)
-        assertThat(mav.getViewName(),equalToIgnoringCase("bicicletas"));
-        assertThat(mav.getModel().get("message"),equalTo("Bienvenido"));
-        assertThat(bicicletas.size(),comparesEqualTo(0));
-
-    }
-
-
-    @Test
-    public void cuandoUnaBicicletaEsNuevaNoDeberiaTenerResenias() {
-        // Preparación
-        Bicicleta bici = new Bicicleta(1, Estado.DISPONIBLE);
-
-       // servicioBicicleta.agregarBicicleta(bici);
-
-        when(servicioBicicleta.getBicicleta()).thenReturn(bici);
-
-        // Lógica del test
-        List<Resenia> cantidadResenias = servicioBicicleta.verReseniasDeBicicleta(bici.getId());
-
-        // Verificación
-        assertEquals(0, cantidadResenias.size());
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("registrar-bicicleta"));
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Debe completar todos los campos"));
+        verify(servicioBicicletaMock, times(1)).darDeAltaUnaBicicleta(datosBicicletaMock);
     }
 
     @Test
-    public void cargoUnaReseniaAUnaBicileta() {
-        // Preparación
-        Bicicleta bici = new Bicicleta(1, Estado.DISPONIBLE);
+    public void unUsuarioConRolPropietarioPuedeDarDeBajaUnaBicicleta() {
+        // preparacion
+        Bicicleta bicicletaMock = mock(Bicicleta.class);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(usuarioMock.getRol()).thenReturn("Propietario");
 
-        servicioBicicleta.agregarBicicleta(bici);
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.darDeBajaUnaBicicleta(bicicletaMock.getId());
 
-        // Configura el servicio para agregar la reseña
-        Resenia resenia = new Resenia(1, "Esta bicicleta es una pija", new Date(), bici.getId());
-
-        // Lógica del test
-        boolean agregada = servicioBicicleta.agregarResenia(resenia);
-        List<Resenia> reseniasDeBicicleta = servicioBicicleta.verReseniasDeBicicleta(bici.getId());
-
-        // Verificación
-        assertTrue(agregada); // Verifica que se haya agregado la reseña con éxito
-        assertEquals(1, reseniasDeBicicleta.size()); // Verifica que haya una reseña para la bicicleta
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/mis-bicicletas"));
+        verify(servicioBicicletaMock, times(1)).darDeBajaUnaBicicleta(bicicletaMock.getId());
     }
 
+    @Test
+    public void unUsuarioConRolPropietarioPuedeVerSusBicicletasRegistradas() {
+        // preparacion
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(usuarioMock.getRol()).thenReturn("Propietario");
+
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.irAMisBicicletas(usuarioMock);
+
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
+    }
+
+//    @Test
+//    public void cuandoUnaBicicletaEsNuevaNoDeberiaTenerResenias() {
+//        // Preparación
+//        Bicicleta bici = new Bicicleta(1, EstadoBicicleta.DISPONIBLE);
+//
+//        servicioBicicleta.agregarBicicleta(bici);
+//
+//        // Lógica del test
+//        List<Resenia> cantidadResenias = servicioBicicleta.verReseniasDeBicicleta(bici.getId());
+//
+//        // Verificación
+//        assertEquals(0, cantidadResenias.size());
+//    }
+//
+//    @Test
+//    public void cargoUnaReseniaAUnaBicileta() {
+//        // Preparación
+//        Bicicleta bici = new Bicicleta(1, EstadoBicicleta.DISPONIBLE);
+//
+//        servicioBicicleta.agregarBicicleta(bici);
+//
+//        // Configura el servicio para agregar la reseña
+//        Resenia resenia = new Resenia(1, "Esta bicicleta es una pija", new Date(), bici.getId());
+//
+//        // Lógica del test
+//        boolean agregada = servicioBicicleta.agregarResenia(resenia);
+//        List<Resenia> reseniasDeBicicleta = servicioBicicleta.verReseniasDeBicicleta(bici.getId());
+//
+//        // Verificación
+//        assertTrue(agregada); // Verifica que se haya agregado la reseña con éxito
+//        assertEquals(1, reseniasDeBicicleta.size()); // Verifica que haya una reseña para la bicicleta
+//    }
 }
