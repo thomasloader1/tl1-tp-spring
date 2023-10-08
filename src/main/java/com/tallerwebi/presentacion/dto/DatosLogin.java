@@ -1,17 +1,15 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.dto;
 
-public class DatosUsuario {
+public class DatosLogin {
     private String email;
     private String password;
-    private String rol;
 
-    public DatosUsuario() {
+    public DatosLogin() {
     }
 
-    public DatosUsuario(String email, String password, String rol) {
+    public DatosLogin(String email, String password) {
         this.email = email;
         this.password = password;
-        this.rol = rol;
     }
 
     public String getEmail() {
@@ -29,12 +27,5 @@ public class DatosUsuario {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
 }
+

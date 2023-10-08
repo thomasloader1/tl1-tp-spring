@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
@@ -7,7 +7,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.presentacion.DatosBicicleta;
+import com.tallerwebi.presentacion.dto.DatosBicicleta;
 
 import java.util.List;
 

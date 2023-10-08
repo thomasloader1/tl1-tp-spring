@@ -3,9 +3,10 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
-import com.tallerwebi.infraestructura.RepositorioUsuario;
-import com.tallerwebi.presentacion.DatosLogin;
-import com.tallerwebi.presentacion.DatosUsuario;
+import com.tallerwebi.dominio.servicios.ServicioLoginImpl;
+import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
+import com.tallerwebi.presentacion.dto.DatosLogin;
+import com.tallerwebi.presentacion.dto.DatosUsuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

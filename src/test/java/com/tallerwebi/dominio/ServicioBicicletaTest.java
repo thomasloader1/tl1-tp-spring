@@ -4,8 +4,9 @@ import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.infraestructura.RepositorioBicicleta;
-import com.tallerwebi.presentacion.DatosBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
+import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
+import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
