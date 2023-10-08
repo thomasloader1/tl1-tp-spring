@@ -4,7 +4,6 @@ import com.tallerwebi.dominio.ServicioBicicleta;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.infraestructura.RepositorioBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,8 +23,6 @@ public class ControladorBicicletaTest {
     private HttpSession sessionMock;
     private ServicioBicicleta servicioBicicletaMock;
     private Usuario usuarioMock;
-    private Bicicleta bicicletaMock;
-    private RepositorioBicicleta repositorioBicicletaMock;
 
     @BeforeEach
     public void init() {
@@ -34,8 +31,6 @@ public class ControladorBicicletaTest {
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock);
         usuarioMock = mock(Usuario.class);
-        bicicletaMock = mock(Bicicleta.class);
-        repositorioBicicletaMock = mock(RepositorioBicicleta.class);
         sessionMock.setAttribute("usuario", usuarioMock);
     }
 
@@ -140,7 +135,5 @@ public class ControladorBicicletaTest {
         // Accede al ID de la bicicleta en el modelo y verifica que sea igual a 1
         Bicicleta bicicletaEnModeloCast = (Bicicleta) bicicletaEnModelo;
         assertThat(bicicletaEnModeloCast.getId(), equalTo(1L));
-
     }
-
 }

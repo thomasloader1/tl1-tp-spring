@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.infraestructura.RepositorioUsuario;
+import com.tallerwebi.presentacion.DatosUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,7 @@ import javax.transaction.Transactional;
 @Service("servicioLogin")
 @Transactional
 public class ServicioLoginImpl implements ServicioLogin {
-
-    private RepositorioUsuario servicioLoginDao;
+    private final RepositorioUsuario servicioLoginDao;
 
     @Autowired
     public ServicioLoginImpl(RepositorioUsuario servicioLoginDao) {
@@ -26,16 +26,15 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(Usuario usuario) throws UsuarioExistente, UsuarioSinRol {
-        Usuario usuarioEncontrado = servicioLoginDao.buscarUsuario(usuario.getEmail(), usuario.getPassword());
+    public void registrar(DatosUsuario datosUsuario) throws UsuarioExistente, UsuarioSinRol {
+        Usuario usuarioEncontrado = servicioLoginDao.buscarUsuarioPorEmail(datosUsuario.getEmail());
         if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
         }
-        if (usuario.getRol() == null) {
+        if (datosUsuario.getRol() == null) {
             throw new UsuarioSinRol();
         }
+        Usuario usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getPassword(), datosUsuario.getRol());
         servicioLoginDao.guardar(usuario);
     }
-
 }
-

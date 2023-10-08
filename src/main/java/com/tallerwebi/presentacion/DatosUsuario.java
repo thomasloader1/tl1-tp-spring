@@ -1,34 +1,17 @@
-package com.tallerwebi.dominio.entidad;
+package com.tallerwebi.presentacion;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DatosUsuario {
     private String email;
     private String password;
     private String rol;
 
-    public Usuario() {
+    public DatosUsuario() {
     }
 
-    public Usuario(String email, String password, String rol) {
+    public DatosUsuario(String email, String password, String rol) {
         this.email = email;
         this.password = password;
         this.rol = rol;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEmail() {
