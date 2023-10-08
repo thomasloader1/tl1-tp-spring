@@ -8,8 +8,12 @@ import com.tallerwebi.dominio.entidad.BicicletaStatus;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
-import com.tallerwebi.infraestructura.RepositorioBicicleta;
-import com.tallerwebi.infraestructura.RepositorioVehicleStatus;
+import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
+import com.tallerwebi.dominio.servicios.ServicioVehicleStatus;
+import com.tallerwebi.dominio.servicios.ServicioVehicleStatusIMP;
+import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
+import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

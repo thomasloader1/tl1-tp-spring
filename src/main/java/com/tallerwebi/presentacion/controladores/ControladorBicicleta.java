@@ -1,9 +1,10 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.controladores;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.dominio.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
