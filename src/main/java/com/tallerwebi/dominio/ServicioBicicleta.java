@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.servicio;
+package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
@@ -20,9 +20,10 @@ public interface ServicioBicicleta {
     List<Bicicleta> obtenerTodasLasBicicleta();
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
-    void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta);
 
-    boolean verificarDisponibilidad(Long id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
+    void actualizarEstadoBicicleta(Long id, EstadoBicicleta estadoBicicleta);
+
+    boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
 
     List<Resenia> verReseniasDeBicicleta(Integer id);
 

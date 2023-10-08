@@ -1,10 +1,10 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.ServicioBicicleta;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.dominio.repositorio.RepositorioBicicleta;
-import com.tallerwebi.dominio.servicio.ServicioBicicleta;
+import com.tallerwebi.infraestructura.RepositorioBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;

@@ -1,15 +1,17 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.entidad.BicicletaStatus;
+
 import java.util.Set;
 
 public interface ServicioVehicleStatus {
-    boolean checkWheelVibration(StatusDAO status);
+    boolean checkWheelVibration(BicicletaStatus status);
 
-    boolean checkWheelBreaks(StatusDAO status);
+    boolean checkWheelBreaks(BicicletaStatus status);
 
-    boolean checkHandlerRotation(StatusDAO status);
+    boolean checkHandlerRotation(BicicletaStatus status);
 
-    boolean checkHandlerHardness(StatusDAO status);
+    boolean checkHandlerHardness(BicicletaStatus status);
 
-    Set<String> checkGeneralStatus(StatusDAO status);
+    Set<String> checkGeneralStatus(BicicletaStatus status);
 }

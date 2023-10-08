@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.servicio;
+package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
@@ -7,7 +7,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.dominio.repositorio.RepositorioBicicleta;
+import com.tallerwebi.infraestructura.RepositorioBicicleta;
 import com.tallerwebi.presentacion.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,8 +37,8 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
 
     @Override
     public void darDeBajaUnaBicicleta(Long id) {
-        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
-        repositorioBicicleta.eliminarBicicleta(bicicleta);
+//        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
+//        repositorioBicicleta.eliminarBicicleta(bicicleta);
     }
 
     @Override
@@ -57,16 +57,18 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
-    public void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
-        Bicicleta bicicleta = obtenerBicicletaPorId(id.longValue());
+    public void actualizarEstadoBicicleta(Long id, EstadoBicicleta estadoBicicleta) {
+        Bicicleta bicicleta = this.obtenerBicicletaPorId(id);
         if (bicicleta != null) {
-            bicicleta.setEstadoBicicleta(estadoBicicleta);
+            repositorioBicicleta.updateEstado(bicicleta);
+//            bicicleta.setEstadoBicicleta(estadoBicicleta);
         }
     }
 
     @Override
-    public boolean verificarDisponibilidad(Long id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
-        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
+    public boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId((long) id);
+
         if (bicicleta != null) {
             if (bicicleta.getEstadoBicicleta() == EstadoBicicleta.DISPONIBLE) {
                 return true;
