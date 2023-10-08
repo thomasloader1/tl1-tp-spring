@@ -44,6 +44,12 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
 
     @Override
     public void updateEstado(Bicicleta bicicleta) {
-
     }
+
+    public List<Bicicleta> obtenerBicicletas() {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b");
+        return (List<Bicicleta>) query.list();
+    }
+
 }

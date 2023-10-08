@@ -16,12 +16,12 @@ public interface ServicioBicicleta {
 
     void darDeBajaUnaBicicleta(Long id);
 
-    Bicicleta obtenerBicicletaPorId(Integer id);
+    Bicicleta obtenerBicicletaPorId(Long id);
+    List<Bicicleta> obtenerTodasLasBicicleta();
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
 
-
-    void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta);
+    void actualizarEstadoBicicleta(Long id, EstadoBicicleta estadoBicicleta);
 
     boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
 

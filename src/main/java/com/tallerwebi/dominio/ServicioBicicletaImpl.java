@@ -47,12 +47,17 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
-    public Bicicleta obtenerBicicletaPorId(Integer id) {
-        return repositorioBicicleta.obtenerBicicletaPorId((long)id);
+    public Bicicleta obtenerBicicletaPorId(Long id) {
+        return repositorioBicicleta.obtenerBicicletaPorId(id);
     }
 
     @Override
-    public void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta) {
+    public List<Bicicleta> obtenerTodasLasBicicleta() {
+        return repositorioBicicleta.obtenerBicicletas();
+    }
+
+    @Override
+    public void actualizarEstadoBicicleta(Long id, EstadoBicicleta estadoBicicleta) {
         Bicicleta bicicleta = this.obtenerBicicletaPorId(id);
         if (bicicleta != null) {
             repositorioBicicleta.updateEstado(bicicleta);
@@ -62,7 +67,7 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
 
     @Override
     public boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible {
-        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId((long)id);
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId((long) id);
 
         if (bicicleta != null) {
             if (bicicleta.getEstadoBicicleta() == EstadoBicicleta.DISPONIBLE) {
@@ -77,14 +82,14 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
 
     @Override
     public List<Resenia> verReseniasDeBicicleta(Integer id) {
-        Bicicleta bicicleta = this.obtenerBicicletaPorId(id);
+        Bicicleta bicicleta = this.obtenerBicicletaPorId(id.longValue());
         return bicicleta.getResenias();
     }
 
     @Override
     public boolean agregarResenia(Resenia resenia) {
         // Obtén la bicicleta asociada a la reseña por su ID
-        Bicicleta bicicleta = obtenerBicicletaPorId(resenia.getBicicletaId());
+        Bicicleta bicicleta = obtenerBicicletaPorId(resenia.getBicicletaId().longValue());
 
         if (bicicleta != null) {
             // Asocia la reseña a la bicicleta

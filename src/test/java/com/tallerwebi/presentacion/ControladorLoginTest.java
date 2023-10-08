@@ -1,8 +1,11 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
+import com.tallerwebi.dominio.ServicioBicicleta;
 import com.tallerwebi.dominio.ServicioLogin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,27 +14,41 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.*;
 
 public class ControladorLoginTest {
     private ControladorLogin controladorLogin;
     private Usuario usuarioMock;
+    private List<Bicicleta> bicicletasMock;
     private DatosLogin datosLoginMock;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
+    private ServicioBicicleta servicioBicicletaMock;
 
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
         usuarioMock = mock(Usuario.class);
+        bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
+
+        // Agregar al menos dos bicicletas a la lista
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock));
+
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock);
+        servicioBicicletaMock = mock(ServicioBicicleta.class);
+        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
     }
 
     @Test
@@ -156,5 +173,25 @@ public class ControladorLoginTest {
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+    }
+
+
+    @Test
+    public void alIngresarComoClienteDebeTenerTodasLasBicicletas() {
+        // preparacion
+        sessionMock.setAttribute("usuario", usuarioMock);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
+
+        // ejecucion
+        ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
+
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+        // Verifica que las listas sean iguales en contenido
+        List<Bicicleta> bicicletasEnVista = (List<Bicicleta>) modelAndView.getModel().get("bicicletas");
+        // Verifica que las listas sean iguales en contenido
+        assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
 }

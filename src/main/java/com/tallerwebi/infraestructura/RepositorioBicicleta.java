@@ -14,5 +14,9 @@ public interface RepositorioBicicleta {
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
 
+
     void updateEstado(Bicicleta bicicleta);
+
+    List<Bicicleta> obtenerBicicletas();
+
 }
