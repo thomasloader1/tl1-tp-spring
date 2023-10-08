@@ -1,6 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.entidad;
 
-public class StatusDAO {
+public class BicicletaStatus {
     private float wheel_1_X;
     private float wheel_1_Y;
     private float wheel_1_Z;
@@ -16,7 +16,7 @@ public class StatusDAO {
     private float wheel_2_break;
 
 
-    public StatusDAO() {
+    public BicicletaStatus() {
     }
 
     public float getWheel_1_X() {

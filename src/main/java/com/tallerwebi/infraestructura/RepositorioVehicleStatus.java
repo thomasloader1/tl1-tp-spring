@@ -1,8 +1,8 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.StatusDAO;
+import com.tallerwebi.dominio.entidad.BicicletaStatus;
 
 public interface RepositorioVehicleStatus {
-    StatusDAO getData(String id);
+    BicicletaStatus getData(String id);
 
 }

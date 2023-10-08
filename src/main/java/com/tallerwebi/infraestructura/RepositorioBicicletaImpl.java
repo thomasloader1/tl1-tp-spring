@@ -2,7 +2,6 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.repositorio.RepositorioBicicleta;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -41,5 +40,10 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.usuario = :usuario");
         query.setParameter("usuario", usuario);
         return (List<Bicicleta>) query.list();
+    }
+
+    @Override
+    public void updateEstado(Bicicleta bicicleta) {
+
     }
 }

@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.servicio;
+package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
@@ -20,7 +20,6 @@ public interface ServicioBicicleta {
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
 
-    void agregarBicicleta(Bicicleta bicicleta);
 
     void actualizarEstadoBicicleta(Integer id, EstadoBicicleta estadoBicicleta);
 

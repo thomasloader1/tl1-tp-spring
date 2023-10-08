@@ -3,6 +3,12 @@ package com.tallerwebi.dominio;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.BicicletaStatus;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
+import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
+import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
+import com.tallerwebi.infraestructura.RepositorioBicicleta;
 import com.tallerwebi.infraestructura.RepositorioVehicleStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,17 +20,43 @@ public class VehicleStatusTest {
 
     private ServicioVehicleStatus servicioVehicleStatus;
     private RepositorioVehicleStatus vehicleStatusRepositorio;
+    private ServicioBicicleta servicioBicicleta;
+    private RepositorioBicicleta repositorioBicicletaMock;
+
 
     @BeforeEach
     public void init() {
         servicioVehicleStatus = new ServicioVehicleStatusIMP();
         vehicleStatusRepositorio = mock(RepositorioVehicleStatus.class);
         when(vehicleStatusRepositorio.getData(any())).thenReturn(makeStatus());
+        repositorioBicicletaMock = mock(RepositorioBicicleta.class);
+        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock);
     }
 
     @Test
-    public void unVehiculoEsOperativoSiCumpleConTodosLosCheckeos(){
-        StatusDAO status = vehicleStatusRepositorio.getData("V_001");
+    public void queSePuedaVerificarLaDisponibilidad() throws BicicletaNoEncontrada, BicicletaNoDisponible {
+        when(repositorioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(makeBicicleta());
+        assertTrue(servicioBicicleta.verificarDisponibilidad(1));
+    }
+
+    @Test
+    public void queNoSePuedaVerificarLaDisponibilidad() {
+        Bicicleta bicicleta = makeBicicleta();
+        bicicleta.setEstadoBicicleta(EstadoBicicleta.EN_USO);
+
+        when(repositorioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(bicicleta);
+        assertThrows(BicicletaNoDisponible.class, () -> servicioBicicleta.verificarDisponibilidad(1));
+    }
+
+    @Test
+    public void queNoExistaLaDisponibilidad() {
+        when(repositorioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(null);
+        assertThrows(BicicletaNoEncontrada.class, () -> servicioBicicleta.verificarDisponibilidad(1));
+    }
+
+    @Test
+    public void unVehiculoEsOperativoSiCumpleConTodosLosCheckeos() {
+        BicicletaStatus status = vehicleStatusRepositorio.getData("V_001");
         assertTrue(status != null);
         assertTrue(servicioVehicleStatus.checkWheelVibration(status));
         assertTrue(servicioVehicleStatus.checkWheelBreaks(status));
@@ -34,7 +66,7 @@ public class VehicleStatusTest {
 
     @Test
     public void siAlgunaRuedaTieneMovimientoExcedenteALaToleranciaNoEsOperativo() {
-        StatusDAO status = vehicleStatusRepositorio.getData("V_001");
+        BicicletaStatus status = vehicleStatusRepositorio.getData("V_001");
         status.setWheel_1_Y(80);
         assertTrue(status != null);
         assertFalse(servicioVehicleStatus.checkWheelVibration(status));
@@ -42,7 +74,7 @@ public class VehicleStatusTest {
 
     @Test
     public void siLaFuerzaDeLosFrenosEsMenorALaToleranciaNoEsOperativo() {
-        StatusDAO status = vehicleStatusRepositorio.getData("V_001");
+        BicicletaStatus status = vehicleStatusRepositorio.getData("V_001");
         status.setWheel_2_break(20);
         assertTrue(status != null);
         assertFalse(servicioVehicleStatus.checkWheelBreaks(status));
@@ -50,7 +82,7 @@ public class VehicleStatusTest {
 
     @Test
     public void siLaRotacionDelManillarNoGira360gNoEsOperativo() {
-        StatusDAO status = vehicleStatusRepositorio.getData("V_001");
+        BicicletaStatus status = vehicleStatusRepositorio.getData("V_001");
         status.setHandler_rotation(220);
         assertTrue(status != null);
         assertFalse(servicioVehicleStatus.checkHandlerRotation(status));
@@ -58,15 +90,15 @@ public class VehicleStatusTest {
 
     @Test
     public void siLaDurezaDelManilalrSuperaLaToleranciaNoEsOperativo() {
-        StatusDAO status = vehicleStatusRepositorio.getData("V_001");
+        BicicletaStatus status = vehicleStatusRepositorio.getData("V_001");
         status.setHandler_hardness(100);
         assertTrue(status != null);
         assertFalse(servicioVehicleStatus.checkHandlerHardness(status));
     }
 
     @Test
-    public void elEstadoGeneraUnaListaDeFallas(){
-        StatusDAO status = vehicleStatusRepositorio.getData("V_001");
+    public void elEstadoGeneraUnaListaDeFallas() {
+        BicicletaStatus status = vehicleStatusRepositorio.getData("V_001");
         Set<String> fallosEsperados = makeSetDeFallos();
         status.setHandler_hardness(100);
         status.setWheel_1_Y(80);
@@ -83,8 +115,8 @@ public class VehicleStatusTest {
     }
 
     //Creacion de un estado valido
-    private StatusDAO makeStatus() {
-        StatusDAO status = new StatusDAO();
+    private BicicletaStatus makeStatus() {
+        BicicletaStatus status = new BicicletaStatus();
 
         status.setHandler_rotation(360);
         status.setHandler_hardness(20);
@@ -101,6 +133,14 @@ public class VehicleStatusTest {
         status.setWheel_2_break(80);
 
         return status;
+    }
+
+    private Bicicleta makeBicicleta() {
+        Bicicleta bicicleta = new Bicicleta();
+
+        bicicleta.setEstadoBicicleta(EstadoBicicleta.DISPONIBLE);
+
+        return bicicleta;
     }
 
 }

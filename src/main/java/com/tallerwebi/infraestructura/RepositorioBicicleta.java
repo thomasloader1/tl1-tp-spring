@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.repositorio;
+package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
@@ -13,4 +13,6 @@ public interface RepositorioBicicleta {
     void eliminarBicicleta(Bicicleta bicicleta);
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
+
+    void updateEstado(Bicicleta bicicleta);
 }

@@ -1,7 +1,7 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.dominio;
 
-import com.tallerwebi.dominio.repositorio.RepositorioBicicleta;
-import com.tallerwebi.dominio.servicio.ServicioBicicletaImpl;
+import com.tallerwebi.dominio.ServicioBicicletaImpl;
+import com.tallerwebi.infraestructura.RepositorioBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.mock;
