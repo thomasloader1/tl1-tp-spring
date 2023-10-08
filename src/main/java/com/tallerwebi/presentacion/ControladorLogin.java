@@ -24,7 +24,7 @@ public class ControladorLogin {
     private final ServicioBicicleta servicioBicicleta;
 
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin,ServicioBicicleta servicioBicicleta) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta) {
         this.servicioLogin = servicioLogin;
         this.servicioBicicleta = servicioBicicleta;
     }
@@ -57,10 +57,10 @@ public class ControladorLogin {
     }
 
     @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
-    public ModelAndView registrarme(@ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView registrarme(@ModelAttribute("datosUsuario") DatosUsuario datosUsuario) {
         ModelMap model = new ModelMap();
         try {
-            servicioLogin.registrar(usuario);
+            servicioLogin.registrar(datosUsuario);
         } catch (UsuarioExistente e) {
             model.put("error", "El usuario ya existe");
             return new ModelAndView("nuevo-usuario", model);
@@ -81,7 +81,7 @@ public class ControladorLogin {
             return new ModelAndView("redirect:/home");
         }
         ModelMap model = new ModelMap();
-        model.put("usuario", new Usuario());
+        model.put("datosUsuario", new DatosUsuario());
         return new ModelAndView("nuevo-usuario", model);
     }
 

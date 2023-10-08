@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 
 @Service("servicioBicicleta")
 @Transactional
@@ -37,8 +36,8 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
 
     @Override
     public void darDeBajaUnaBicicleta(Long id) {
-//        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
-//        repositorioBicicleta.eliminarBicicleta(bicicleta);
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
+        repositorioBicicleta.eliminarBicicleta(bicicleta);
     }
 
     @Override
