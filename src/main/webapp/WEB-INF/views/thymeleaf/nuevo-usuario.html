@@ -10,7 +10,7 @@
 <main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center">
     <div class="w-[360px] xl:w-[480px] py-5 sm:py-10 flex flex-col items-center bg-slate-50 rounded">
         <h1 class="mb-6 text-3xl font-bold text-gray-900">Nuevo Usuario</h1>
-        <form class="w-full" action="#" th:action="@{/registrarme}" th:object="${usuario}" method="POST">
+        <form class="w-full" action="#" th:action="@{/registrarme}" th:object="${datosUsuario}" method="POST">
             <div class="w-80 mx-auto mb-6">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
                 <input th:field="*{email}" id="email" type="email"
