@@ -1,4 +1,4 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.repositorios;
 
 import com.tallerwebi.dominio.entidad.BicicletaStatus;
 
