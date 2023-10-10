@@ -3,7 +3,7 @@ package com.tallerwebi.infraestructura.repositorios;
 import com.tallerwebi.dominio.entidad.Usuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,11 +18,11 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     @Override
     public Usuario buscarUsuario(String email, String password) {
-        final Session session = sessionFactory.getCurrentSession();
-        return (Usuario) session.createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email))
-                .add(Restrictions.eq("password", password))
-                .uniqueResult();
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Usuario WHERE email = :email AND password = :password");
+        query.setParameter("email", email);
+        query.setParameter("password", password);
+        return (Usuario) query.uniqueResult();
     }
 
     @Override
@@ -32,9 +32,10 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
     @Override
     public Usuario buscarUsuarioPorEmail(String email) {
-        return (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
-                .add(Restrictions.eq("email", email))
-                .uniqueResult();
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Usuario WHERE email = :email");
+        query.setParameter("email", email);
+        return (Usuario) query.uniqueResult();
     }
 
     @Override

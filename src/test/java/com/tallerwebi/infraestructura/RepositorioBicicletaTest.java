@@ -1,21 +1,110 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.EstadoBicicleta;
-import org.junit.jupiter.api.Assertions;
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.infraestructura.repositorios.RepositorioBicicletaImpl;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RepositorioBicicletaTest {
+import java.util.List;
 
-//    @Test
-//    public void queSePuedaActualizarElEstadoDeLaBicicleta() {
-//        //Dado que tenemos bici con un estado
-//        Bicicleta bicicleta = repositorioBicicletaMock.obtenerBicicletaPorId(1L);
-//        EstadoBicicleta estadoBicicletaActual = bicicleta.getEstadoBicicleta();
-//
-//        //Cambiamos el estado
-//        servicioBicicleta.actualizarEstadoBicicleta(1, EstadoBicicleta.DISPONIBLE);
-//
-//        Assertions.assertEquals(EstadoBicicleta.DISPONIBLE, estadoBicicletaActual);
-//    }
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+public class RepositorioBicicletaTest {
+    private SessionFactory sessionFactory;
+    private Session sessionMock;
+    private RepositorioBicicletaImpl repositorioBicicleta;
+
+    @BeforeEach
+    public void init() {
+        sessionFactory = mock(SessionFactory.class);
+        sessionMock = mock(Session.class);
+        repositorioBicicleta = new RepositorioBicicletaImpl(sessionFactory);
+        when(sessionFactory.getCurrentSession()).thenReturn(sessionMock);
+    }
+
+    @Test
+    public void queSePuedaRegistrarUnaBicicleta() {
+        // preparación
+        Bicicleta bicicletaMock = mock(Bicicleta.class);
+        when(bicicletaMock.getId()).thenReturn(1L);
+        when(sessionMock.get(Bicicleta.class, bicicletaMock.getId())).thenReturn(bicicletaMock);
+
+        // ejecución
+        repositorioBicicleta.registrarBicicleta(bicicletaMock);
+
+        // validación
+        verify(sessionMock, times(1)).save(bicicletaMock);
+    }
+
+    @Test
+    public void queSePuedaEliminarUnaBicicleta() {
+        // preparación
+        Bicicleta bicicletaMock = mock(Bicicleta.class);
+        when(bicicletaMock.getId()).thenReturn(1L);
+        when(sessionMock.get(Bicicleta.class, bicicletaMock.getId())).thenReturn(bicicletaMock);
+
+        // ejecución
+        repositorioBicicleta.registrarBicicleta(bicicletaMock);
+        repositorioBicicleta.eliminarBicicleta(bicicletaMock);
+
+        // validación
+        verify(sessionMock, times(1)).delete(bicicletaMock);
+    }
+
+    @Test
+    public void queSePuedaObtenerUnaBicicletaPorId() {
+        // preparación
+        Bicicleta bicicletaMock = mock(Bicicleta.class);
+        when(bicicletaMock.getId()).thenReturn(1L);
+        when(sessionMock.get(Bicicleta.class, bicicletaMock.getId())).thenReturn(bicicletaMock);
+
+        // ejecución
+        repositorioBicicleta.registrarBicicleta(bicicletaMock);
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(bicicletaMock.getId());
+
+        // validación
+        verify(sessionMock, times(1)).get(Bicicleta.class, bicicletaMock.getId());
+        assertEquals(bicicletaMock, bicicleta);
+    }
+
+    @Test
+    public void queSePuedaObtenerUnaListaDeLasBicicletasDelUsuario() {
+        // preparación
+        Usuario usuarioMock = mock(Usuario.class);
+        Query queryMock = mock(Query.class);
+        when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
+        when(queryMock.list()).thenReturn(List.of());
+
+        // ejecución
+        List<Bicicleta> bicicletas = repositorioBicicleta.obtenerBicicletasDelUsuario(usuarioMock);
+
+        // validación
+        verify(sessionMock, times(1)).createQuery(anyString());
+        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.usuario = :usuario");
+        verify(queryMock).setParameter("usuario", usuarioMock);
+        verify(queryMock).list();
+        assertEquals(0, bicicletas.size());
+    }
+
+    @Test
+    public void queSePuedaObtenerUnaListaDeTodasLasBicicletas() {
+        // preparación
+        Query queryMock = mock(Query.class);
+        when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
+        when(queryMock.list()).thenReturn(List.of());
+
+        // ejecución
+        List<Bicicleta> bicicletas = repositorioBicicleta.obtenerBicicletas();
+
+        // validación
+        verify(sessionMock, times(1)).createQuery(anyString());
+        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b");
+        verify(queryMock).list();
+        assertEquals(0, bicicletas.size());
+    }
 }
