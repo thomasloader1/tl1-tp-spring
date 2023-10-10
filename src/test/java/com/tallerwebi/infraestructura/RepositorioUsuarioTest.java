@@ -1,7 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Usuario;
-import org.hibernate.Criteria;
+import com.tallerwebi.infraestructura.repositorios.RepositorioUsuarioImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RepositorioUsuarioTest {
-    private Criteria criteriaMock;
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioUsuarioImpl repositorioUsuario;
@@ -22,7 +21,6 @@ public class RepositorioUsuarioTest {
     public void init() {
         sessionFactory = mock(SessionFactory.class);
         sessionMock = mock(Session.class);
-        criteriaMock = mock(Criteria.class);
         repositorioUsuario = new RepositorioUsuarioImpl(sessionFactory);
         when(sessionFactory.getCurrentSession()).thenReturn(sessionMock);
         usuarioMock = mock(Usuario.class);
