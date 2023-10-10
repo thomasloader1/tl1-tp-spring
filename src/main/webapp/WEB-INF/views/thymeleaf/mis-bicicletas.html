@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mis bicicletas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<main class="w-full h-screen flex flex-col justify-center items-center">
+    <img alt="image" src="https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg"
+         class="w-full h-full object-cover"/>
+    <div class="!absolute h-fit w-[90%] sm:w-4/5 my-2 sm:my-0 p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+        <nav class="w-full border-gray-200 bg-gray-50">
+            <div class="flex flex-col sm:flex-row items-center justify-between mx-auto p-4">
+                <div class="w-full md:block md:w-auto">
+                    <ul class="flex font-medium mt-4 md:space-x-8 md:mt-0 md:border-0">
+                        <li>
+                            <a th:href="@{'/home'}"
+                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0"
+                               aria-current="page">Home</a>
+                        </li>
+                        <li th:if="${usuario.getRol() == 'Propietario'}">
+                            <a th:href="@{'/registrar-bicicleta'}"
+                               class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Registrar bicicleta</a>
+                        </li>
+                        <li th:if="${usuario.getRol() == 'Propietario'}">
+                            <a th:href="@{'/mis-bicicletas'}"
+                               class="block p-2 text-blue-700 md:p-0">Mis bicicletas</a>
+                        </li>
+                    </ul>
+                </div>
+                <form action="#" th:action="@{/cerrar-sesion}" method="POST">
+                    <button type="submit" class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </nav>
+        <div class="w-full my-5 sm:my-0 sm:h-full sm:flex sm:flex-col sm:items-center sm:justify-center">
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas</p>
+            <div class="flex flex-wrap justify-center">
+                <div th:if="${#lists.isEmpty(bicicletas)}">
+                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas registradas</p>
+                </div>
+                <div th:each="bicicleta : ${bicicletas}" class="m-2 border border-gray-300 rounded-lg">
+                    <div class="max-w-[320px] pb-4">
+                        <img src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476"
+                             class="w-64 sm:w-80 h-auto rounded-t-lg" alt=""/>
+                        <div class="p-2">
+                            <div class="w-full my-1">
+                                <p class="font-semi-bold text-gray-800">Descripción: </p>
+                                <p th:text="${bicicleta.descripcion}" class="font-medium text-gray-800"></p>
+                            </div>
+                            <div class="w-full my-1">
+                                <p class="font-semi-bold text-gray-800">Estado: </p>
+                                <p th:text="${bicicleta.estadoBicicleta}" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+                        <div class="my-2 text-center">
+                            <a th:href="@{/baja-bicicleta/{id}(id=${bicicleta.id})}"
+                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 my-2 focus:outline-none">
+                                Dar de baja
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

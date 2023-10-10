@@ -21,6 +21,7 @@ public class HibernateConfig {
         dataSource.setUrl("jdbc:mysql://localhost:3306/tallerweb?useSSL=false&requireSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("");
+
         return dataSource;
     }
 
