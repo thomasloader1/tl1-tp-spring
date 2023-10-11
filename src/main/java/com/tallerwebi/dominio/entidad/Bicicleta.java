@@ -17,6 +17,9 @@ public class Bicicleta {
     @ManyToOne
     private Usuario usuario;
 
+    @OneToOne
+    private BicicletaStatus status;
+
     public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
@@ -73,5 +76,13 @@ public class Bicicleta {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public BicicletaStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BicicletaStatus status) {
+        this.status = status;
     }
 }

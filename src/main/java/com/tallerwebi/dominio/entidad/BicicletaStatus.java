@@ -1,5 +1,8 @@
 package com.tallerwebi.dominio.entidad;
 
+import javax.persistence.Entity;
+
+@Entity
 public class BicicletaStatus {
     private float wheel_1_X;
     private float wheel_1_Y;

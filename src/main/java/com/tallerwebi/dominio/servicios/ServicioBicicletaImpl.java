@@ -18,6 +18,7 @@ import java.util.List;
 @Service("servicioBicicleta")
 @Transactional
 public class ServicioBicicletaImpl implements ServicioBicicleta {
+
     private final RepositorioBicicleta repositorioBicicleta;
 
     @Autowired
