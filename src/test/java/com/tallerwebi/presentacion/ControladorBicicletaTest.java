@@ -1,9 +1,10 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
+import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.presentacion.controladores.ControladorBicicleta;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,7 +114,7 @@ public class ControladorBicicletaTest {
     }
 
     @Test
-    public void puedoVerElDetalleDeUnaBicicleta() {
+    public void puedoVerElDetalleDeUnaBicicleta() throws BicicletaNoEncontrada {
         // Preparación
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);

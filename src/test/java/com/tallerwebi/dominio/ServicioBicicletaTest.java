@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
@@ -53,6 +54,7 @@ public class ServicioBicicletaTest {
 
         // ejecución y validación
         assertThrows(BicicletaValidacion.class, () -> servicioBicicleta.darDeAltaUnaBicicleta(datosBicicletaMock));
+        verify(repositorioBicicletaMock, times(0)).registrarBicicleta(any(Bicicleta.class));
     }
 
     @Test
@@ -66,6 +68,17 @@ public class ServicioBicicletaTest {
 
         // ejecución y validación
         assertThrows(BicicletaValidacion.class, () -> servicioBicicleta.darDeAltaUnaBicicleta(datosBicicletaMock));
+        verify(repositorioBicicletaMock, times(0)).registrarBicicleta(any(Bicicleta.class));
+    }
+
+    @Test
+    public void queLanceUnaExcepcionSiNoSeEncuentraUnaBicicletaConId() {
+        // preparación
+        when(repositorioBicicletaMock.obtenerBicicletaPorId(anyLong())).thenReturn(null);
+
+        // ejecución y validación
+        assertThrows(BicicletaNoEncontrada.class, () -> servicioBicicleta.obtenerBicicletaPorId(anyLong()));
+        verify(repositorioBicicletaMock, times(1)).obtenerBicicletaPorId(anyLong());
     }
 
     @Test
@@ -82,7 +95,7 @@ public class ServicioBicicletaTest {
     }
 
     @Test
-    public void queSePuedaObtenerUnaBicicletaPorId() {
+    public void queSePuedaObtenerUnaBicicletaPorId() throws BicicletaNoEncontrada {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         when(repositorioBicicletaMock.obtenerBicicletaPorId(anyLong())).thenReturn(bicicletaMock);

@@ -1,4 +1,4 @@
-package com.tallerwebi.integracion.config;
+package com.tallerwebi.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -62,6 +62,7 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
         templateEngine.setEnableSpringELCompiler(true);
         return templateEngine;
     }
+
     // Spring + Thymeleaf
     // Configure Thymeleaf View Resolver
     @Bean

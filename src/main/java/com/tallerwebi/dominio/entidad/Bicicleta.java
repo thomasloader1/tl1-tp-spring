@@ -1,8 +1,6 @@
 package com.tallerwebi.dominio.entidad;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Bicicleta {
@@ -12,27 +10,16 @@ public class Bicicleta {
     @Enumerated(EnumType.STRING)
     private EstadoBicicleta estadoBicicleta;
     private String descripcion;
-    @OneToMany
-    private List<Resenia> resenias = new ArrayList<Resenia>();
     @ManyToOne
     private Usuario usuario;
+
+    public Bicicleta() {
+    }
 
     public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
         this.usuario = usuario;
-    }
-
-    public Bicicleta(Long id, EstadoBicicleta estadoBicicleta, String descripcion, Resenia resenia, Usuario usuario) {
-        this.id = id;
-        this.estadoBicicleta = estadoBicicleta;
-        this.descripcion = descripcion;
-        this.resenias.add(resenia);
-        this.usuario = usuario;
-    }
-
-    public Bicicleta() {
-
     }
 
     public Long getId() {
@@ -49,14 +36,6 @@ public class Bicicleta {
 
     public void setEstadoBicicleta(EstadoBicicleta estadoBicicleta) {
         this.estadoBicicleta = estadoBicicleta;
-    }
-
-    public List<Resenia> getResenias() {
-        return resenias;
-    }
-
-    public void setResenias(List<Resenia> resenias) {
-        this.resenias = resenias;
     }
 
     public String getDescripcion() {
