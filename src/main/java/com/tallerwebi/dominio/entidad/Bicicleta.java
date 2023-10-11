@@ -12,14 +12,24 @@ public class Bicicleta {
     private String descripcion;
     @ManyToOne
     private Usuario usuario;
-
-    public Bicicleta() {
-    }
+    @OneToOne
+    private BicicletaStatus status;
 
     public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
         this.usuario = usuario;
+    }
+
+    public Bicicleta(Long id, EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
+        this.id = id;
+        this.estadoBicicleta = estadoBicicleta;
+        this.descripcion = descripcion;
+        this.usuario = usuario;
+    }
+
+    public Bicicleta() {
+
     }
 
     public Long getId() {
@@ -52,5 +62,13 @@ public class Bicicleta {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public BicicletaStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BicicletaStatus status) {
+        this.status = status;
     }
 }

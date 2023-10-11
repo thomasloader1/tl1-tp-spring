@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.BicicletaStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,8 +10,8 @@ enum Fallos {
     HAN_HAR, HAN_ROT, WHE_VIB, WHE_BRE,
 }
 
+@Service("servicioVehicleStatus")
 public class ServicioVehicleStatusIMP implements ServicioVehicleStatus {
-
     @Override
     public boolean checkWheelVibration(BicicletaStatus status) {
         final float TOL = 50;
@@ -57,4 +58,5 @@ public class ServicioVehicleStatusIMP implements ServicioVehicleStatus {
 
         return fallos;
     }
+
 }
