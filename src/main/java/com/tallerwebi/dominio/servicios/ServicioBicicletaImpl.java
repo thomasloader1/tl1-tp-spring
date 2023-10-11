@@ -1,28 +1,31 @@
 package com.tallerwebi.dominio.servicios;
 
-import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.EstadoBicicleta;
-import com.tallerwebi.dominio.entidad.Resenia;
-import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
+import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Service("servicioBicicleta")
 @Transactional
 public class ServicioBicicletaImpl implements ServicioBicicleta {
     private final RepositorioBicicleta repositorioBicicleta;
+    private final RepositorioVehicleStatus repositorioVehicleStatus;
+    private final ServicioVehicleStatus servicioVehicleStatus;
 
     @Autowired
-    public ServicioBicicletaImpl(RepositorioBicicleta repositorioBicicleta) {
+    public ServicioBicicletaImpl(RepositorioBicicleta repositorioBicicleta, RepositorioVehicleStatus repositorioVehicleStatus, ServicioVehicleStatus servicioVehicleStatus) {
         this.repositorioBicicleta = repositorioBicicleta;
+        this.repositorioVehicleStatus = repositorioVehicleStatus;
+        this.servicioVehicleStatus = servicioVehicleStatus;
     }
 
     @Override
@@ -56,12 +59,19 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
-    public void actualizarEstadoBicicleta(Long id, EstadoBicicleta estadoBicicleta) {
-        Bicicleta bicicleta = this.obtenerBicicletaPorId(id);
-        if (bicicleta != null) {
-            repositorioBicicleta.updateEstado(bicicleta);
-//            bicicleta.setEstadoBicicleta(estadoBicicleta);
+    public Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta) {
+        if (bicicleta.getStatus() != null) {
+
+            // Verifica si hay fallos en el estado del vehículo
+            Set<String> fallos = servicioVehicleStatus.checkGeneralStatus(bicicleta.getStatus());
+
+            if (!fallos.isEmpty()) {
+                // Si hay fallos, cambia el estado a "requiere reparación"
+                bicicleta.setEstadoBicicleta(EstadoBicicleta.REQUIERE_REPARACION);
+               // repositorioBicicleta.updateEstado(bicicleta);
+            }
         }
+        return bicicleta;
     }
 
     @Override

@@ -8,9 +8,7 @@ import java.util.Set;
 enum Fallos {
     HAN_HAR, HAN_ROT, WHE_VIB, WHE_BRE,
 }
-
 public class ServicioVehicleStatusIMP implements ServicioVehicleStatus {
-
     @Override
     public boolean checkWheelVibration(BicicletaStatus status) {
         final float TOL = 50;
@@ -57,4 +55,5 @@ public class ServicioVehicleStatusIMP implements ServicioVehicleStatus {
 
         return fallos;
     }
+
 }

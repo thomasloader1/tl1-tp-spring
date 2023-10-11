@@ -1,16 +1,22 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.BicicletaStatus;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
+import com.tallerwebi.dominio.servicios.ServicioVehicleStatus;
+import com.tallerwebi.dominio.servicios.ServicioVehicleStatusIMP;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
+import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,12 +24,33 @@ import static org.mockito.Mockito.*;
 
 public class ServicioBicicletaTest {
     private ServicioBicicletaImpl servicioBicicleta;
+
+    private ServicioVehicleStatus servicioVehicleStatus;
+    private RepositorioVehicleStatus vehicleStatusRepositorio;
     private RepositorioBicicleta repositorioBicicletaMock;
 
     @BeforeEach
     public void init() {
+        servicioVehicleStatus = new ServicioVehicleStatusIMP();
+        vehicleStatusRepositorio = mock(RepositorioVehicleStatus.class);
         repositorioBicicletaMock = mock(RepositorioBicicleta.class);
-        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock);
+        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock, vehicleStatusRepositorio, servicioVehicleStatus);
+    }
+
+
+    @Test
+    public void queSiUnaBicicletaPresentaAlgunFalloSuEstadoCambieARequiereReparacion(){
+        //Preparacion
+        Bicicleta bici = new Bicicleta();
+        BicicletaStatus estado = makeStatus();
+
+        estado.setHandler_hardness(100);
+        bici.setStatus(estado);
+        bici.setEstadoBicicleta(EstadoBicicleta.EN_USO);
+
+        //Ejecucion
+        servicioBicicleta.actualizarEstadoBicicleta(bici);
+        assertEquals(bici.getEstadoBicicleta(),EstadoBicicleta.REQUIERE_REPARACION);
     }
 
     @Test
@@ -124,5 +151,32 @@ public class ServicioBicicletaTest {
         verify(repositorioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
         assertEquals(1, bicicletas.size());
         assertEquals(bicicletaMock, bicicletas.get(0));
+    }
+
+
+    private BicicletaStatus makeStatus() {
+        BicicletaStatus status = new BicicletaStatus();
+
+        status.setHandler_rotation(360);
+        status.setHandler_hardness(20);
+
+        status.setWheel_1_Y(20);
+        status.setWheel_1_X(-25);
+        status.setWheel_1_Z(-50);
+
+        status.setWheel_2_Y(20);
+        status.setWheel_2_X(-25);
+        status.setWheel_2_Z(50);
+
+        status.setWheel_1_break(80);
+        status.setWheel_2_break(80);
+
+        return status;
+    }
+    private Set<String> makeBiciConFallos() {
+        Set<String> fallos = new HashSet<>();
+        fallos.add("HAN_HAR");
+        fallos.add("WHE_VIB");
+        return fallos;
     }
 }
