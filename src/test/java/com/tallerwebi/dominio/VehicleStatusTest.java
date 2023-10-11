@@ -34,7 +34,7 @@ public class VehicleStatusTest {
         vehicleStatusRepositorio = mock(RepositorioVehicleStatus.class);
         when(vehicleStatusRepositorio.getData(any())).thenReturn(makeStatus());
         repositorioBicicletaMock = mock(RepositorioBicicleta.class);
-        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock);
+        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock, vehicleStatusRepositorio, servicioVehicleStatus);
     }
 
     @Test

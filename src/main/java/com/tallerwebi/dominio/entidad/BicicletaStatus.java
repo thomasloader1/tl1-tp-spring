@@ -1,9 +1,15 @@
 package com.tallerwebi.dominio.entidad;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class BicicletaStatus {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private float wheel_1_X;
     private float wheel_1_Y;
     private float wheel_1_Z;
@@ -45,6 +51,7 @@ public class BicicletaStatus {
     public void setWheel_1_Z(float wheel_1_Z) {
         this.wheel_1_Z = wheel_1_Z;
     }
+
     public float getHandler_hardness() {
         return handler_hardness;
     }

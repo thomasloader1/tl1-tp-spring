@@ -31,6 +31,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaRegistrarUnaBicicleta() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -45,6 +47,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaEliminarUnaBicicleta() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -60,6 +64,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaBicicletaPorId() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -77,6 +83,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaListaDeLasBicicletasDelUsuario() {
         // preparación
         Usuario usuarioMock = mock(Usuario.class);
@@ -98,6 +106,8 @@ public class RepositorioBicicletaTest {
     @Transactional
     @Rollback
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaListaDeTodasLasBicicletas() {
         // preparación
         Query queryMock = mock(Query.class);
