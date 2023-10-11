@@ -8,7 +8,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.Rollback;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +30,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaRegistrarUnaBicicleta() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -42,6 +46,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaEliminarUnaBicicleta() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -57,6 +63,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaBicicletaPorId() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -73,6 +81,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaListaDeLasBicicletasDelUsuario() {
         // preparación
         Usuario usuarioMock = mock(Usuario.class);
@@ -92,6 +102,8 @@ public class RepositorioBicicletaTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaListaDeTodasLasBicicletas() {
         // preparación
         Query queryMock = mock(Query.class);

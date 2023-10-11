@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio.servicios;
 
-import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
@@ -49,8 +51,12 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
-    public Bicicleta obtenerBicicletaPorId(Long id) {
-        return repositorioBicicleta.obtenerBicicletaPorId(id);
+    public Bicicleta obtenerBicicletaPorId(Long id) throws BicicletaNoEncontrada {
+        Bicicleta bicicleta = repositorioBicicleta.obtenerBicicletaPorId(id);
+        if (bicicleta == null) {
+            throw new BicicletaNoEncontrada("No se encontró la bicicleta.");
+        }
+        return bicicleta;
     }
 
     @Override
@@ -68,7 +74,7 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             if (!fallos.isEmpty()) {
                 // Si hay fallos, cambia el estado a "requiere reparación"
                 bicicleta.setEstadoBicicleta(EstadoBicicleta.REQUIERE_REPARACION);
-               // repositorioBicicleta.updateEstado(bicicleta);
+                // repositorioBicicleta.updateEstado(bicicleta);
             }
         }
         return bicicleta;
@@ -88,27 +94,4 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
         }
     }
-
-    @Override
-    public List<Resenia> verReseniasDeBicicleta(Integer id) {
-        Bicicleta bicicleta = this.obtenerBicicletaPorId(id.longValue());
-        return bicicleta.getResenias();
-    }
-
-    @Override
-    public boolean agregarResenia(Resenia resenia) {
-        // Obtén la bicicleta asociada a la reseña por su ID
-        Bicicleta bicicleta = obtenerBicicletaPorId(resenia.getBicicletaId().longValue());
-
-        if (bicicleta != null) {
-            // Asocia la reseña a la bicicleta
-            List<Resenia> resenias = bicicleta.getResenias();
-            resenias.add(resenia);
-
-            return true;
-        }
-
-        return false; // La bicicleta no existe
-    }
-
 }

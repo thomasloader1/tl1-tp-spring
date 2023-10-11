@@ -7,6 +7,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.Rollback;
+
+import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -27,6 +30,8 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaGuardarUnUsuario() {
         // preparación
         when(usuarioMock.getId()).thenReturn(1L);
@@ -40,6 +45,8 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaModificarUnUsuario() {
         // preparación
         when(usuarioMock.getId()).thenReturn(1L);
@@ -56,6 +63,8 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaBuscarUnUsuarioConEmailYContrasena() {
         // preparación
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
@@ -76,6 +85,8 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void queSePuedaBuscarUnUsuarioPorEmail() {
         // preparación
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");

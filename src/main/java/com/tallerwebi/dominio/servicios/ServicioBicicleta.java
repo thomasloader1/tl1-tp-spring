@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.Resenia;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
@@ -15,7 +14,8 @@ public interface ServicioBicicleta {
 
     void darDeBajaUnaBicicleta(Long id);
 
-    Bicicleta obtenerBicicletaPorId(Long id);
+    Bicicleta obtenerBicicletaPorId(Long id) throws BicicletaNoEncontrada;
+
     List<Bicicleta> obtenerTodasLasBicicleta();
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
@@ -23,8 +23,4 @@ public interface ServicioBicicleta {
     Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta);
 
     boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
-
-    List<Resenia> verReseniasDeBicicleta(Integer id);
-
-    boolean agregarResenia(Resenia resenia);
 }
