@@ -32,7 +32,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version> <!-- Asegúrate de usar la versión más reciente -->
+            <version>8.0.28</version> <!-- Asegúrate de usar la versión más reciente -->
         </dependency>
 
         <dependency>
@@ -118,11 +118,11 @@
             <version>${playwright.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+       <!-- <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
-        </dependency>
+        </dependency> -->
 
         <!-- compile only, deployed container will provide this -->
         <!--
