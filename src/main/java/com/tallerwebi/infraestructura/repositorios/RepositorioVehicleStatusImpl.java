@@ -18,4 +18,9 @@ public class RepositorioVehicleStatusImpl implements RepositorioVehicleStatus{
     public BicicletaStatus getData(String id) {
         return sessionFactory.getCurrentSession().get(BicicletaStatus.class, id);
     }
+
+    @Override
+    public BicicletaStatus getStatus(long l) {
+        return null;
+    }
 }
