@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
 </head>
 <body>
-<main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center">
-    <div class="w-[90%] h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+<main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
+    <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
         <div th:replace="~{partials/nav :: nav}"></div>
         <p class="mt-5 sm:mt-10 text-center text-3xl font-bold text-gray-900">Reseñas de la bicicleta</p>
         <div class="flex flex-col sm:flex-row">
             <img src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476"
                  alt=""
-                 class="w-64 sm:w-96 my-5 sm:my-10 sm:mx-3 h-auto rounded-lg">
+                 class="w-64 sm:w-96 h-fit my-5 sm:my-10 sm:mx-3 h-auto rounded-lg">
             <div class="flex flex-col items-center sm:mx-3 sm:my-10">
                 <div th:each="resena : ${resenas}" class="w-64 sm:w-96 shadow-sm rounded-md my-1 p-2">
                     <div class="flex items-center gap-[16px]">
