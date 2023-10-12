@@ -9,6 +9,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository("repositorioAlquilerBicicletas")
 public class RepositorioAlquilerImpl implements RepositorioAlquiler {
     private final SessionFactory sessionFactory;
@@ -24,11 +26,24 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
     }
 
     @Override
+    public void crearAlquiler(Alquiler alquiler) {
+        sessionFactory.getCurrentSession().save(alquiler);
+    }
+
+    @Override
     public void finalizarAlquiler(Alquiler alquiler) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("UPDATE Alquiler SET estadoAlquiler = :estado WHERE id = :id");
         query.setParameter("estado", EstadoAlquiler.FINALIZADO);
         query.setParameter("id", alquiler.getId());
         query.executeUpdate();
+    }
+
+    @Override
+    public List<Alquiler> obtenerAlquilerDeBicicletas(Bicicleta bicicleta) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.bicicleta = :bicicleta");
+        query.setParameter("bicicleta", bicicleta);
+        return (List<Alquiler>) query.list();
     }
 }

@@ -17,7 +17,7 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-public class ControladorAlquierTest {
+public class ControladorAlquilerTest {
 
     private ControladorAlquiler controladorAlquiler;
     private HttpServletRequest requestMock;
