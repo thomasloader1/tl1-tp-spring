@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class RepositorioBicicletaTest {
+
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioBicicletaImpl repositorioBicicleta;
