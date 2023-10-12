@@ -13,7 +13,10 @@ import java.util.List;
 
 @Repository("repositorioAlquilerBicicletas")
 public class RepositorioAlquilerImpl implements RepositorioAlquiler {
-    private final SessionFactory sessionFactory;
+
+
+    private SessionFactory sessionFactory;
+
     @Autowired
     public RepositorioAlquilerImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
