@@ -103,8 +103,6 @@ public class RepositorioBicicletaTest {
         assertEquals(0, bicicletas.size());
     }
 
-    @Transactional
-    @Rollback
     @Test
     @Rollback
     @Transactional
