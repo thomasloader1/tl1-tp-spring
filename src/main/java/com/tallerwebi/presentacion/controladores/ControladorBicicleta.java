@@ -36,7 +36,7 @@ public class ControladorBicicleta {
         if (verificarSiEsPropietario(usuario)) {
             ModelMap modelo = new ModelMap();
             modelo.put("datosBicicleta", new DatosBicicleta());
-            modelo.put("usuario", usuario);
+            modelo.put("rol", usuario.getRol());
             return new ModelAndView("registrar-bicicleta", modelo);
         }
         return new ModelAndView("redirect:/home");
@@ -59,6 +59,7 @@ public class ControladorBicicleta {
     public ModelAndView irAMisBicicletas(@ModelAttribute("usuario") Usuario usuario) {
         if (verificarSiEsPropietario(usuario)) {
             ModelMap modelo = new ModelMap();
+            modelo.put("rol", usuario.getRol());
             modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDelUsuario(usuario));
             return new ModelAndView("mis-bicicletas", modelo);
         }
@@ -78,6 +79,7 @@ public class ControladorBicicleta {
         try {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
             model.put("bicicleta", bicicleta);
+           //model.put("datosResena", new DatosAlquiler());
         } catch (BicicletaNoEncontrada e) {
             return new ModelAndView("pagina-no-encontrada");
         }
