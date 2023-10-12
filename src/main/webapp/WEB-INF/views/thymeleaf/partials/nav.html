@@ -4,18 +4,23 @@
             <ul class="flex font-medium mt-4 md:space-x-8 md:mt-0 md:border-0">
                 <li>
                     <a th:href="@{'/home'}"
-                       class="block p-2 text-blue-700 md:p-0"
-                       aria-current="page">Home</a>
+                       th:class="${#httpServletRequest.requestURI == '/home'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'"
+                       aria-current="page">
+                        Home
+                    </a>
                 </li>
                 <li th:if="${rol == 'Propietario'}">
                     <a th:href="@{'/registrar-bicicleta'}"
-                       class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Registrar bicicleta</a>
+                       th:class="${#httpServletRequest.requestURI == '/registrar-bicicleta'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'">
+                        Registrar bicicleta
+                    </a>
                 </li>
                 <li th:if="${rol == 'Propietario'}">
                     <a th:href="@{'/mis-bicicletas'}"
-                       class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">Mis bicicletas</a>
+                       th:class="${#httpServletRequest.requestURI == '/mis-bicicletas'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'">
+                        Mis bicicletas
+                    </a>
                 </li>
-
             </ul>
         </div>
         <form action="#" th:action="@{/cerrar-sesion}" method="POST">

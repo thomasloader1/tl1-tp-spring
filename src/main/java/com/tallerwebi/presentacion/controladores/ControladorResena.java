@@ -44,7 +44,7 @@ public class ControladorResena {
             return new ModelAndView("pagina-no-encontrada");
         }
         modelo.put("datosResena", new DatosResena());
-        modelo.put("usuario", usuario);
+        modelo.put("rol", usuario.getRol());
         modelo.put("idBicicleta", idBicicleta);
         return new ModelAndView("crear-resena", modelo);
     }
