@@ -79,6 +79,7 @@ public class ControladorBicicleta {
         try {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
             model.put("bicicleta", bicicleta);
+           //model.put("datosResena", new DatosAlquiler());
         } catch (BicicletaNoEncontrada e) {
             return new ModelAndView("pagina-no-encontrada");
         }

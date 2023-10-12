@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class RepositorioBicicletaTest {
+
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioBicicletaImpl repositorioBicicleta;
@@ -103,8 +104,6 @@ public class RepositorioBicicletaTest {
         assertEquals(0, bicicletas.size());
     }
 
-    @Transactional
-    @Rollback
     @Test
     @Rollback
     @Transactional
