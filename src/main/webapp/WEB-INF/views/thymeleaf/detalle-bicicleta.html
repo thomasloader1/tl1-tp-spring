@@ -15,7 +15,9 @@
         <div th:if="${bicicleta}">
             <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
             <p th:text="${bicicleta.getId()}"></p>
-            <div th:replace="~{components/formClienteAlquilerBici :: div}"></div>
+            <p th:text="${bicicleta.getEstadoBicicleta()}"></p>
+            <p th:text="${bicicleta.getDescripcion()}"></p>
+            <div th:replace="~{components/formSelectorHorasParaAlquilar.html :: div}"></div>
 
         </div>
 
