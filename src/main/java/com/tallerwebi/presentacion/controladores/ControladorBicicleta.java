@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.presentacion.dto.DatosAlquiler;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,7 +80,7 @@ public class ControladorBicicleta {
         try {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
             model.put("bicicleta", bicicleta);
-           //model.put("datosResena", new DatosAlquiler());
+            model.put("datosAlquiler", new DatosAlquiler());
         } catch (BicicletaNoEncontrada e) {
             return new ModelAndView("pagina-no-encontrada");
         }
