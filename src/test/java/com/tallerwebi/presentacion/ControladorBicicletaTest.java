@@ -26,6 +26,7 @@ public class ControladorBicicletaTest {
     private HttpSession sessionMock;
     private ServicioBicicleta servicioBicicletaMock;
     private Usuario usuarioMock;
+    private Bicicleta bicicletaMock;
 
     @BeforeEach
     public void init() {
@@ -34,6 +35,7 @@ public class ControladorBicicletaTest {
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock);
         usuarioMock = mock(Usuario.class);
+        bicicletaMock = mock(Bicicleta.class);
         sessionMock.setAttribute("usuario", usuarioMock);
     }
 
@@ -120,8 +122,9 @@ public class ControladorBicicletaTest {
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
         // Simula una bicicleta con un ID específico (por ejemplo, ID 1)
-        Bicicleta bicicletaConId1 = new Bicicleta();
-        bicicletaConId1.setId(1L);
+        Bicicleta bicicletaConId1 = bicicletaMock;
+        //bicicletaConId1.setId(1L);
+        when(bicicletaConId1.getId()).thenReturn(1L);
 
         when(servicioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(bicicletaConId1);
 
@@ -132,11 +135,10 @@ public class ControladorBicicletaTest {
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("detalle-bicicleta"));
 
         // Verifica que el objeto en el modelo sea un registro de tipo Bicicleta
-        Object bicicletaEnModelo = modelAndView.getModel().get("bicicleta");
+        Bicicleta bicicletaEnModelo = (Bicicleta) modelAndView.getModel().get("bicicleta");
         assertThat(bicicletaEnModelo, instanceOf(Bicicleta.class));
 
         // Accede al ID de la bicicleta en el modelo y verifica que sea igual a 1
-        Bicicleta bicicletaEnModeloCast = (Bicicleta) bicicletaEnModelo;
-        assertThat(bicicletaEnModeloCast.getId(), equalTo(1L));
+        assertThat(bicicletaEnModelo.getId(), equalTo(1L));
     }
 }
