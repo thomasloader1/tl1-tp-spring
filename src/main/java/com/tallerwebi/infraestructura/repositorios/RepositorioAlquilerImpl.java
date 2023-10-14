@@ -5,6 +5,7 @@ import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoAlquiler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import java.util.List;
 public class RepositorioAlquilerImpl implements RepositorioAlquiler {
 
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public RepositorioAlquilerImpl(SessionFactory sessionFactory) {
@@ -34,13 +35,17 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
     }
 
     @Override
-    public void finalizarAlquiler(Alquiler alquiler) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("UPDATE Alquiler SET estadoAlquiler = :estado WHERE id = :id");
-        query.setParameter("estado", EstadoAlquiler.FINALIZADO);
-        query.setParameter("id", alquiler.getId());
-        query.executeUpdate();
+    public Alquiler finalizarAlquiler(Alquiler alquiler) {
+        alquiler.setEstadoAlquiler(EstadoAlquiler.FINALIZADO);
+        sessionFactory.getCurrentSession().update(alquiler);
+        return alquiler;
     }
+
+    @Override
+    public Alquiler modificarAlquiler(Alquiler alquiler) {
+        return null;
+    }
+
 
     @Override
     public List<Alquiler> obtenerAlquilerDeBicicletas(Bicicleta bicicleta) {

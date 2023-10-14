@@ -11,7 +11,7 @@ public interface ServicioAlquiler {
 
     List<Alquiler> obtenerBicicletasAlquiladas (Bicicleta bicicleta);
 
-    void finalizarAlquiler(Long id);
+    Alquiler finalizarAlquiler(Long id);
 
     Bicicleta obtenerBicicletaPorIdDeAlquiler(Long id);
 }

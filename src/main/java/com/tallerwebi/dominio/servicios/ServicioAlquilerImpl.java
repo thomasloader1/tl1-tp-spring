@@ -31,9 +31,10 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public void finalizarAlquiler(Long id) {
+    public Alquiler finalizarAlquiler(Long id) {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
-        repositorioAlquiler.finalizarAlquiler(alquiler);}
+        return repositorioAlquiler.finalizarAlquiler(alquiler);
+    }
 
     @Override
     public Bicicleta obtenerBicicletaPorIdDeAlquiler(Long id) {
