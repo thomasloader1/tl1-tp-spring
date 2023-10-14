@@ -4,7 +4,6 @@ import com.tallerwebi.config.HibernateTestConfig;
 import com.tallerwebi.config.SpringWebConfig;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Alquiler;
-import com.tallerwebi.dominio.entidad.EstadoAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquilerImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,13 +16,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import javax.transaction.Transactional;
 import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -36,12 +32,14 @@ public class RepositorioAlquilerTest {
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioAlquilerImpl repositorioAlquiler;
+    private Alquiler alquilerMock;
 
     @BeforeEach
     public void init() {
         sessionFactory = mock(SessionFactory.class);
         sessionMock = mock(Session.class);
-       repositorioAlquiler = new RepositorioAlquilerImpl(sessionFactory);
+        alquilerMock = new Alquiler();
+        repositorioAlquiler = mock(RepositorioAlquilerImpl.class);
         when(sessionFactory.getCurrentSession()).thenReturn(sessionMock);
     }
 

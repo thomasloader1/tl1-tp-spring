@@ -200,4 +200,22 @@ public class ControladorLoginTest {
         // Verifica que las listas sean iguales en contenido
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
+
+
+    @Test
+    public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {
+        // preparación
+        Usuario usuarioEncontradoMock = mock(Usuario.class);
+        when(usuarioEncontradoMock.getRol()).thenReturn("Propietario");
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioEncontradoMock);
+
+        // ejecución
+        ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
+
+        // validación
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
+        verify(sessionMock, times(1)).setAttribute("usuario", usuarioEncontradoMock);
+    }
 }
