@@ -16,6 +16,7 @@
         <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
 
 
+
         <div class="container pt-4">
             <div class="container">
             <div class="row ">
@@ -34,11 +35,35 @@
         </div>
 
         </div>
-        <div> <tr th:each="resena : ${resenas}">
-            <td th:text="${resena.comentario}"></td>
-            <td th:text="${resena.fecha}"></td>
+        
+          
+          <div th:each="resena : ${resenas}">
+            <p th:text="${resena.comentario}"></p>
+            <p th:text="${resena.fecha}"></p>
+        </div>
 
-        </tr>
+        <div th:if="${bicicleta}">
+            <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
+            <p th:text="${bicicleta.getId()}"></p>
+            <p th:text="${bicicleta.getEstadoBicicleta()}"></p>
+            <p th:text="${bicicleta.getDescripcion()}"></p>
+            <!--<div th:replace="~{components/formSelectorHorasParaAlquilar.html :: div}"></div>-->
+
+            <form class="w-full" th:action="@{/bicicleta/{bicicletaId}/crear-alquiler(bicicletaId=${bicicleta.id})}" th:object="${datosAlquiler}"  method="POST">
+                <div class="w-80 mx-auto mb-6">
+                    <label for="cantidadHoras" class="block mb-2 text-sm font-medium text-gray-900">Horas</label>
+                    <input th:field="*{cantidadHoras}" id="cantidadHoras" type="number" name="horas"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                           autocomplete="off" required/>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit"
+                            class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center">
+                        Comenzar alquilacion
+                    </button>
+                </div>
+            </form>
 
         </div>
 

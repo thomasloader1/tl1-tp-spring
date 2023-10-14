@@ -16,6 +16,17 @@ public class Bicicleta {
     @OneToOne
     private BicicletaStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private Condition condicion;
+
+    public Condition getCondicion() {
+        return condicion;
+    }
+
+    public void setCondicion(Condition condicion) {
+        this.condicion = condicion;
+    }
+
     public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, String urlImagen) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;

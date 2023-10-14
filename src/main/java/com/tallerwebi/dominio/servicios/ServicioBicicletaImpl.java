@@ -19,6 +19,7 @@ import java.util.Set;
 @Service("servicioBicicleta")
 @Transactional
 public class ServicioBicicletaImpl implements ServicioBicicleta {
+
     private final RepositorioBicicleta repositorioBicicleta;
     private final RepositorioVehicleStatus repositorioVehicleStatus;
     private final ServicioVehicleStatus servicioVehicleStatus;

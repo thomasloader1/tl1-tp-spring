@@ -133,8 +133,8 @@ public class VehicleStatusTest {
         status.setWheel_2_X(-25);
         status.setWheel_2_Z(50);
 
-        status.setWheel_1_break(80);
-        status.setWheel_2_break(80);
+        status.setWheel_1_break(100);
+        status.setWheel_2_break(100);
 
         return status;
     }

@@ -14,9 +14,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class RepositorioBicicletaTest {
+
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioBicicletaImpl repositorioBicicleta;
@@ -77,6 +79,7 @@ public class RepositorioBicicletaTest {
 
         // validación
         verify(sessionMock, times(1)).get(Bicicleta.class, bicicletaMock.getId());
+        assertTrue(bicicleta != null);
         assertEquals(bicicletaMock, bicicleta);
     }
 
