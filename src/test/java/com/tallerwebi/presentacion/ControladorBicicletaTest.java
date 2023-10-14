@@ -1,10 +1,12 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.controladores.ControladorBicicleta;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +16,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class ControladorBicicletaTest {
@@ -25,18 +31,23 @@ public class ControladorBicicletaTest {
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioBicicleta servicioBicicletaMock;
+    private ServicioResena servicioResenaMock;
     private Usuario usuarioMock;
+    private Resena resenaMock;
     private Bicicleta bicicletaMock;
+
 
     @BeforeEach
     public void init() {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
-        controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock);
+        servicioResenaMock  = mock(ServicioResena.class);
+        controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock, servicioResenaMock);
         usuarioMock = mock(Usuario.class);
         bicicletaMock = mock(Bicicleta.class);
         sessionMock.setAttribute("usuario", usuarioMock);
+        resenaMock = mock(Resena.class);
     }
 
     @Test
@@ -115,6 +126,7 @@ public class ControladorBicicletaTest {
         verify(servicioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
     }
 
+
     @Test
     public void puedoVerElDetalleDeUnaBicicleta() throws BicicletaNoEncontrada {
         // Preparación
@@ -140,5 +152,43 @@ public class ControladorBicicletaTest {
 
         // Accede al ID de la bicicleta en el modelo y verifica que sea igual a 1
         assertThat(bicicletaEnModelo.getId(), equalTo(1L));
+    }
+    @Test
+    public void puedoVerElDetalleDeUnaBicicletaConSusResenas() throws BicicletaNoEncontrada {
+        // Preparación
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(usuarioMock.getRol()).thenReturn("Cliente");
+        // Simula una bicicleta con un ID específico (por ejemplo, ID 1)
+
+
+        Bicicleta bicicletaConId1 = new Bicicleta();
+
+        bicicletaConId1.setId(1L);
+        Resena resena = new Resena(7,"hola",bicicletaConId1, usuarioMock);
+                List<Resena> resenas = new ArrayList<Resena>();
+                resenas.add(resena);
+                resenas.add(resenaMock);
+
+        when(servicioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(bicicletaConId1);
+        when(servicioResenaMock.obtenerResenasDeUnaBicicleta(bicicletaConId1)).thenReturn(resenas);
+
+        List<Resena>listaResenas= servicioResenaMock.obtenerResenasDeUnaBicicleta(bicicletaConId1);
+        // Ejecución
+        ModelAndView modelAndView = controladorBicicleta.detalleBicicleta(1);
+        // Validación
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("detalle-bicicleta"));
+        // Verifica que el objeto en el modelo sea un registro de tipo Bicicleta
+        Object bicicletaEnModelo = modelAndView.getModel().get("bicicleta");
+
+        assertThat(bicicletaEnModelo, instanceOf(Bicicleta.class));
+        // Accede al ID de la bicicleta en el modelo y verifica que sea igual a 1
+        Bicicleta bicicletaEnModeloCast = (Bicicleta) bicicletaEnModelo;
+        assertNotNull(listaResenas);
+        assertThat(bicicletaEnModeloCast.getId(), equalTo(1L));
+        assertThat(resenas.size(),equalTo(2));
+        List<Resena> resenaEnModelo = (ArrayList<Resena>) modelAndView.getModel().get("resenas");
+        assertThat(resenaEnModelo.size(),equalTo(2));
+       // assertThat(resenaEnModelo, instanceOf(Bicicleta.class));
     }
 }

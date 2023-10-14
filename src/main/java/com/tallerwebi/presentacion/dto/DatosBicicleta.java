@@ -8,6 +8,8 @@ public class DatosBicicleta {
     private String descripcion;
     private Usuario usuario;
 
+    private String urlImagen;
+
     public DatosBicicleta() {
     }
 
@@ -27,6 +29,14 @@ public class DatosBicicleta {
 
     public String getDescripcion() {
         return descripcion;
+    }
+
+    public String    getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 
     public void setDescripcion(String descripcion) {

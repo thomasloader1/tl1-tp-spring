@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Home</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -11,6 +13,34 @@
     <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
 
         <div th:replace="~{partials/nav :: nav}"></div>
+        <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
+
+
+
+        <div class="container pt-4">
+            <div class="container">
+            <div class="row ">
+                <div class="col-sm">
+                    <p th:text="${bicicleta.getId()}"></p>
+                    <p th:text="${bicicleta.getEstadoBicicleta()}"></p>
+                    <p th:text="${bicicleta.getDescripcion()}"></p>
+                </div>
+                <div class="col-sm">
+                    <img  th:src="${bicicleta.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" alt=""/>
+                </div>
+                <div class="col-sm">
+                    <div th:replace="~{components/formSelectorHorasParaAlquilar.html :: div}"></div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        
+          
+          <div th:each="resena : ${resenas}">
+            <p th:text="${resena.comentario}"></p>
+            <p th:text="${resena.fecha}"></p>
+        </div>
 
         <div th:if="${bicicleta}">
             <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
@@ -34,7 +64,6 @@
                     </button>
                 </div>
             </form>
-
 
         </div>
 

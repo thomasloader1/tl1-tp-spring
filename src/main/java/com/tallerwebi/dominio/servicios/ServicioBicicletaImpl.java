@@ -36,7 +36,7 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
         if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()) {
             throw new BicicletaValidacion();
         }
-        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario());
+        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen());
         repositorioBicicleta.registrarBicicleta(bicicleta);
     }
 

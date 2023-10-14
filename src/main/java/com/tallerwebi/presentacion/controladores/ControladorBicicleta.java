@@ -1,9 +1,11 @@
 package com.tallerwebi.presentacion.controladores;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
@@ -17,14 +19,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ControladorBicicleta {
     private final ServicioBicicleta servicioBicicleta;
-
+    private final ServicioResena servicioResena;
     @Autowired
-    public ControladorBicicleta(ServicioBicicleta servicioBicicleta) {
+    public ControladorBicicleta(ServicioBicicleta servicioBicicleta, ServicioResena servicioResena) {
         this.servicioBicicleta = servicioBicicleta;
+        this.servicioResena = servicioResena;
     }
 
     @ModelAttribute("usuario")
@@ -79,8 +83,11 @@ public class ControladorBicicleta {
         ModelMap model = new ModelMap();
         try {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
+            List<Resena> resenas = servicioResena.obtenerResenasDeUnaBicicleta(bicicleta);
             model.put("bicicleta", bicicleta);
+            model.put("resenas",resenas);
             model.put("datosAlquiler", new DatosAlquiler());
+          
         } catch (BicicletaNoEncontrada e) {
             return new ModelAndView("pagina-no-encontrada");
         }
