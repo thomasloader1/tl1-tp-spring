@@ -18,9 +18,9 @@ public class HibernateConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/tallerwebi_db?useSSL=false&requireSSL=false");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/datos?useSSL=false&requireSSL=false");
         dataSource.setUsername("root");
-        dataSource.setPassword("example");
+        dataSource.setPassword("");
 
         return dataSource;
     }

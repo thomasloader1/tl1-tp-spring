@@ -40,8 +40,8 @@ public class ControladorLoginTest {
         bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
 
         // Agregar al menos dos bicicletas a la lista
-        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock));
-        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
 
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
         requestMock = mock(HttpServletRequest.class);

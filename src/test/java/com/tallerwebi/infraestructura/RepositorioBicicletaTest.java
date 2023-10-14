@@ -119,4 +119,5 @@ public class RepositorioBicicletaTest {
         verify(queryMock).list();
         assertEquals(0, bicicletas.size());
     }
+
 }

@@ -10,15 +10,17 @@ public class Bicicleta {
     @Enumerated(EnumType.STRING)
     private EstadoBicicleta estadoBicicleta;
     private String descripcion;
+    private String urlImagen;
     @ManyToOne
     private Usuario usuario;
     @OneToOne
     private BicicletaStatus status;
 
-    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
+    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, String urlImagen) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
         this.usuario = usuario;
+        this.urlImagen = urlImagen;
     }
 
     public Bicicleta(Long id, EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
@@ -46,6 +48,14 @@ public class Bicicleta {
 
     public void setEstadoBicicleta(EstadoBicicleta estadoBicicleta) {
         this.estadoBicicleta = estadoBicicleta;
+    }
+
+    public String getUrlImagen() {
+        return urlImagen;
+    }
+
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 
     public String getDescripcion() {

@@ -18,8 +18,7 @@
                 </div>
                 <div th:each="bicicleta : ${bicicletas}" class="m-2 border border-gray-300 rounded-lg">
                     <div class="max-w-[320px] pb-4">
-                        <img src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476"
-                             class="w-64 sm:w-80 h-auto rounded-t-lg" alt=""/>
+                        <img  th:src="${bicicleta.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" alt=""/>
                         <div class="p-2">
                             <div class="w-full my-1">
                                 <p class="font-semi-bold text-gray-800">Descripción: </p>
