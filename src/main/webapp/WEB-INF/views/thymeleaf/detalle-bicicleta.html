@@ -16,56 +16,45 @@
         <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
 
 
+            <div class="grid grid-cols-1 md:grid-rows-[2fr_auto] gap-4 md:grid-cols-2 ">
 
-        <div class="container pt-4">
-            <div class="container">
-            <div class="row ">
-                <div class="col-sm">
-                    <p th:text="${bicicleta.getId()}"></p>
-                    <p th:text="${bicicleta.getEstadoBicicleta()}"></p>
-                    <p th:text="${bicicleta.getDescripcion()}"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 md:col-start-1 md:col-end-3">
+                    <div>
+                        <img th:src="${bicicleta.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" alt=""/>
+                    </div>
+
+                    <form class="w-full bg-white px-3 py-2 shadow-lg rounded-lg" th:action="@{/bicicleta/{bicicletaId}/crear-alquiler(bicicletaId=${bicicleta.id})}" th:object="${datosAlquiler}"  method="POST">
+                        <div>
+                            <h3 class="mb-2  text-2xl">Estado:</h3>
+                            <span class="py-2 px-3 shadow-md rounded-full bg-blue text-white font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getEstadoBicicleta()}"></span>
+                            <h3 class="mb-3 text-2xl">Descripcion:</h3>
+                            <p th:text="${bicicleta.getDescripcion()}"></p>
+                        </div>
+                        <div class="w-80 mx-auto mb-6">
+                            <label for="cantidadHoras" class="block mb-2 text-sm font-medium text-gray-900">Horas</label>
+                            <input th:field="*{cantidadHoras}" id="cantidadHoras" type="number" name="horas"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   autocomplete="off" required/>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit"
+                                    class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center">
+                                Comenzar alquilacion
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-sm">
-                    <img  th:src="${bicicleta.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" alt=""/>
-                </div>
-                <div class="col-sm">
-                    <div th:replace="~{components/formSelectorHorasParaAlquilar.html :: div}"></div>
-                </div>
+
+                <section class="grid grid-cols-1 col-span-2 md:grid-cols-3 gap-4">
+                    <article class="bg-white px-3 py-2 shadow-lg rounded-lg " th:each="resena : ${resenas}">
+                        <p th:text="${resena.comentario}"></p>
+                        <p th:text="${resena.fecha}"></p>
+                        <p th:text="${resena.usuario.email}"></p>
+                    </article>
+                </section>
+
             </div>
-        </div>
-
-        </div>
-        
-          
-          <div th:each="resena : ${resenas}">
-            <p th:text="${resena.comentario}"></p>
-            <p th:text="${resena.fecha}"></p>
-        </div>
-
-        <div th:if="${bicicleta}">
-            <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta (Cliente)</h1>
-            <p th:text="${bicicleta.getId()}"></p>
-            <p th:text="${bicicleta.getEstadoBicicleta()}"></p>
-            <p th:text="${bicicleta.getDescripcion()}"></p>
-            <!--<div th:replace="~{components/formSelectorHorasParaAlquilar.html :: div}"></div>-->
-
-            <form class="w-full" th:action="@{/bicicleta/{bicicletaId}/crear-alquiler(bicicletaId=${bicicleta.id})}" th:object="${datosAlquiler}"  method="POST">
-                <div class="w-80 mx-auto mb-6">
-                    <label for="cantidadHoras" class="block mb-2 text-sm font-medium text-gray-900">Horas</label>
-                    <input th:field="*{cantidadHoras}" id="cantidadHoras" type="number" name="horas"
-                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                           autocomplete="off" required/>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit"
-                            class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center">
-                        Comenzar alquilacion
-                    </button>
-                </div>
-            </form>
-
-        </div>
 
         <div th:if="${rol == 'Propietario'}">
             <p class="text-3xl font-bold text-gray-900">Vista Propietario</p>
