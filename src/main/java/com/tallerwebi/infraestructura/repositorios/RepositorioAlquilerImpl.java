@@ -54,4 +54,9 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
         query.setParameter("bicicleta", bicicleta);
         return (List<Alquiler>) query.list();
     }
+
+    @Override
+    public List<Alquiler> obtenerBicicletasAlquiladas() {
+        return null;
+    }
 }

@@ -13,4 +13,6 @@ public interface RepositorioAlquiler {
     Alquiler finalizarAlquiler(Alquiler alquiler);
     Alquiler modificarAlquiler(Alquiler alquiler);
     List<Alquiler> obtenerAlquilerDeBicicletas(Bicicleta bicicleta);
+
+    List<Alquiler> obtenerBicicletasAlquiladas();
 }

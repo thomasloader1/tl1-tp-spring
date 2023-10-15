@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion.controladores;
 
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+
 @Controller
 public class ControladorAlquiler {
     private final ServicioAlquiler servicioAlquiler;
@@ -38,6 +42,26 @@ public class ControladorAlquiler {
             return new ModelAndView("crear-alquiler", modelo);
         }
         return new ModelAndView("redirect:/mapa");
+    }
+
+    @RequestMapping(path = "/mis-alquileres/{idBicicleta}", method = RequestMethod.GET)
+    public ModelAndView verAlquiler(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
+        ModelMap modelo = new ModelMap();
+        try {
+            Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
+            datosAlquiler.setBicicleta(bicicleta);
+            datosAlquiler.setUsuario(usuario);
+            List<Alquiler> alquileres = servicioAlquiler.buscarAlquiler(datosAlquiler);
+
+            modelo.put("usuario", usuario);
+            modelo.put("bicicleta", bicicleta);
+            modelo.put("alquileres", alquileres);
+        } catch (BicicletaNoEncontrada e) {
+            modelo.put("error", "Error al mostrar el Alquiler");
+            return new ModelAndView("mis-alquileres", modelo);
+        }
+        return new ModelAndView("mis-alquileres", modelo);
+
     }
     @RequestMapping(path = "/alquiler/{idAlquiler}/finalizar-alquiler", method = RequestMethod.GET)
     public ModelAndView finalizarAlquiler(@PathVariable("idAlquiler") Long id)  {

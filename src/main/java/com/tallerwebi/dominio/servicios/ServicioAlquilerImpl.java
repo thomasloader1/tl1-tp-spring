@@ -41,4 +41,9 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
         return alquiler.getBicicleta();
     }
+
+    @Override
+    public List<Alquiler> buscarAlquiler(DatosAlquiler datosAlquiler) {
+        return repositorioAlquiler.obtenerAlquilerDeBicicletas(datosAlquiler.getBicicleta());
+    }
 }
