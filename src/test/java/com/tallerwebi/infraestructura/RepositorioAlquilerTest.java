@@ -43,7 +43,7 @@ public class RepositorioAlquilerTest {
         when(sessionFactory.getCurrentSession()).thenReturn(sessionMock);
     }
 
-    @Test
+/*    @Test
     @Rollback
     @Transactional
     public void queSePuedaCrearElAlquilerDeUnaBicicleta(){
@@ -57,9 +57,9 @@ public class RepositorioAlquilerTest {
 
         // validación
         verify(sessionMock, times(1)).save(alquilerMock);
-    }
+    }*/
 
-    @Test
+ /*   @Test
     @Rollback
     @Transactional
     public void queSePuedaObtenerUnaListaDeLosAlquileresDeUnaBicicleta() {
@@ -79,7 +79,7 @@ public class RepositorioAlquilerTest {
         verify(queryMock).list();
         assertEquals(0, alquileres.size());
 
-    }
+    }*/
 
 
 

@@ -10,6 +10,7 @@ import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
 import com.tallerwebi.dominio.servicios.ServicioVehicleStatus;
 import com.tallerwebi.dominio.servicios.ServicioVehicleStatusIMP;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
+import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
 import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;

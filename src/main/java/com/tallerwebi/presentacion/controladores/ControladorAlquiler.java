@@ -44,18 +44,16 @@ public class ControladorAlquiler {
         return new ModelAndView("redirect:/mapa");
     }
 
-    @RequestMapping(path = "/mis-alquileres/{idBicicleta}", method = RequestMethod.GET)
-    public ModelAndView verAlquiler(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
+    @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
+    public ModelAndView verAlquiler( @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
         ModelMap modelo = new ModelMap();
         try {
-            Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
-            datosAlquiler.setBicicleta(bicicleta);
             datosAlquiler.setUsuario(usuario);
-            List<Alquiler> alquileres = servicioAlquiler.buscarAlquiler(datosAlquiler);
+            List<Alquiler> alquileres = servicioAlquiler.buscarAlquilerPorIdUsuario(datosAlquiler);
 
             modelo.put("usuario", usuario);
-            modelo.put("bicicleta", bicicleta);
             modelo.put("alquileres", alquileres);
+
         } catch (BicicletaNoEncontrada e) {
             modelo.put("error", "Error al mostrar el Alquiler");
             return new ModelAndView("mis-alquileres", modelo);

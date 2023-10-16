@@ -17,7 +17,9 @@
                     <p class="font-medium text-gray-900 text-center text-lg">No tenés alquileres registrados</p>
                 </div>
 
-                <p class="font-medium text-gray-900 text-center text-lg">HAY ALQUILERES</p>
+               <div th:each="alquiler: ${alquileres}" class="bg-white rounded-lg ">
+                   <p th:text="${alquiler.id}"></p>
+               </div>
 
             </div>
         </div>

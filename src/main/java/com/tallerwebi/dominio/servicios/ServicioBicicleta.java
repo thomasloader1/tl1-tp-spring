@@ -15,6 +15,7 @@ public interface ServicioBicicleta {
     void darDeBajaUnaBicicleta(Long id);
 
     Bicicleta obtenerBicicletaPorId(Long id) throws BicicletaNoEncontrada;
+    Bicicleta obtenerBicicletaPorIdUsuario(Long id) throws BicicletaNoEncontrada;
 
     List<Bicicleta> obtenerTodasLasBicicleta();
 

@@ -96,11 +96,11 @@ public class ControladorAlquilerTest {
         List<Alquiler> alquileres = new ArrayList<>();
 
         // Configura el comportamiento simulado para obtener una bicicleta y alquileres exitosamente
-        Mockito.when(servicioBicicletaMock.obtenerBicicletaPorId(Mockito.eq(bicicleta.getId()))).thenReturn(bicicleta);
+        Mockito.when(servicioBicicletaMock.obtenerBicicletaPorIdUsuario(Mockito.eq(usuario.getId()))).thenReturn(bicicleta);
         Mockito.when(servicioAlquilerMock.buscarAlquiler(Mockito.eq(datosAlquiler))).thenReturn(alquileres);
 
         // Llama al método del controlador
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(bicicleta.getId(), usuario, datosAlquiler);
+        ModelAndView modelAndView = controladorAlquiler.verAlquiler(usuario, datosAlquiler);
 
         Usuario userInModel = (Usuario) modelAndView.getModel().get("usuario");
 
@@ -122,7 +122,7 @@ public class ControladorAlquilerTest {
         when(servicioBicicletaMock.obtenerBicicletaPorId(eq(idBicicleta))).thenThrow(BicicletaNoEncontrada.class);
 
         // Llama al método del controlador
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(idBicicleta, usuario, datosAlquiler);
+        ModelAndView modelAndView = controladorAlquiler.verAlquiler(usuario, datosAlquiler);
 
         // Verifica las aserciones
         Assertions.assertEquals("mis-alquileres", modelAndView.getViewName());

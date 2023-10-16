@@ -17,4 +17,5 @@ public interface ServicioAlquiler {
 
     List<Alquiler> buscarAlquiler(DatosAlquiler datosAlquiler);
 
+    List<Alquiler> buscarAlquilerPorIdUsuario(DatosAlquiler datosAlquiler);
 }
