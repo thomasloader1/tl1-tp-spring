@@ -3,6 +3,7 @@ package com.tallerwebi.presentacion.controladores;
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
@@ -37,6 +38,9 @@ public class ControladorAlquiler {
             datosAlquiler.setBicicleta(bicicleta);
             datosAlquiler.setUsuario(usuario);
             servicioAlquiler.crearAlquiler(datosAlquiler);
+        } catch (AlquilerValidacion e) {
+            modelo.put("error", "Error al crear el Alquiler");
+            return new ModelAndView("crear-alquiler", modelo);
         } catch (BicicletaNoEncontrada e) {
             modelo.put("error", "Error al crear el Alquiler");
             return new ModelAndView("crear-alquiler", modelo);
@@ -51,7 +55,7 @@ public class ControladorAlquiler {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
             datosAlquiler.setBicicleta(bicicleta);
             datosAlquiler.setUsuario(usuario);
-            List<Alquiler> alquileres = servicioAlquiler.buscarAlquiler(datosAlquiler);
+            List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDeUnaBicicleta(datosAlquiler);
 
             modelo.put("usuario", usuario);
             modelo.put("bicicleta", bicicleta);
@@ -63,12 +67,13 @@ public class ControladorAlquiler {
         return new ModelAndView("mis-alquileres", modelo);
 
     }
-    @RequestMapping(path = "/alquiler/{idAlquiler}/finalizar-alquiler", method = RequestMethod.GET)
-    public ModelAndView finalizarAlquiler(@PathVariable("idAlquiler") Long id)  {
 
-            Bicicleta bicicleta = servicioAlquiler.obtenerBicicletaPorIdDeAlquiler(id);
-            servicioAlquiler.finalizarAlquiler(id);
-            String viewName = "redirect:/bicicleta/" +bicicleta.getId() + "/crear-resena" ;
-               return new ModelAndView(viewName);
+    @RequestMapping(path = "/alquiler/{idAlquiler}/finalizar-alquiler", method = RequestMethod.GET)
+    public ModelAndView finalizarAlquiler(@PathVariable("idAlquiler") Long id) {
+
+        Bicicleta bicicleta = servicioAlquiler.obtenerBicicletaPorIdDeAlquiler(id);
+        servicioAlquiler.finalizarAlquiler(id);
+        String viewName = "redirect:/bicicleta/" + bicicleta.getId() + "/crear-resena";
+        return new ModelAndView(viewName);
     }
 }
