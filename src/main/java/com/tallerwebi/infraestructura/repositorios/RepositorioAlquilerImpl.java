@@ -2,10 +2,9 @@ package com.tallerwebi.infraestructura.repositorios;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.EstadoAlquiler;
+import com.tallerwebi.dominio.entidad.Usuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,33 +29,29 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
     }
 
     @Override
+    public List<Alquiler> obtenerAlquilerPorUsuario(Usuario usuario) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.usuario = :usuario");
+        query.setParameter("usuario", usuario);
+        return (List<Alquiler>) query.list();
+    }
+
+    @Override
     public void crearAlquiler(Alquiler alquiler) {
         sessionFactory.getCurrentSession().save(alquiler);
     }
 
     @Override
-    public Alquiler finalizarAlquiler(Alquiler alquiler) {
-        alquiler.setEstadoAlquiler(EstadoAlquiler.FINALIZADO);
+    public void modificarAlquiler(Alquiler alquiler) {
         sessionFactory.getCurrentSession().update(alquiler);
-        return alquiler;
-    }
-
-    @Override
-    public Alquiler modificarAlquiler(Alquiler alquiler) {
-        return null;
     }
 
 
     @Override
-    public List<Alquiler> obtenerAlquilerDeBicicletas(Bicicleta bicicleta) {
+    public List<Alquiler> obtenerAlquileresDeUnaBicicleta(Bicicleta bicicleta) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.bicicleta = :bicicleta");
         query.setParameter("bicicleta", bicicleta);
         return (List<Alquiler>) query.list();
-    }
-
-    @Override
-    public List<Alquiler> obtenerBicicletasAlquiladas() {
-        return null;
     }
 }

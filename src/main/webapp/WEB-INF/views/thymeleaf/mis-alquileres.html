@@ -17,9 +17,12 @@
                     <p class="font-medium text-gray-900 text-center text-lg">No tenés alquileres registrados</p>
                 </div>
 
-               <div th:each="alquiler: ${alquileres}" class="bg-white rounded-lg ">
+               <form th:action="@{/alquiler/{idAlquiler}/finalizar-alquiler(idAlquiler=${alquiler.id})}"  th:each="alquiler: ${alquileres}" class="bg-white rounded-lg px-2 py-3">
                    <p th:text="${alquiler.id}"></p>
-               </div>
+                   <p th:text="${alquiler.cantidadHoras}"></p>
+                   <p th:text="${alquiler.bicicleta.descripcion}"></p>
+                   <button type="submit" class="px-3 py-2 bg-primary">Finalizar Alquiler</button>
+               </form>
 
             </div>
         </div>

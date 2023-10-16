@@ -1,15 +1,18 @@
 package com.tallerwebi.dominio.servicios;
 
-import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Alquiler;
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoAlquiler;
+import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Service ("ServicioAlquiler")
+@Service("ServicioAlquiler")
 @Transactional
 public class ServicioAlquilerImpl implements ServicioAlquiler {
     private final RepositorioAlquiler repositorioAlquiler;
@@ -20,20 +23,19 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public void crearAlquiler(DatosAlquiler datosAlquiler) {
-
+    public void crearAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion {
+        if (datosAlquiler.getCantidadHoras() < 1) {
+            throw new AlquilerValidacion();
+        }
+        Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
+        repositorioAlquiler.crearAlquiler(alquiler);
     }
 
     @Override
-    public List<Alquiler> obtenerBicicletasAlquiladas(Bicicleta bicicleta) {
-        return null;
-                //repositorioBicicletaAlquiler.obtenerBicicletasAlquiladas(bicicleta);
-    }
-
-    @Override
-    public Alquiler finalizarAlquiler(Long id) {
+    public void finalizarAlquiler(Long id) {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
-        return repositorioAlquiler.finalizarAlquiler(alquiler);
+        alquiler.setEstadoAlquiler(EstadoAlquiler.FINALIZADO);
+        repositorioAlquiler.modificarAlquiler(alquiler);
     }
 
     @Override
@@ -43,14 +45,14 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public List<Alquiler> buscarAlquiler(DatosAlquiler datosAlquiler) {
-        return repositorioAlquiler.obtenerAlquilerDeBicicletas(datosAlquiler.getBicicleta());
+    public List<Alquiler> obtenerAlquileresDeUnaBicicleta(DatosAlquiler datosAlquiler) {
+        return repositorioAlquiler.obtenerAlquilerPorUsuario(datosAlquiler.getUsuario());
     }
 
     @Override
     public List<Alquiler> buscarAlquilerPorIdUsuario(DatosAlquiler datosAlquiler) {
 
-        repositorioAlquiler.obtenerAlquileres();
-        return null;
+        return repositorioAlquiler.obtenerAlquilerPorUsuario(datosAlquiler.getUsuario());
+
     }
 }
