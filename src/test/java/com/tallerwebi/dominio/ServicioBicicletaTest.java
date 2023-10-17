@@ -150,6 +150,22 @@ public class ServicioBicicletaTest {
         assertEquals(1, bicicletas.size());
         assertEquals(bicicletaMock, bicicletas.get(0));
     }
+    @Test
+    public void queSePuedaObtenerListaDeLasBicicletasDisponibles(){
+        //preparacion (agrego 2 bicicleta pero solo 1 con estado disponible
+        Bicicleta bicicletaUnoMock = mock(Bicicleta.class);
+        Bicicleta bicicletaDosMock = mock(Bicicleta.class);
+        bicicletaUnoMock.setEstadoBicicleta(EstadoBicicleta.DISPONIBLE);
+        bicicletaDosMock.setEstadoBicicleta(EstadoBicicleta.EN_USO);
+        repositorioBicicletaMock.registrarBicicleta(bicicletaDosMock);
+        repositorioBicicletaMock.registrarBicicleta(bicicletaUnoMock);
+        // ejecucion
+        List <Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDisponibles();
+
+        //validacion
+        verify()
+
+    }
 
     @Test
     public void queSePuedaObtenerUnaListaDeTodasLasBicicletasDelUsuario() {
