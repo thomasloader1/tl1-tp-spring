@@ -2,7 +2,7 @@ package com.tallerwebi.infraestructura.repositorios;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.EstadoAlquiler;
+import com.tallerwebi.dominio.entidad.Usuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -15,7 +15,7 @@ import java.util.List;
 public class RepositorioAlquilerImpl implements RepositorioAlquiler {
 
 
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Autowired
     public RepositorioAlquilerImpl(SessionFactory sessionFactory) {
@@ -29,21 +29,26 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
     }
 
     @Override
+    public List<Alquiler> obtenerAlquilerPorUsuario(Usuario usuario) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.usuario = :usuario");
+        query.setParameter("usuario", usuario);
+        return (List<Alquiler>) query.list();
+    }
+
+    @Override
     public void crearAlquiler(Alquiler alquiler) {
         sessionFactory.getCurrentSession().save(alquiler);
     }
 
     @Override
-    public void finalizarAlquiler(Alquiler alquiler) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("UPDATE Alquiler SET estadoAlquiler = :estado WHERE id = :id");
-        query.setParameter("estado", EstadoAlquiler.FINALIZADO);
-        query.setParameter("id", alquiler.getId());
-        query.executeUpdate();
+    public void modificarAlquiler(Alquiler alquiler) {
+        sessionFactory.getCurrentSession().update(alquiler);
     }
 
+
     @Override
-    public List<Alquiler> obtenerAlquilerDeBicicletas(Bicicleta bicicleta) {
+    public List<Alquiler> obtenerAlquileresDeUnaBicicleta(Bicicleta bicicleta) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.bicicleta = :bicicleta");
         query.setParameter("bicicleta", bicicleta);

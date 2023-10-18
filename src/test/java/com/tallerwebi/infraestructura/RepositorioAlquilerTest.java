@@ -1,9 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.config.HibernateTestConfig;
-import com.tallerwebi.config.SpringWebConfig;
-import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Alquiler;
+import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquilerImpl;
 import org.hibernate.Session;
@@ -11,28 +9,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = {SpringWebConfig.class, HibernateTestConfig.class})
-
 public class RepositorioAlquilerTest {
-    @Autowired
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioAlquilerImpl repositorioAlquiler;
@@ -41,14 +26,14 @@ public class RepositorioAlquilerTest {
     public void init() {
         sessionFactory = mock(SessionFactory.class);
         sessionMock = mock(Session.class);
-       repositorioAlquiler = new RepositorioAlquilerImpl(sessionFactory);
+        repositorioAlquiler = new RepositorioAlquilerImpl(sessionFactory);
         when(sessionFactory.getCurrentSession()).thenReturn(sessionMock);
     }
 
     @Test
     @Rollback
     @Transactional
-    public void queSePuedaCrearElAlquilerDeUnaBicicleta(){
+    public void queSePuedaCrearElAlquilerDeUnaBicicleta() {
         // preparación
         Alquiler alquilerMock = mock(Alquiler.class);
         when(alquilerMock.getId()).thenReturn(1L);
@@ -64,6 +49,42 @@ public class RepositorioAlquilerTest {
     @Test
     @Rollback
     @Transactional
+    public void queSePuedaObtenerUnAlquilerPorId() {
+        // preparación
+        Alquiler alquilerMock = mock(Alquiler.class);
+        when(alquilerMock.getId()).thenReturn(1L);
+        when(sessionMock.get(Alquiler.class, alquilerMock.getId())).thenReturn(alquilerMock);
+
+        // ejecución
+        Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(alquilerMock.getId());
+
+        // validación
+        verify(sessionMock, times(1)).get(Alquiler.class, alquilerMock.getId());
+        assertEquals(alquilerMock, alquiler);
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    public void queSePuedaModificarUnAlquiler() {
+        // preparación
+        Alquiler alquilerMock = mock(Alquiler.class);
+        when(alquilerMock.getId()).thenReturn(1L);
+        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.EN_CURSO);
+        when(sessionMock.get(Alquiler.class, alquilerMock.getId())).thenReturn(alquilerMock);
+
+        // ejecución
+        repositorioAlquiler.modificarAlquiler(alquilerMock);
+
+        // validación
+        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.FINALIZADO);
+        verify(sessionMock, times(1)).update(alquilerMock);
+        assertEquals(EstadoAlquiler.FINALIZADO, alquilerMock.getEstadoAlquiler());
+    }
+
+    @Test
+    @Rollback
+    @Transactional
     public void queSePuedaObtenerUnaListaDeLosAlquileresDeUnaBicicleta() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -72,7 +93,7 @@ public class RepositorioAlquilerTest {
         when(queryMock.list()).thenReturn(List.of());
 
         // ejecución
-        List<Alquiler> alquileres = repositorioAlquiler.obtenerAlquilerDeBicicletas(bicicletaMock);
+        List<Alquiler> alquileres = repositorioAlquiler.obtenerAlquileresDeUnaBicicleta(bicicletaMock);
 
         // validación
         verify(sessionMock, times(1)).createQuery(anyString());
@@ -80,10 +101,6 @@ public class RepositorioAlquilerTest {
         verify(queryMock).setParameter("bicicleta", bicicletaMock);
         verify(queryMock).list();
         assertEquals(0, alquileres.size());
-
     }
-
-
-
 
 }

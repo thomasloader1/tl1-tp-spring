@@ -40,8 +40,8 @@ public class ControladorLoginTest {
         bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
 
         // Agregar al menos dos bicicletas a la lista
-        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock));
-        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
 
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
         requestMock = mock(HttpServletRequest.class);
@@ -199,5 +199,23 @@ public class ControladorLoginTest {
         List<Bicicleta> bicicletasEnVista = (List<Bicicleta>) modelAndView.getModel().get("bicicletas");
         // Verifica que las listas sean iguales en contenido
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
+    }
+
+
+    @Test
+    public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {
+        // preparación
+        Usuario usuarioEncontradoMock = mock(Usuario.class);
+        when(usuarioEncontradoMock.getRol()).thenReturn("Propietario");
+
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuarioEncontradoMock);
+
+        // ejecución
+        ModelAndView modelAndView = controladorLogin.validarLogin(datosLoginMock, requestMock);
+
+        // validación
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
+        verify(sessionMock, times(1)).setAttribute("usuario", usuarioEncontradoMock);
     }
 }

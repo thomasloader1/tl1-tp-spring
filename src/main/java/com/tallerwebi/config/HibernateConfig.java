@@ -20,7 +20,7 @@ public class HibernateConfig {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/tallerweb?useSSL=false&requireSSL=false");
         dataSource.setUsername("root");
-        dataSource.setPassword("");
+        dataSource.setPassword("example");
 
 
         return dataSource;

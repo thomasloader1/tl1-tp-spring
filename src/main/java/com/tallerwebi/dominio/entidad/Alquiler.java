@@ -24,7 +24,7 @@ public class Alquiler {
             this.cantidadHoras = cantidadHoras;
             this.bicicleta = bicicleta;
             this.usuario = usuario;
-            estadoAlquiler = EstadoAlquiler.EN_CURSO;
+            this.estadoAlquiler = EstadoAlquiler.EN_CURSO;
         }
 
         public Long getId() {
@@ -60,7 +60,7 @@ public class Alquiler {
     }
 
     public EstadoAlquiler getEstadoAlquiler() {
-        return estadoAlquiler;
+        return this.estadoAlquiler;
     }
 
     public void setEstadoAlquiler(EstadoAlquiler estadoAlquiler) {
