@@ -21,6 +21,12 @@
                         Mis bicicletas
                     </a>
                 </li>
+                <li th:if="${rol == 'Cliente'}">
+                    <a th:href="@{'/mis-alquileres'}"
+                       th:class="${#httpServletRequest.requestURI == '/mis-bicicletas'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'">
+                        Mis bicicletas
+                    </a>
+                </li>
             </ul>
         </div>
         <form action="#" th:action="@{/cerrar-sesion}" method="POST">

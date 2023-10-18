@@ -1,7 +1,7 @@
-<form class="w-full" th:action="@{/bicicleta/bicicleta.getId()/crear-alquiler}" th:object=""  method="POST">
+<form class="w-full" th:action="@{/bicicleta/bicicleta.getId()/crear-alquiler}" th:object="${datosAlquiler}"  method="POST">
     <div class="w-80 mx-auto mb-6">
-        <label for="horas" class="block mb-2 text-sm font-medium text-gray-900">Horas</label>
-        <input  id="horas" type="number" name="horas"
+        <label for="cantidadHoras" class="block mb-2 text-sm font-medium text-gray-900">Horas</label>
+        <input th:field="*{cantidadHoras}" id="cantidadHoras" type="number" name="horas"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 autocomplete="off" required/>
     </div>
