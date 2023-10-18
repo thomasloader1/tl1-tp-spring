@@ -102,4 +102,9 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
         }
     }
+
+    public List<Bicicleta> obtenerBicicletasDisponibles() {
+          List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
+          return bicicleta;
+    }
 }
