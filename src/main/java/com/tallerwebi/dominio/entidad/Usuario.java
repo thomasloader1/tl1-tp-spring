@@ -11,16 +11,22 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+    private String nombre;
     private String password;
     private String rol;
+    private Double latitud;
+    private Double longitud;
 
     public Usuario() {
     }
 
-    public Usuario(String email, String password, String rol) {
+    public Usuario(String email, String nombre, String password, String rol, Double latitud, Double longitud) {
         this.email = email;
+        this.nombre = nombre;
         this.password = password;
         this.rol = rol;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public Long getId() {
@@ -53,5 +59,29 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public Double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(Double latitud) {
+        this.latitud = latitud;
+    }
+
+    public Double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }

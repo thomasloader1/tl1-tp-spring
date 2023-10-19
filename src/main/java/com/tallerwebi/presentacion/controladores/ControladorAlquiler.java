@@ -58,12 +58,10 @@ public class ControladorAlquiler {
     public ModelAndView verAlquiler(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
         ModelMap modelo = new ModelMap();
         datosAlquiler.setUsuario(usuario);
-        List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDeUnaBicicleta(datosAlquiler);
-
+        List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDelUsuario(datosAlquiler);
         modelo.put("usuario", usuario);
         modelo.put("alquileres", alquileres);
         return new ModelAndView("mis-alquileres", modelo);
-
     }
 
     @RequestMapping(path = "/alquiler/{idAlquiler}/finalizar-alquiler", method = RequestMethod.GET)
