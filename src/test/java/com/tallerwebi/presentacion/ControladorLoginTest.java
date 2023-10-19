@@ -32,7 +32,7 @@ public class ControladorLoginTest {
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
-
+    private ServicioBicicleta servicioBicicletamock;
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
@@ -47,8 +47,8 @@ public class ControladorLoginTest {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
+        servicioBicicletamock = mock(ServicioBicicleta.class);
+        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletamock);
     }
 
     @Test
@@ -183,23 +183,35 @@ public class ControladorLoginTest {
 
 
     @Test
-    public void alIngresarComoClienteDebeTenerTodasLasBicicletas() {
+    public void queSeMuestrenEnVistaClienteSoloLasBicicletasDisponibles() {
         // preparación
         sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
         when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
-
+        when(servicioBicicletamock.obtenerBicicletasDisponibles()).thenReturn(bicicletasMock);
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
-
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-        // Verifica que las listas sean iguales en contenido
         List<Bicicleta> bicicletasEnVista = (List<Bicicleta>) modelAndView.getModel().get("bicicletas");
         // Verifica que las listas sean iguales en contenido
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
+ /*   @Test
+    public void queSeMuestrenEnVistaClienteSoloLasBicicletasDisponibles(){
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(usuarioMock.getRol()).thenReturn("Cliente");
+
+        //ejecucion
+            ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
+            // validacion
+            assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+            verify(servicioBicicletamock, times(1)).obtenerBicicletasDisponibles();
+
+    }*/
+
 
 
     @Test

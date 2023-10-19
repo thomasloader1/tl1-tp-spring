@@ -90,7 +90,7 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        List<Bicicleta> bicicletas = (List<Bicicleta>) session.getAttribute("bicicletas");
+        List<Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDisponibles();
 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
