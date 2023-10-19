@@ -48,7 +48,7 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
 
 
     @Override
-    public List<Alquiler> obtenerAlquileresDeUnaBicicleta(Bicicleta bicicleta) {
+    public List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(Bicicleta bicicleta) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.bicicleta = :bicicleta");
         query.setParameter("bicicleta", bicicleta);
