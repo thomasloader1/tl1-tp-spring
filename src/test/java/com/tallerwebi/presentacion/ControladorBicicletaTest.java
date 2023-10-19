@@ -154,18 +154,7 @@ public class ControladorBicicletaTest {
         // Accede al ID de la bicicleta en el modelo y verifica que sea igual a 1
         assertThat(bicicletaEnModelo.getId(), equalTo(1L));
     }
-   /* @Test
-    public void queEnElHomeDelClienteSoloSeVeanLasBicicletasDisponibles(){
-        when(requestMock.getSession()).thenReturn(sessionMock);
-        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
-        when(usuarioMock.getRol()).thenReturn("Cliente");
 
-        Bicicleta bicicletaDisponible = new Bicicleta();
-        bicicletaDisponible.setEstadoBicicleta(EstadoBicicleta.DISPONIBLE);
-        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponibles();
-      //  ModelAndView modelAndView = controladorBicicleta.
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
-    }*/
     @Test
     public void puedoVerElDetalleDeUnaBicicletaConSusResenas() throws BicicletaNoEncontrada {
         // Preparación
