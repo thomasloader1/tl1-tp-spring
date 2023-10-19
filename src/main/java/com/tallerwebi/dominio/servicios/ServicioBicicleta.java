@@ -19,6 +19,9 @@ public interface ServicioBicicleta {
 
     List<Bicicleta> obtenerTodasLasBicicleta();
 
+    List<Bicicleta> obtenerTodasLasBicicletasDisponibles();
+
+
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
 
     Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta);

@@ -52,6 +52,7 @@ public class ServicioBicicletaTest {
 
         //Ejecucion
         servicioBicicleta.actualizarEstadoBicicleta(bici);
+
         assertEquals(bici.getEstadoBicicleta(),EstadoBicicleta.REQUIERE_REPARACION);
     }
 

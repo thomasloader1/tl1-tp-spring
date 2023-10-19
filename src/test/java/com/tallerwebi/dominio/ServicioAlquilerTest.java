@@ -2,11 +2,12 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.EstadoAlquiler;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.dominio.servicios.ServicioAlquilerImpl;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
+import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,13 @@ import static org.mockito.Mockito.*;
 public class ServicioAlquilerTest {
     private ServicioAlquilerImpl servicioAlquiler;
     private RepositorioAlquiler repositorioAlquilerMock;
+    private RepositorioBicicleta repositorioBicicletaMock;
 
     @BeforeEach
     public void init() {
         repositorioAlquilerMock = mock(RepositorioAlquiler.class);
-        servicioAlquiler = new ServicioAlquilerImpl(repositorioAlquilerMock);
+        repositorioBicicletaMock = mock(RepositorioBicicleta.class);
+        servicioAlquiler = new ServicioAlquilerImpl(repositorioAlquilerMock,repositorioBicicletaMock);
     }
 
     @Test
@@ -48,15 +51,15 @@ public class ServicioAlquilerTest {
         // preparación
         Alquiler alquilerMock = mock(Alquiler.class);
         when(repositorioAlquilerMock.obtenerAlquilerporId(anyLong())).thenReturn(alquilerMock);
-        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.EN_CURSO);
+        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoBicicleta.EN_USO);
 
         // ejecución
         servicioAlquiler.finalizarAlquiler(alquilerMock.getId());
 
         // validación
-        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.FINALIZADO);
+        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoBicicleta.DISPONIBLE);
         verify(repositorioAlquilerMock, times(1)).eliminarAlquiler(alquilerMock);
-        assertEquals(EstadoAlquiler.FINALIZADO, alquilerMock.getEstadoAlquiler());
+        assertEquals(EstadoBicicleta.DISPONIBLE, alquilerMock.getEstadoAlquiler());
     }
 
     @Test

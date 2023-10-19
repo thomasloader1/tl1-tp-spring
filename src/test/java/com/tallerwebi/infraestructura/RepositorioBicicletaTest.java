@@ -107,7 +107,7 @@ public class RepositorioBicicletaTest {
     @Test
     @Rollback
     @Transactional
-    public void queSePuedaObtenerUnaListaDeTodasLasBicicletas() {
+    public void queSePuedaObtenerUnaListaDeTodasLasBicicletasDisponibles() {
         // preparación
         Query queryMock = mock(Query.class);
         when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
@@ -118,9 +118,8 @@ public class RepositorioBicicletaTest {
 
         // validación
         verify(sessionMock, times(1)).createQuery(anyString());
-        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b");
+        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = 'DISPONIBLE'");
         verify(queryMock).list();
         assertEquals(0, bicicletas.size());
     }
-
 }

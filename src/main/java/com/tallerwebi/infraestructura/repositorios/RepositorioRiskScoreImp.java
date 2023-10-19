@@ -1,7 +1,8 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.repositorios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Condition;
+import com.tallerwebi.infraestructura.repositorios.RepositorioRiskScore;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

@@ -11,7 +11,7 @@ public class Alquiler {
       //  private Double precioAlquiler;
         private Integer cantidadHoras;
         @Enumerated(EnumType.STRING)
-        private EstadoAlquiler estadoAlquiler;
+        private EstadoBicicleta estadoAlquiler;
         @ManyToOne
         private Bicicleta bicicleta;
         @ManyToOne
@@ -24,7 +24,7 @@ public class Alquiler {
             this.cantidadHoras = cantidadHoras;
             this.bicicleta = bicicleta;
             this.usuario = usuario;
-            this.estadoAlquiler = EstadoAlquiler.EN_CURSO;
+            this.estadoAlquiler = EstadoBicicleta.EN_USO;
         }
 
         public Long getId() {
@@ -59,11 +59,11 @@ public class Alquiler {
         this.cantidadHoras = cantidadHoras;
     }
 
-    public EstadoAlquiler getEstadoAlquiler() {
-        return this.estadoAlquiler;
+    public EstadoBicicleta getEstadoAlquiler() {
+        return estadoAlquiler;
     }
 
-    public void setEstadoAlquiler(EstadoAlquiler estadoAlquiler) {
+    public void setEstadoAlquiler(EstadoBicicleta estadoAlquiler) {
         this.estadoAlquiler = estadoAlquiler;
     }
 }

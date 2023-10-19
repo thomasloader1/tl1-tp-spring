@@ -183,15 +183,18 @@ public class ControladorLoginTest {
 
 
     @Test
-    public void alIngresarComoClienteDebeTenerTodasLasBicicletas() {
+    public void alIngresarComoClienteDebeTenerTodasLasBicicletasDisponibles() {
         // preparación
         sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
         when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
 
+
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
+
+
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));

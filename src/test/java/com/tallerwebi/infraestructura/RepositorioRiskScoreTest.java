@@ -4,9 +4,9 @@ import com.tallerwebi.config.HibernateTestConfig;
 import com.tallerwebi.config.SpringWebConfig;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Condition;
+import com.tallerwebi.infraestructura.repositorios.RepositorioRiskScore;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import static org.junit.jupiter.api.Assertions.*;
 
 import javax.transaction.Transactional;
-
-import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
