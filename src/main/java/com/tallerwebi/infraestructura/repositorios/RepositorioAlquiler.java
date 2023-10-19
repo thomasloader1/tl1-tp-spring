@@ -10,11 +10,12 @@ import java.util.List;
 
 public interface RepositorioAlquiler {
     Alquiler obtenerAlquilerporId(Long id);
+
     List<Alquiler> obtenerAlquilerPorUsuario(Usuario usuario);
 
     void crearAlquiler(Alquiler alquiler);
 
     void modificarAlquiler(Alquiler alquiler);
 
-    List<Alquiler> obtenerAlquileresDeUnaBicicleta(Bicicleta bicicleta);
+    List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(Bicicleta bicicleta);
 }

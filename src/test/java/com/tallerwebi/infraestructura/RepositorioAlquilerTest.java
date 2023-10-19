@@ -93,7 +93,7 @@ public class RepositorioAlquilerTest {
         when(queryMock.list()).thenReturn(List.of());
 
         // ejecución
-        List<Alquiler> alquileres = repositorioAlquiler.obtenerAlquileresDeUnaBicicleta(bicicletaMock);
+        List<Alquiler> alquileres = repositorioAlquiler.obtenerTodosLosAlquileresDeUnaBicicleta(bicicletaMock);
 
         // validación
         verify(sessionMock, times(1)).createQuery(anyString());

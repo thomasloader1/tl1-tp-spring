@@ -75,7 +75,7 @@ public class ServicioAlquilerTest {
     }
 
     @Test
-    public void queSePuedaObtenerUnaListaDeLosAlquileresDeUnaBicicleta() throws AlquilerValidacion {
+    public void queSePuedaObtenerUnaListaDeTodosLosAlquileresDeUnaBicicleta() throws AlquilerValidacion {
         // preparación
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -86,11 +86,11 @@ public class ServicioAlquilerTest {
 
         // ejecución
         servicioAlquiler.crearAlquiler(datosAlquilerMock);
-        when(repositorioAlquilerMock.obtenerAlquileresDeUnaBicicleta(bicicletaMock)).thenReturn(List.of(new Alquiler(1, bicicletaMock, usuarioMock)));
-        List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDeUnaBicicleta(datosAlquilerMock);
+        when(repositorioAlquilerMock.obtenerTodosLosAlquileresDeUnaBicicleta(bicicletaMock)).thenReturn(List.of(new Alquiler(1, bicicletaMock, usuarioMock)));
+        List<Alquiler> alquileres = servicioAlquiler.obtenerTodosLosAlquileresDeUnaBicicleta(datosAlquilerMock);
 
         // validación
-        verify(repositorioAlquilerMock, times(1)).obtenerAlquileresDeUnaBicicleta(bicicletaMock);
+        verify(repositorioAlquilerMock, times(1)).obtenerTodosLosAlquileresDeUnaBicicleta(bicicletaMock);
         assertEquals(1, alquileres.size());
         assertEquals(datosAlquilerMock.getBicicleta(), alquileres.get(0).getBicicleta());
     }
