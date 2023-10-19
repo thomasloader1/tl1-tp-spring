@@ -19,4 +19,5 @@ public interface RepositorioBicicleta {
 
     List<Bicicleta> obtenerBicicletas();
 
+    List<Bicicleta> obtenerBicicletasDisponibles();
 }

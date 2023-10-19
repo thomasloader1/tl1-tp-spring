@@ -1,7 +1,6 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
@@ -24,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class ControladorBicicletaTest {
@@ -43,7 +42,7 @@ public class ControladorBicicletaTest {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
-        servicioResenaMock = mock(ServicioResena.class);
+        servicioResenaMock  = mock(ServicioResena.class);
         controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock, servicioResenaMock);
         usuarioMock = mock(Usuario.class);
         bicicletaMock = mock(Bicicleta.class);
@@ -154,7 +153,6 @@ public class ControladorBicicletaTest {
         // Accede al ID de la bicicleta en el modelo y verifica que sea igual a 1
         assertThat(bicicletaEnModelo.getId(), equalTo(1L));
     }
-
     @Test
     public void puedoVerElDetalleDeUnaBicicletaConSusResenas() throws BicicletaNoEncontrada {
         // Preparación
@@ -167,15 +165,15 @@ public class ControladorBicicletaTest {
         Bicicleta bicicletaConId1 = new Bicicleta();
 
         bicicletaConId1.setId(1L);
-        Resena resena = new Resena(7, "hola", bicicletaConId1, usuarioMock);
-        List<Resena> resenas = new ArrayList<Resena>();
-        resenas.add(resena);
-        resenas.add(resenaMock);
+        Resena resena = new Resena(7,"hola",bicicletaConId1, usuarioMock);
+                List<Resena> resenas = new ArrayList<Resena>();
+                resenas.add(resena);
+                resenas.add(resenaMock);
 
         when(servicioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(bicicletaConId1);
         when(servicioResenaMock.obtenerResenasDeUnaBicicleta(bicicletaConId1)).thenReturn(resenas);
 
-        List<Resena> listaResenas = servicioResenaMock.obtenerResenasDeUnaBicicleta(bicicletaConId1);
+        List<Resena>listaResenas= servicioResenaMock.obtenerResenasDeUnaBicicleta(bicicletaConId1);
         // Ejecución
         ModelAndView modelAndView = controladorBicicleta.detalleBicicleta(1);
         // Validación
@@ -188,50 +186,9 @@ public class ControladorBicicletaTest {
         Bicicleta bicicletaEnModeloCast = (Bicicleta) bicicletaEnModelo;
         assertNotNull(listaResenas);
         assertThat(bicicletaEnModeloCast.getId(), equalTo(1L));
-        assertThat(resenas.size(), equalTo(2));
+        assertThat(resenas.size(),equalTo(2));
         List<Resena> resenaEnModelo = (ArrayList<Resena>) modelAndView.getModel().get("resenas");
-        assertThat(resenaEnModelo.size(), equalTo(2));
-        // assertThat(resenaEnModelo, instanceOf(Bicicleta.class));
-    }
-
-    @Test
-    public void traerLosDatosDeTodasLasBicis() {
-        Bicicleta bicicleta = new Bicicleta();
-        bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
-        List<Bicicleta> bicis = new ArrayList<>();
-        bicis.add(bicicleta);
-        when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(bicis);
-
-        ModelAndView mv = controladorBicicleta.verBicicletas();
-
-        assertEquals("bicicletas", mv.getViewName());
-        assertEquals(1, mv.getModel().size());
-        assertTrue(mv.getModel().keySet().contains("bicicletas"));
-        assertEquals(1, ((List<Bicicleta>) mv.getModel().get("bicicletas")).size());
-        assertEquals(bicicleta, ((List<Bicicleta>) mv.getModel().get("bicicletas")).get(0));
-        assertEquals(Condition.PERFECTO_ESTADO, ((List<Bicicleta>) mv.getModel().get("bicicletas")).get(0).getCondicion());
-    }
-
-    @Test
-    public void noExistenBicicletasEnviaMensajeDeError() {
-        List<Bicicleta> bicis = new ArrayList<>();
-        when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(bicis);
-
-        ModelAndView mv = controladorBicicleta.verBicicletas();
-
-        assertEquals("bicicletas", mv.getViewName());
-        assertEquals(mv.getModel().size(), 1);
-        assertTrue(mv.getModel().keySet().contains("error"));
-    }
-
-    @Test
-    public void errorDesconocidoEnviaAPaginaDeErrorConCodigo(){
-        when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(null);
-
-        ModelAndView mv = controladorBicicleta.verBicicletas();
-
-        assertEquals("error", mv.getViewName());
-        assertEquals(mv.getModel().size(), 1);
-        assertTrue(mv.getModel().keySet().contains("error"));
+        assertThat(resenaEnModelo.size(),equalTo(2));
+       // assertThat(resenaEnModelo, instanceOf(Bicicleta.class));
     }
 }

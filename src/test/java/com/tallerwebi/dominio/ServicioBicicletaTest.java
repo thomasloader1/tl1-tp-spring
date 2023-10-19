@@ -16,6 +16,7 @@ import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -149,6 +150,17 @@ public class ServicioBicicletaTest {
         verify(repositorioBicicletaMock, times(1)).obtenerBicicletas();
         assertEquals(1, bicicletas.size());
         assertEquals(bicicletaMock, bicicletas.get(0));
+    }
+    @Test
+    public void queSePuedaObtenerListaDeLasBicicletasDisponibles(){
+        //preparacion
+        Bicicleta bicicletaUnoMock = mock(Bicicleta.class);
+        // ejecucion
+        when(repositorioBicicletaMock.obtenerBicicletasDisponibles()).thenReturn(Arrays.asList(bicicletaUnoMock));
+        List <Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDisponibles();
+        //validacion
+        verify(repositorioBicicletaMock, times(1)).obtenerBicicletasDisponibles();
+        assertEquals(1, bicicletas.size());
     }
 
     @Test

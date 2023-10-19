@@ -34,7 +34,7 @@ public class ServicioLoginImpl implements ServicioLogin {
         if (datosUsuario.getRol() == null) {
             throw new UsuarioSinRol();
         }
-        Usuario usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getPassword(), datosUsuario.getRol());
+        Usuario usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getNombre(), datosUsuario.getPassword(), datosUsuario.getRol(), datosUsuario.getLatitud(), datosUsuario.getLongitud());
         servicioLoginDao.guardar(usuario);
     }
 }
