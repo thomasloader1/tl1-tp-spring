@@ -72,6 +72,7 @@ public class ControladorBicicleta {
         return new ModelAndView("redirect:/home");
     }
 
+
     @RequestMapping(path = "/baja-bicicleta/{id}", method = RequestMethod.GET)
     public ModelAndView darDeBajaUnaBicicleta(@PathVariable("id") Long id) {
         servicioBicicleta.darDeBajaUnaBicicleta(id);
@@ -116,5 +117,8 @@ public class ControladorBicicleta {
 
     private boolean verificarSiEsPropietario(Usuario usuario) {
         return usuario != null && usuario.getRol().equals("Propietario");
+    }
+    private boolean verificarSiEsCliente(Usuario usuario) {
+        return usuario != null && usuario.getRol().equals("Cliente");
     }
 }

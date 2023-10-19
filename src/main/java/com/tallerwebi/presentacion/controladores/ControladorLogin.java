@@ -48,7 +48,6 @@ public class ControladorLogin {
 
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), datosLogin.getPassword());
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicleta();
-
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("usuario", usuarioBuscado);
             request.getSession().setAttribute("bicicletas", bicicletas);
@@ -91,27 +90,15 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicleta();
+        List<Bicicleta> bicicletas = (List<Bicicleta>) session.getAttribute("bicicletas");
 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
 
         ModelAndView modelAndView = new ModelAndView("home");
-
-        try {
-            if (bicicletas.size() == 0) {
-                modelAndView.addObject("error", "No se encontraron Bicicletas");
-            } else {
-                modelAndView.addObject("bicicletas", bicicletas);
-            }
-        } catch (Exception e) {
-            ModelAndView error = new ModelAndView("error");
-            error.addObject("code", "520");
-            return error;
-        }
-
         modelAndView.addObject("rol", usuario.getRol());
+        modelAndView.addObject("bicicletas", bicicletas);
 
         return modelAndView;
     }
