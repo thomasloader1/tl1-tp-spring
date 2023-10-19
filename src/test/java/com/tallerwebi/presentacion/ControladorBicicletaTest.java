@@ -194,44 +194,5 @@ public class ControladorBicicletaTest {
         // assertThat(resenaEnModelo, instanceOf(Bicicleta.class));
     }
 
-    @Test
-    public void traerLosDatosDeTodasLasBicis() {
-        Bicicleta bicicleta = new Bicicleta();
-        bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
-        List<Bicicleta> bicis = new ArrayList<>();
-        bicis.add(bicicleta);
-        when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(bicis);
 
-        ModelAndView mv = controladorBicicleta.verBicicletas();
-
-        assertEquals("bicicletas", mv.getViewName());
-        assertEquals(1, mv.getModel().size());
-        assertTrue(mv.getModel().keySet().contains("bicicletas"));
-        assertEquals(1, ((List<Bicicleta>) mv.getModel().get("bicicletas")).size());
-        assertEquals(bicicleta, ((List<Bicicleta>) mv.getModel().get("bicicletas")).get(0));
-        assertEquals(Condition.PERFECTO_ESTADO, ((List<Bicicleta>) mv.getModel().get("bicicletas")).get(0).getCondicion());
-    }
-
-    @Test
-    public void noExistenBicicletasEnviaMensajeDeError() {
-        List<Bicicleta> bicis = new ArrayList<>();
-        when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(bicis);
-
-        ModelAndView mv = controladorBicicleta.verBicicletas();
-
-        assertEquals("bicicletas", mv.getViewName());
-        assertEquals(mv.getModel().size(), 1);
-        assertTrue(mv.getModel().keySet().contains("error"));
-    }
-
-    @Test
-    public void errorDesconocidoEnviaAPaginaDeErrorConCodigo(){
-        when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(null);
-
-        ModelAndView mv = controladorBicicleta.verBicicletas();
-
-        assertEquals("error", mv.getViewName());
-        assertEquals(mv.getModel().size(), 1);
-        assertTrue(mv.getModel().keySet().contains("error"));
-    }
 }

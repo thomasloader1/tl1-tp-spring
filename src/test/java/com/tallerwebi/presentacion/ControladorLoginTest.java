@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.dominio.entidad.Bicicleta;
@@ -22,6 +23,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ControladorLoginTest {
@@ -33,11 +35,15 @@ public class ControladorLoginTest {
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
 
+    private ServicioBicicleta servicioBicicletaMock;
+
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
         usuarioMock = mock(Usuario.class);
         bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
+
+        servicioBicicletaMock = mock(ServicioBicicleta.class);
 
         // Agregar al menos dos bicicletas a la lista
         bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
@@ -170,9 +176,13 @@ public class ControladorLoginTest {
     @Test
     public void redirigirAHomeSiHaySesion() {
         // preparación
+        Bicicleta bicicleta = makeBici();
+        List<Bicicleta> bicis = makeBiciList(bicicleta);
+
         sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(sessionMock.getAttribute("bicicletas")).thenReturn(bicis);
 
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
@@ -217,5 +227,73 @@ public class ControladorLoginTest {
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
         verify(sessionMock, times(1)).setAttribute("usuario", usuarioEncontradoMock);
+    }
+
+//    Bicicleta related
+@Test
+public void traerLosDatosDeTodasLasBicis() {
+    Bicicleta bicicleta = makeBici();
+    List<Bicicleta> bicis = makeBiciList(bicicleta);
+
+    sessionMock.setAttribute("usuario", usuarioMock);
+    when(requestMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+
+    when(sessionMock.getAttribute("bicicletas")).thenReturn(bicis);
+
+    ModelAndView mv = controladorLogin.irAHome(sessionMock);
+
+    assertEquals("home", mv.getViewName());
+    assertEquals(2, mv.getModel().size()); // rol & bicicletas
+    assertTrue(mv.getModel().keySet().contains("bicicletas"));
+    assertEquals(1, ((List<Bicicleta>)mv.getModel().get("bicicletas")).size());
+    assertEquals(bicicleta, ((List<Bicicleta>) mv.getModel().get("bicicletas")).get(0));
+    assertEquals(Condition.PERFECTO_ESTADO, ((List<Bicicleta>) mv.getModel().get("bicicletas")).get(0).getCondicion());
+}
+
+    @Test
+    public void noExistenBicicletasEnviaMensajeDeError() {
+        List<Bicicleta> bicis = new ArrayList<>();
+
+        sessionMock.setAttribute("usuario", usuarioMock);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+
+        when(sessionMock.getAttribute("bicicletas")).thenReturn(bicis);
+
+        ModelAndView mv = controladorLogin.irAHome(sessionMock);
+
+
+        assertEquals("home", mv.getViewName());
+        assertEquals(mv.getModel().size(), 2); //bicis & rol
+        assertTrue(mv.getModel().keySet().contains("error"));
+    }
+
+    @Test
+    public void errorDesconocidoEnviaAPaginaDeErrorConCodigo(){
+        sessionMock.setAttribute("usuario", usuarioMock);
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+
+        when(sessionMock.getAttribute("bicicletas")).thenReturn(null);
+
+        ModelAndView mv = controladorLogin.irAHome(sessionMock);
+
+        assertEquals("error", mv.getViewName());
+        assertEquals(mv.getModel().size(), 1);
+        assertTrue(mv.getModel().keySet().contains("code"));
+        assertEquals(mv.getModel().get("code"), "520");
+    }
+
+    private List<Bicicleta> makeBiciList(Bicicleta bicicleta){
+        List<Bicicleta> bicis = new ArrayList<>();
+        bicis.add(bicicleta);
+        return bicis;
+    }
+
+    private  Bicicleta makeBici(){
+        Bicicleta bicicleta = new Bicicleta();
+        bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
+        return bicicleta;
     }
 }
