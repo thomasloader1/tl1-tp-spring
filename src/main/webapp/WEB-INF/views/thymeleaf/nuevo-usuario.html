@@ -18,6 +18,12 @@
                        autocomplete="off" required/>
             </div>
             <div class="w-80 mx-auto mb-6">
+                <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900">Nombre</label>
+                <input th:field="*{nombre}" id="nombre" type="text"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                       autocomplete="off" required/>
+            </div>
+            <div class="w-80 mx-auto mb-6">
                 <label for="password"
                        class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
                 <input th:field="*{password}" type="password" id="password"
@@ -27,7 +33,8 @@
             <div class="w-80 mx-auto mb-6">
                 <ul class="grid w-full gap-6">
                     <li>
-                        <input type="radio" id="cliente" name="rol" value="Cliente" class="hidden peer">
+                        <input type="radio" id="cliente" name="rol" value="Cliente" class="hidden peer"
+                               onclick="mostrarContenedorDireccion()">
                         <label for="cliente"
                                class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100">
                             <div class="block">
@@ -37,7 +44,8 @@
                         </label>
                     </li>
                     <li>
-                        <input type="radio" id="propietario" name="rol" value="Propietario" class="hidden peer">
+                        <input type="radio" id="propietario" name="rol" value="Propietario" class="hidden peer"
+                               onclick="mostrarContenedorDireccion()">
                         <label for="propietario"
                                class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100">
                             <div class="block">
@@ -47,6 +55,14 @@
                         </label>
                     </li>
                 </ul>
+            </div>
+            <div class="w-80 mx-auto mb-6 hidden" id="contenedorDireccion">
+                <label for="direccion" class="block mb-2 text-sm font-medium text-gray-900">Dirección</label>
+                <input type="text" id="direccion" oninput="obtenerCoordenadas()"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                       autocomplete="off" required/>
+                <input type="hidden" id="latitud" th:field="*{latitud}"/>
+                <input type="hidden" id="longitud" th:field="*{longitud}"/>
             </div>
             <div th:if="${error != null}"
                  class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
@@ -66,5 +82,32 @@
         </a>
     </div>
 </main>
+<script type="text/javascript">
+    function mostrarContenedorDireccion() {
+        const direccion = document.getElementById('contenedorDireccion');
+        if (document.getElementById('propietario').checked) {
+            direccion.classList.remove('hidden');
+            direccion.classList.add('block');
+        } else {
+            direccion.classList.remove('block');
+            direccion.classList.add('hidden');
+        }
+    }
+
+    function obtenerCoordenadas() {
+        let direccion = document.getElementById("direccion").value;
+        fetch('https://api.geoapify.com/v1/geocode/search?text=' + direccion + '&apiKey=8cb977ca2d744bcf815a3d2b3617a5c7')
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("latitud").value = data.features[0].properties.lat;
+                document.getElementById("longitud").value = data.features[0].properties.lon;
+            })
+            .catch(error => {
+                console.error('Error al obtener las coordenadas:', error);
+            });
+    }
+</script>
 </body>
 </html>
