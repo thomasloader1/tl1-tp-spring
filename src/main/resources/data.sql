@@ -1,11 +1,17 @@
-INSERT INTO Usuario(id, email, password, rol)
-VALUES (null, 'propietario1@mail.com', '1234', 'Propietario');
-INSERT INTO Usuario(id, email, password, rol)
-VALUES (null, 'propietario2@mail.com', '1234', 'Propietario');
-INSERT INTO Usuario(id, email, password, rol)
-VALUES (null, 'cliente1@mail.com', '1234', 'Cliente');
-INSERT INTO Usuario(id, email, password, rol)
-VALUES (null, 'cliente2@mail.com', '1234', 'Cliente');
+INSERT INTO Usuario(id, email, nombre, password, rol, latitud, longitud)
+VALUES (null, 'propietario1@mail.com', 'Juan', '1234', 'Propietario', -34.6523007, -58.6235996);
+INSERT INTO Usuario(id, email, nombre, password, rol, latitud, longitud)
+VALUES (null, 'propietario2@mail.com', 'Pedro', '1234', 'Propietario', -34.6523051, -58.6210247);
+INSERT INTO Usuario(id, email, nombre, password, rol, latitud, longitud)
+VALUES (null, 'propietario3@mail.com', 'Leonel', '1234', 'Propietario', -34.652111, -58.618521);
+INSERT INTO Usuario(id, email, nombre, password, rol, latitud, longitud)
+VALUES (null, 'propietario4@mail.com', 'Rodrigo', '1234', 'Propietario', -34.632180, -58.608109);
+INSERT INTO Usuario(id, email, nombre, password, rol, latitud, longitud)
+VALUES (null, 'propietario4@mail.com', 'Federico', '1234', 'Propietario', -34.642509, -58.638187);
+INSERT INTO Usuario(id, email, nombre, password, rol)
+VALUES (null, 'cliente1@mail.com', 'Matías', '1234', 'Cliente');
+INSERT INTO Usuario(id, email, nombre, password, rol)
+VALUES (null, 'cliente2@mail.com', 'Gustavo', '1234', 'Cliente');
 
 INSERT INTO Bicicleta(id, descripcion, estadoBicicleta, usuario_id,urlImagen, condicion)
 VALUES (null, 'Mi primer bicicleta', 'DISPONIBLE', 1, "https://www.seguroscatalanaoccidente.com/blog/assets/multimedia/2016/04/bicicleta-tandem.jpg", "PERFECTO_ESTADO");
