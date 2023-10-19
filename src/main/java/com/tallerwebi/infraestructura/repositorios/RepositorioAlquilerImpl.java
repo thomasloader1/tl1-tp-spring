@@ -46,6 +46,10 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
         sessionFactory.getCurrentSession().update(alquiler);
     }
 
+    @Override
+    public void eliminarAlquiler(Alquiler alquiler){
+        sessionFactory.getCurrentSession().delete(alquiler);
+    }
 
     @Override
     public List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(Bicicleta bicicleta) {

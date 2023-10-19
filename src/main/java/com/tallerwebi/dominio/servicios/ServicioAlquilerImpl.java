@@ -35,7 +35,7 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     public void finalizarAlquiler(Long id) {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
         alquiler.setEstadoAlquiler(EstadoAlquiler.FINALIZADO);
-        repositorioAlquiler.modificarAlquiler(alquiler);
+        repositorioAlquiler.eliminarAlquiler(alquiler);
     }
 
     @Override

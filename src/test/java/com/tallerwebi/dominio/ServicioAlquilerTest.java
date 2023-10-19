@@ -44,7 +44,7 @@ public class ServicioAlquilerTest {
     }
 
     @Test
-    public void queSePuedaFinalizarUnAlquiler() {
+    public void queSePuedaFinalizarUnAlquilerYLoElimine() {
         // preparación
         Alquiler alquilerMock = mock(Alquiler.class);
         when(repositorioAlquilerMock.obtenerAlquilerporId(anyLong())).thenReturn(alquilerMock);
@@ -55,7 +55,7 @@ public class ServicioAlquilerTest {
 
         // validación
         when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.FINALIZADO);
-        verify(repositorioAlquilerMock, times(1)).modificarAlquiler(alquilerMock);
+        verify(repositorioAlquilerMock, times(1)).eliminarAlquiler(alquilerMock);
         assertEquals(EstadoAlquiler.FINALIZADO, alquilerMock.getEstadoAlquiler());
     }
 
