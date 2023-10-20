@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mantenimiento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
+    <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+        <div th:replace="~{partials/nav}"></div>
+        <div class="my-5 sm:my-0 sm:h-full sm:flex sm:flex-col sm:items-center sm:justify-center">
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900">Mantenimiento</p>
+            <form class="w-full" action="#" th:action="@{update}" th:object="${bicicletaStatus}" method="POST">
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel1X"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 1 Axys X</label>
+                            <input type="text" id="wheel1X" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel1Y"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 1 Axys Y</label>
+                            <input type="text" id="wheel1Y" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel1Z"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 1 Axys Z</label>
+                            <input type="text" id="wheel1Z" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel2X"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 2 Axys X</label>
+                            <input type="text" id="wheel2X" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel2Y"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 2 Axys Y</label>
+                            <input type="text" id="wheel2Y" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel1Break"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 1 Break</label>
+                            <input type="text" id="wheel1Break" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheel2Break"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Wheel 2 Break</label>
+                            <input type="text" id="wheel2Break" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheelHandRot"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Handler Rotation</label>
+                            <input type="text" id="wheelHandRot" name="wheel1X"><br><br>
+                        </div>
+
+                        <div class="w-80 sm:w-96 mx-auto mb-6">
+                            <label for="wheelHandHard"
+                                   class="block mb-2 text-sm font-medium text-gray-900">Handler Hardness</label>
+                            <input type="text" id="wheelHandHard" name="wheel1X"><br><br>
+                        </div>
+
+                <div class="text-center">
+                    <button type="submit"
+                            class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center">
+                        Registrar
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</main>
+
+
+</body>
+</html>

@@ -32,7 +32,8 @@ public class ControladorLoginTest {
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
-    private ServicioBicicleta servicioBicicletamock;
+    private ServicioBicicleta servicioBicicletaMock;
+
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
@@ -47,8 +48,10 @@ public class ControladorLoginTest {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        servicioBicicletamock = mock(ServicioBicicleta.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletamock);
+        servicioBicicletaMock = mock(ServicioBicicleta.class);
+        //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
+        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
+
     }
 
     @Test
@@ -189,7 +192,7 @@ public class ControladorLoginTest {
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
         when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
-        when(servicioBicicletamock.obtenerBicicletasDisponibles()).thenReturn(bicicletasMock);
+        when(servicioBicicletaMock.obtenerTodasLasBicicletasDisponibles()).thenReturn(bicicletasMock);
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
         // validación
@@ -211,7 +214,6 @@ public class ControladorLoginTest {
             verify(servicioBicicletamock, times(1)).obtenerBicicletasDisponibles();
 
     }*/
-
 
 
     @Test

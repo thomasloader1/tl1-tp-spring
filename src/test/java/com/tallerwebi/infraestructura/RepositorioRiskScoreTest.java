@@ -4,9 +4,9 @@ import com.tallerwebi.config.HibernateTestConfig;
 import com.tallerwebi.config.SpringWebConfig;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Condition;
+import com.tallerwebi.infraestructura.repositorios.RepositorioRiskScore;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import javax.transaction.Transactional;
 
-import static org.mockito.Mockito.*;
-
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = {SpringWebConfig.class, HibernateTestConfig.class})
 public class RepositorioRiskScoreTest {
+    @Autowired
     private  SessionFactory sessionFactory;
     private Session sessionMock;
 
@@ -45,7 +44,7 @@ public class RepositorioRiskScoreTest {
         Bicicleta bicicleta = makeBici();
         bicicleta.setCondicion(Condition.BUENO_ESTADO);
 
-        repositorioRiskScore.guardarBici(bicicleta);
+       sessionFactory.getCurrentSession().save(bicicleta);
 
         Condition condicion = repositorioRiskScore.getCondicionByID(1L);
 

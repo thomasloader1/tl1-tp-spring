@@ -2,7 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.EstadoAlquiler;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquilerImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -70,16 +70,16 @@ public class RepositorioAlquilerTest {
         // preparación
         Alquiler alquilerMock = mock(Alquiler.class);
         when(alquilerMock.getId()).thenReturn(1L);
-        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.EN_CURSO);
+        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoBicicleta.EN_USO);
         when(sessionMock.get(Alquiler.class, alquilerMock.getId())).thenReturn(alquilerMock);
 
         // ejecución
         repositorioAlquiler.modificarAlquiler(alquilerMock);
 
         // validación
-        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoAlquiler.FINALIZADO);
+        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoBicicleta.DISPONIBLE);
         verify(sessionMock, times(1)).update(alquilerMock);
-        assertEquals(EstadoAlquiler.FINALIZADO, alquilerMock.getEstadoAlquiler());
+        assertEquals(EstadoBicicleta.DISPONIBLE, alquilerMock.getEstadoAlquiler());
     }
 
     @Test

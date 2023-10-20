@@ -73,6 +73,11 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
+    public List<Bicicleta> obtenerTodasLasBicicletasDisponibles() {
+        return repositorioBicicleta.obtenerBicicletasDisponibles();
+    }
+
+    @Override
     public Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta) {
         if (bicicleta.getStatus() != null) {
 
@@ -82,7 +87,7 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             if (!fallos.isEmpty()) {
                 // Si hay fallos, cambia el estado a "requiere reparación"
                 bicicleta.setEstadoBicicleta(EstadoBicicleta.REQUIERE_REPARACION);
-                // repositorioBicicleta.updateEstado(bicicleta);
+                repositorioBicicleta.updateEstado(bicicleta.getId(),bicicleta.getEstadoBicicleta());
             }
         }
         return bicicleta;
@@ -103,8 +108,9 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
         }
     }
 
-    @Override
     public List<Bicicleta> obtenerBicicletasDisponibles() {
-        return null;
+          List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
+          return bicicleta;
+
     }
 }

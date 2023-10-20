@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura.repositorios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,14 +43,30 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         return (List<Bicicleta>) query.list();
     }
 
-    @Override
-    public void updateEstado(Bicicleta bicicleta) {
-    }
 
+
+    @Override
+    public void updateEstado(Long id, EstadoBicicleta estadoBicicleta) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.id = :id");
+
+        query.setParameter("id", id);
+        Bicicleta bicicleta = (Bicicleta) query.uniqueResult();
+        bicicleta.setEstadoBicicleta(estadoBicicleta);
+        session.update(bicicleta);
+    }
     public List<Bicicleta> obtenerBicicletas() {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT b FROM Bicicleta b");
         return (List<Bicicleta>) query.list();
+
     }
 
+    public List<Bicicleta> obtenerBicicletasDisponibles() {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
+        query.setParameter("estado",EstadoBicicleta.DISPONIBLE);
+
+        return (List<Bicicleta>) query.list();
+    }
 }
