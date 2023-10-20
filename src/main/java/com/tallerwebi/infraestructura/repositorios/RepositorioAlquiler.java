@@ -17,5 +17,7 @@ public interface RepositorioAlquiler {
 
     void modificarAlquiler(Alquiler alquiler);
 
+    void eliminarAlquiler(Alquiler alquiler);
+
     List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(Bicicleta bicicleta);
 }

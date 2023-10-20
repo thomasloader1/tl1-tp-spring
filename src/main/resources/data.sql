@@ -28,3 +28,4 @@ INSERT INTO Alquiler(id,cantidadHoras, estadoAlquiler, bicicleta_id, usuario_id)
 VALUES (1, 2, 'EN_USO', 1, 3);
 INSERT INTO Alquiler(id,cantidadHoras, estadoAlquiler, bicicleta_id, usuario_id)
 VALUES (2, 3, 'EN_USO', 1, 4);
+

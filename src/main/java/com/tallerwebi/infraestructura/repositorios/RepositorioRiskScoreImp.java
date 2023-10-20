@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura.repositorios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Condition;
+import com.tallerwebi.infraestructura.repositorios.RepositorioRiskScore;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -20,5 +21,10 @@ public class RepositorioRiskScoreImp implements RepositorioRiskScore {
         Query query = session.createQuery("SELECT b.condicion FROM Bicicleta b WHERE b.id = :id");
         query.setParameter("id", bici_id);
         return (Condition) query.uniqueResult();
+    }
+
+    @Override
+    public void guardarBici(Bicicleta bicicleta) {
+        sessionFactory.getCurrentSession().save(bicicleta);
     }
 }

@@ -27,7 +27,6 @@ import static org.mockito.Mockito.*;
 
 public class ServicioBicicletaTest {
     private ServicioBicicletaImpl servicioBicicleta;
-
     private ServicioVehicleStatus servicioVehicleStatus;
     private RepositorioVehicleStatus vehicleStatusRepositorio;
     private RepositorioBicicleta repositorioBicicletaMock;
@@ -53,6 +52,7 @@ public class ServicioBicicletaTest {
 
         //Ejecucion
         servicioBicicleta.actualizarEstadoBicicleta(bici);
+
         assertEquals(bici.getEstadoBicicleta(),EstadoBicicleta.REQUIERE_REPARACION);
     }
 
