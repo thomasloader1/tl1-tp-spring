@@ -86,7 +86,7 @@ public class ControladorLogin {
         model.put("datosUsuario", new DatosUsuario());
         return new ModelAndView("nuevo-usuario", model);
     }
-
+ //cambiar a modelMap
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");

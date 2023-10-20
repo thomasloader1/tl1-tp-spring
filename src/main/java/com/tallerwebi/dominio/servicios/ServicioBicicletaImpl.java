@@ -102,4 +102,9 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
         }
     }
+
+    @Override
+    public List<Bicicleta> obtenerBicicletasDisponibles() {
+        return null;
+    }
 }
