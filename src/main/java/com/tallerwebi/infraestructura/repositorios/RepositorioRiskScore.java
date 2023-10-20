@@ -10,4 +10,6 @@ public interface RepositorioRiskScore {
 
     Condition getCondicionByID(long bici_id);
 
+    void guardarBici(Bicicleta bicicleta);
+
 }
