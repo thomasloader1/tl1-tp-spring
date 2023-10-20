@@ -33,6 +33,8 @@ public class ControladorLoginTest {
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
 
+    private ServicioBicicleta servicioBicicletaMock;
+
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
@@ -47,7 +49,8 @@ public class ControladorLoginTest {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-        ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
+        servicioBicicletaMock = mock(ServicioBicicleta.class);
+        //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
         controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
     }
 
@@ -183,27 +186,21 @@ public class ControladorLoginTest {
 
 
     @Test
-    public void alIngresarComoClienteDebeTenerTodasLasBicicletasDisponibles() {
+    public void queSeMuestrenEnVistaClienteSoloLasBicicletasDisponibles() {
         // preparación
         sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
         when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
-
-
+        when(servicioBicicletaMock.obtenerTodasLasBicicletasDisponibles()).thenReturn(bicicletasMock);
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
-
-
-
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-        // Verifica que las listas sean iguales en contenido
         List<Bicicleta> bicicletasEnVista = (List<Bicicleta>) modelAndView.getModel().get("bicicletas");
         // Verifica que las listas sean iguales en contenido
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
-
 
     @Test
     public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {

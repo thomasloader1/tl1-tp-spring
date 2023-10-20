@@ -26,7 +26,6 @@ import static org.mockito.Mockito.*;
 
 public class ServicioBicicletaTest {
     private ServicioBicicletaImpl servicioBicicleta;
-
     private ServicioVehicleStatus servicioVehicleStatus;
     private RepositorioVehicleStatus vehicleStatusRepositorio;
     private RepositorioBicicleta repositorioBicicletaMock;
