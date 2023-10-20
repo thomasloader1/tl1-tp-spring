@@ -1,6 +1,7 @@
 package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicletaImpl;
 import org.hibernate.Session;
@@ -121,5 +122,25 @@ public class RepositorioBicicletaTest {
         verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
         verify(queryMock).list();
         assertEquals(0, bicicletas.size());
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    public void queSePuedaObtenerUnaListaDeLasBicicletasDisponibles() {
+        // preparación
+        Query queryMock = mock(Query.class);
+        when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
+        when(queryMock.list()).thenReturn(List.of());
+
+        // ejecución
+        List<Bicicleta> bicicletasDisponibles = repositorioBicicleta.obtenerBicicletasDisponibles();
+
+        // validación
+        verify(sessionMock, times(1)).createQuery(anyString());
+        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estadoBicicleta");
+        verify(queryMock).setParameter("estadoBicicleta", EstadoBicicleta.DISPONIBLE);
+        verify(queryMock).list();
+        assertEquals(0, bicicletasDisponibles.size());
     }
 }

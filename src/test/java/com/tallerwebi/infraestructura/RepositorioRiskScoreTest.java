@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 @WebAppConfiguration
 @ContextConfiguration(classes = {SpringWebConfig.class, HibernateTestConfig.class})
 public class RepositorioRiskScoreTest {
+    @Autowired
     private  SessionFactory sessionFactory;
     private Session sessionMock;
 
@@ -43,7 +44,7 @@ public class RepositorioRiskScoreTest {
         Bicicleta bicicleta = makeBici();
         bicicleta.setCondicion(Condition.BUENO_ESTADO);
 
-        repositorioRiskScore.guardarBici(bicicleta);
+       sessionFactory.getCurrentSession().save(bicicleta);
 
         Condition condicion = repositorioRiskScore.getCondicionByID(1L);
 
