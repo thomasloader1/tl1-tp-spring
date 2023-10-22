@@ -1,19 +1,19 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div th:each="item : ${bicicletas}"
+    <div th:each="bicicleta : ${bicicletas}"
          class="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition duration-300 ease-in-out">
 
-        <img th:src="${item.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" alt=""/>
+        <img th:src="${bicicleta.urlImagen}" class="max-w-64 max-h-64 h-auto rounded-t-lg img-fluid" alt=""/>
 
         <div>
-            <span class="text-lg font-semibold">Bicicleta ID: <span th:text="${item.id}"></span></span>
+            <span class="text-lg font-semibold">Bicicleta ID: <span th:text="${bicicleta.id}"></span></span>
         </div>
         <div>
-            <span class="text-gray-700">Descripción: <span th:text="${item.descripcion}"></span></span>
+            <span class="text-gray-700">Descripción: <span th:text="${bicicleta.descripcion}"></span></span>
         </div>
 
-        <div><span th:text="${item.condicion}"></span></div>
+        <div><span th:text="${bicicleta.condicion}"></span></div>
         <div class="mt-4">
-            <a th:href="'/bicicleta/detalle/' + ${item.id}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">Ir
+            <a th:href="'/bicicleta/detalle/' + ${bicicleta.id}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">Ir
                 al detalle</a>
         </div>
     </div>

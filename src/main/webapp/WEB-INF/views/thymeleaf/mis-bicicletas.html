@@ -12,13 +12,80 @@
         <div th:replace="~{partials/nav}"></div>
         <div class="w-full my-5 sm:my-0 sm:h-full sm:flex sm:flex-col sm:items-center sm:justify-center">
             <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas</p>
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas en Alquier:</p>
             <div class="flex flex-wrap justify-center">
+
                 <div th:if="${#lists.isEmpty(bicicletas)}">
                     <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas registradas</p>
                 </div>
                 <div th:each="bicicleta : ${bicicletas}" class="m-2 border border-gray-300 rounded-lg">
                     <div class="max-w-[320px] pb-4">
                         <img  th:src="${bicicleta.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" alt=""/>
+                        <div class="p-2">
+                            <div class="w-full my-1">
+                                <p class="font-semi-bold text-gray-800">Descripción: </p>
+                                <p th:text="${bicicleta.descripcion}" class="font-medium text-gray-800"></p>
+                            </div>
+                            <div class="w-full my-1">
+                                <p class="font-semi-bold text-gray-800">Estado: </p>
+                                <p th:text="${bicicleta.estadoBicicleta}" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+                        <div class="my-2 flex justify-center">
+                            <a th:href="@{/baja-bicicleta/{id}(id=${bicicleta.id})}"
+                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none">
+                                Dar de baja
+                            </a>
+                            <a th:href="@{/bicicleta/{id}/resenas(id=${bicicleta.id})}"
+                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none">
+                                Reseñas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas Disponibles:</p>
+            <div class="flex flex-wrap justify-center">
+
+                <div th:if="${#lists.isEmpty(bicicletas)}">
+                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas registradas</p>
+                </div>
+                <div th:each="bicicleta : ${bicicletas}" class="m-2 border border-gray-300 rounded-lg">
+                    <div class="max-w-[320px] pb-4">
+                        <img  th:src="${bicicleta.urlImagen}" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" alt=""/>
+                        <div class="p-2">
+                            <div class="w-full my-1">
+                                <p class="font-semi-bold text-gray-800">Descripción: </p>
+                                <p th:text="${bicicleta.descripcion}" class="font-medium text-gray-800"></p>
+                            </div>
+                            <div class="w-full my-1">
+                                <p class="font-semi-bold text-gray-800">Estado: </p>
+                                <p th:text="${bicicleta.estadoBicicleta}" class="font-medium text-gray-800"></p>
+                            </div>
+                        </div>
+                        <div class="my-2 flex justify-center">
+                            <a th:href="@{/baja-bicicleta/{id}(id=${bicicleta.id})}"
+                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none">
+                                Dar de baja
+                            </a>
+                            <a th:href="@{/bicicleta/{id}/resenas(id=${bicicleta.id})}"
+                               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none">
+                                Reseñas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas en Reparación:</p>
+            <div class="flex flex-wrap justify-center">
+
+
+                <div th:if="${#lists.isEmpty(bicicletas)}">
+                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas registradas</p>
+                </div>
+                <div th:each="bicicleta : ${bicicletas}" class="m-2 border border-gray-300 rounded-lg">
+                    <div class="max-w-[320px] pb-4">
+                        <img  th:src="${bicicleta.urlImagen}" class="max-w-64 max-h-64 rounded-t-lg img-fluid" style="width: 400px; height: 300px;" alt=""/>
                         <div class="p-2">
                             <div class="w-full my-1">
                                 <p class="font-semi-bold text-gray-800">Descripción: </p>

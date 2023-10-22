@@ -86,19 +86,20 @@ public class ControladorLogin {
         model.put("datosUsuario", new DatosUsuario());
         return new ModelAndView("nuevo-usuario", model);
     }
- //cambiar a modelMap
+
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
-
-        ModelAndView modelAndView = new ModelAndView("home");
+        model.put("bicicletas" , bicicletas);
+        ModelAndView modelAndView = new ModelAndView("home" , model);
         modelAndView.addObject("rol", usuario.getRol());
-        modelAndView.addObject("bicicletas", bicicletas);
+
 
         return modelAndView;
     }

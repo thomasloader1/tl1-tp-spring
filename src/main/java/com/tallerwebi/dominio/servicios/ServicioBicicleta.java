@@ -11,23 +11,13 @@ import java.util.List;
 
 public interface ServicioBicicleta {
     void darDeAltaUnaBicicleta(DatosBicicleta datosBicicleta) throws BicicletaValidacion;
-
     void darDeBajaUnaBicicleta(Long id);
-
     Bicicleta obtenerBicicletaPorId(Long id) throws BicicletaNoEncontrada;
     Bicicleta obtenerBicicletaPorIdUsuario(Long id) throws BicicletaNoEncontrada;
-
     List<Bicicleta> obtenerTodasLasBicicleta();
-
     List<Bicicleta> obtenerTodasLasBicicletasDisponibles();
-
-
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
-
     Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta);
-
     boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
-
-
     List<Bicicleta> obtenerBicicletasDisponibles();
 }

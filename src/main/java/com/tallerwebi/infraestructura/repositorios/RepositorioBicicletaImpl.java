@@ -69,4 +69,12 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
 
         return (List<Bicicleta>) query.list();
     }
+
+    @Override
+    public List<Bicicleta> obtenerBiciclestasEnReparacion() {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
+        query.setParameter("estado", EstadoBicicleta.REQUIERE_REPARACION);
+        return (List<Bicicleta>) query.list();
+    }
 }

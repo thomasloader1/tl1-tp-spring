@@ -191,14 +191,15 @@ public class ControladorLoginTest {
         sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
-        when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
+
         when(servicioBicicletaMock.obtenerTodasLasBicicletasDisponibles()).thenReturn(bicicletasMock);
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
         // validación
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+
         List<Bicicleta> bicicletasEnVista = (List<Bicicleta>) modelAndView.getModel().get("bicicletas");
         // Verifica que las listas sean iguales en contenido
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
  /*   @Test

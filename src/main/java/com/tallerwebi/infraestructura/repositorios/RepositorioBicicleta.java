@@ -22,4 +22,6 @@ public interface RepositorioBicicleta {
     List<Bicicleta> obtenerBicicletas();
 
     List<Bicicleta> obtenerBicicletasDisponibles();
+
+    List<Bicicleta> obtenerBiciclestasEnReparacion();
 }
