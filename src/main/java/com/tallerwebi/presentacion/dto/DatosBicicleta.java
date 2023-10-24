@@ -50,4 +50,5 @@ public class DatosBicicleta {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
 }

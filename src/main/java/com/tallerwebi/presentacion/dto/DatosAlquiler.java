@@ -8,6 +8,7 @@ public class DatosAlquiler {
     private Integer cantidadHoras;
     private Bicicleta bicicleta;
     private Usuario usuario;
+    private double precioxhora;
 
     public DatosAlquiler(){
     }
@@ -41,5 +42,13 @@ public class DatosAlquiler {
 
     public void setCantidadHoras(Integer cantidadHoras) {
         this.cantidadHoras = cantidadHoras;
+    }
+
+    public double getPrecioxhora() {
+        return precioxhora;
+    }
+
+    public void setPrecioxhora(double precioxhora) {
+        this.precioxhora = precioxhora;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -71,10 +72,30 @@ public class ControladorBicicleta {
         return new ModelAndView("redirect:/home");
     }
 
+
     @RequestMapping(path = "/baja-bicicleta/{id}", method = RequestMethod.GET)
     public ModelAndView darDeBajaUnaBicicleta(@PathVariable("id") Long id) {
         servicioBicicleta.darDeBajaUnaBicicleta(id);
         return new ModelAndView("redirect:/mis-bicicletas");
+    }
+
+    @RequestMapping(path = "/bicicletas", method = RequestMethod.GET)
+    public ModelAndView verBicicletas(){
+        ModelMap model = new ModelMap();
+        List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
+
+        try{
+            if(bicis.size() == 0){
+                model.put("error", "No se encontraron Bicicletas");
+            }else {
+                model.put("bicicletas", bicis);
+            }
+        }catch (Exception e){
+            model.put("error", "520");
+            return new ModelAndView("error", model);
+        }
+
+        return  new ModelAndView("bicicletas", model);
     }
 
     @RequestMapping(path = "bicicleta/detalle/{id}", method = RequestMethod.GET)
@@ -96,5 +117,8 @@ public class ControladorBicicleta {
 
     private boolean verificarSiEsPropietario(Usuario usuario) {
         return usuario != null && usuario.getRol().equals("Propietario");
+    }
+    private boolean verificarSiEsCliente(Usuario usuario) {
+        return usuario != null && usuario.getRol().equals("Cliente");
     }
 }

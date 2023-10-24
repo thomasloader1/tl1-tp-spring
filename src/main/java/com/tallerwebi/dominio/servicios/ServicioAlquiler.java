@@ -19,4 +19,6 @@ public interface ServicioAlquiler {
     List<Alquiler> obtenerAlquileresDelUsuario(DatosAlquiler datosAlquiler);
 
     List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(DatosAlquiler datosAlquiler);
+
+    double calcularPrecioAlquiler(DatosAlquiler datosAlquiler);
 }

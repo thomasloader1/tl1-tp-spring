@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
@@ -59,6 +60,32 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     @Override
     public List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(DatosAlquiler datosAlquiler) {
         return repositorioAlquiler.obtenerTodosLosAlquileresDeUnaBicicleta(datosAlquiler.getBicicleta());
+    }
+
+    @Override
+    public double calcularPrecioAlquiler(DatosAlquiler datosAlquiler) {
+        double precioBasePorHora = datosAlquiler.getPrecioxhora();
+        int cantidadHoras = datosAlquiler.getCantidadHoras();
+        Condition estadoBicicleta = datosAlquiler.getBicicleta().getCondicion();
+
+        double valorEstado;
+
+        switch (estadoBicicleta){
+            case PERFECTO_ESTADO:
+                valorEstado = 1.0;
+                break;
+            case BUENO_ESTADO:
+                valorEstado = 0.8;
+                break;
+            case MAL_ESTADO:
+                valorEstado = 0.5;
+                break;
+            default:
+                valorEstado = 1.0;
+        }
+        double precioFinal = precioBasePorHora * cantidadHoras * valorEstado;
+        return precioFinal;
+
     }
 
     @Override
