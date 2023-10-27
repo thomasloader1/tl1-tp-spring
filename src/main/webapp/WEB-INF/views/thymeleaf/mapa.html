@@ -14,8 +14,11 @@
 <div th:replace="~{partials/nav}"></div>
 <div id="map" style="width: 100%; height: 90vh"></div>
 <script th:inline="javascript">
+    const userLatitude = [[${latitudActual}]];
+    const userLongitude = [[${longitudActual}]];
     const propietarios = [[${propietarios}]];
     let map;
+
     function initializeMap() {
         map = L.map('map', {
             zoom: 15
@@ -25,15 +28,7 @@
             maxZoom: 25
         }).addTo(map);
 
-        navigator.geolocation.getCurrentPosition(function (position) {
-            const userLatitude = position.coords.latitude;
-            const userLongitude = position.coords.longitude;
-            map.setView([userLatitude, userLongitude]);
-            L.marker([userLatitude, userLongitude]).addTo(map).bindPopup(`
-                <b>Tu ubicacion</b><br>
-                <a href="/home">Ir Home</a>
-            `);
-        });
+        map.setView([userLatitude, userLongitude]);
 
         for (let i = 0; i < propietarios.length; i++) {
             const marker = L.marker([propietarios[i].latitud, propietarios[i].longitud]);
