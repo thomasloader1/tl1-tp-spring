@@ -11,6 +11,8 @@ public class Bicicleta {
     private EstadoBicicleta estadoBicicleta;
     private String descripcion;
     private String urlImagen;
+
+    private double precioVenta;
     @ManyToOne
     private Usuario usuario;
     @OneToOne
@@ -27,11 +29,12 @@ public class Bicicleta {
         this.condicion = condicion;
     }
 
-    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, String urlImagen) {
+    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, String urlImagen,double precioVenta) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
         this.usuario = usuario;
         this.urlImagen = urlImagen;
+        this.precioVenta = precioVenta;
     }
 
     public Bicicleta(Long id, EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
@@ -91,5 +94,13 @@ public class Bicicleta {
 
     public void setStatus(BicicletaStatus status) {
         this.status = status;
+    }
+
+    public double getPrecioVenta() {
+        return precioVenta;
+    }
+
+    public void setPrecioVenta(double precioVenta) {
+        this.precioVenta = precioVenta;
     }
 }

@@ -112,10 +112,10 @@ public class ServicioAlquilerTest {
     }
 
     @Test
-    public void queSePuedaCalcularPrecioAlquiler() {
+    public void queSePuedaCalcularElPrecioDelAlquiler() {
         // Crea un objeto de datos de alquiler con valores de ejemplo
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
-        Bicicleta bicicletaMock = mock(Bicicleta.class);
+        when(datosAlquilerMock.getBicicleta()).thenReturn(mock(Bicicleta.class));
         when(datosAlquilerMock.getPrecioxhora()).thenReturn(500.0);
         when(datosAlquilerMock.getCantidadHoras()).thenReturn(2);
         when(datosAlquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.BUENO_ESTADO);

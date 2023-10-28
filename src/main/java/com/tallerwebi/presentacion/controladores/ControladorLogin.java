@@ -92,11 +92,13 @@ public class ControladorLogin {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
 
+
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
 
         ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("usuario", usuario);
         modelAndView.addObject("rol", usuario.getRol());
         modelAndView.addObject("bicicletas", bicicletas);
 

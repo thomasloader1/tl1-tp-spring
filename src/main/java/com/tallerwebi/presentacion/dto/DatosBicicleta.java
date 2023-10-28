@@ -8,15 +8,18 @@ public class DatosBicicleta {
     private String descripcion;
     private Usuario usuario;
 
+    private double precioAlquilerPorHora;
+    private double precioVenta;
     private String urlImagen;
 
     public DatosBicicleta() {
     }
 
-    public DatosBicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
+    public DatosBicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, double precioVenta) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
         this.usuario = usuario;
+        this.precioVenta = precioVenta;
     }
 
     public EstadoBicicleta getEstadoBicicleta() {
@@ -51,4 +54,19 @@ public class DatosBicicleta {
         this.usuario = usuario;
     }
 
+    public double getPrecioVenta() {
+        return precioVenta;
+    }
+
+    public void setPrecioVenta(double precioVenta) {
+        this.precioVenta = precioVenta;
+    }
+
+    public double getPrecioAlquilerPorHora() {
+        return precioAlquilerPorHora;
+    }
+
+    public void setPrecioAlquilerPorHora(double precioAlquilerPorHora) {
+        this.precioAlquilerPorHora = precioAlquilerPorHora;
+    }
 }

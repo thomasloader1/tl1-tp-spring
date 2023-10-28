@@ -65,6 +65,7 @@ public class ServicioBicicletaTest {
         when(datosBicicletaMock.getEstadoBicicleta()).thenReturn(EstadoBicicleta.DISPONIBLE);
         when(datosBicicletaMock.getDescripcion()).thenReturn("Bicicleta de paseo");
         when(datosBicicletaMock.getUsuario()).thenReturn(usuarioMock);
+        when(datosBicicletaMock.getPrecioVenta()).thenReturn(50000.0);
 
         // ejecución
         servicioBicicleta.darDeAltaUnaBicicleta(datosBicicletaMock);

@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
@@ -35,10 +36,12 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
 
     @Override
     public void darDeAltaUnaBicicleta(DatosBicicleta datosBicicleta) throws BicicletaValidacion {
-        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()) {
+        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()|| datosBicicleta.getPrecioVenta() <= 0) {
             throw new BicicletaValidacion();
         }
-        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen());
+        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen(),datosBicicleta.getPrecioVenta());
+        bicicleta.setPrecioVenta(datosBicicleta.getPrecioVenta());
+        bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
         repositorioBicicleta.registrarBicicleta(bicicleta);
     }
 

@@ -24,6 +24,16 @@
                     </select>
                 </div>
                 <div class="w-80 sm:w-96 mx-auto mb-6">
+                    <label for="precioVenta" class="block mb-2 text-sm font-medium text-gray-900">Precio de Venta</label>
+                    <input th:field="*{precioVenta}" id="precioVenta"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                           autocomplete="off" type="number" required/>
+                </div>
+                <div class="w-80 sm:w-96 mx-auto mb-6">
+                    <label for="precioAlquilerPorHora" class="block mb-2 text-sm font-medium text-gray-900">Precio de Alquiler por Hora</label>
+                    <input id="precioAlquilerPorHora" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readonly/>
+                </div>
+                <div class="w-80 sm:w-96 mx-auto mb-6">
                     <label for="descripcion"
                            class="block mb-2 text-sm font-medium text-gray-900">Descripción</label>
                     <textarea th:field="*{descripcion}" id="descripcion"
@@ -50,5 +60,22 @@
         </div>
     </div>
 </main>
+<script type="text/javascript">
+    // Obtén los elementos del DOM
+    var precioVentaInput = document.getElementById("precioVenta");
+    var precioAlquilerPorHoraInput = document.getElementById("precioAlquilerPorHora");
+
+    // Agrega un evento de escucha para el campo de precio de venta
+    precioVentaInput.addEventListener("input", function() {
+        // Obtiene el valor del precio de venta
+        var precioVenta = parseFloat(precioVentaInput.value);
+
+        // Realiza el cálculo para el precio de alquiler por hora (precio de venta * 1.2 / 50)
+        var precioAlquilerPorHora = (precioVenta * 1.2) / 100;
+
+        // Actualiza el campo de precio de alquiler por hora
+        precioAlquilerPorHoraInput.value = precioAlquilerPorHora.toFixed(2);
+    });
+</script>
 </body>
 </html>
