@@ -5,8 +5,8 @@ import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ import java.util.List;
 public class ControladorBicicleta {
     private final ServicioBicicleta servicioBicicleta;
     private final ServicioResena servicioResena;
+
     @Autowired
     public ControladorBicicleta(ServicioBicicleta servicioBicicleta, ServicioResena servicioResena) {
         this.servicioBicicleta = servicioBicicleta;
@@ -82,6 +83,7 @@ public class ControladorBicicleta {
 
     @RequestMapping(path = "/bicicletas", method = RequestMethod.GET)
     public ModelAndView verBicicletas(){
+
         ModelMap model = new ModelMap();
         List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
 
@@ -102,18 +104,57 @@ public class ControladorBicicleta {
     @RequestMapping(path = "bicicleta/detalle/{id}", method = RequestMethod.GET)
     public ModelAndView detalleBicicleta(@PathVariable("id") Integer id) throws BicicletaNoEncontrada {
         Long biciId = id.longValue();
+
         ModelMap model = new ModelMap();
-        try {
-            Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
-            List<Resena> resenas = servicioResena.obtenerResenasDeUnaBicicleta(bicicleta);
-            model.put("bicicleta", bicicleta);
-            model.put("resenas",resenas);
-            model.put("datosAlquiler", new DatosAlquiler());
-          
-        } catch (BicicletaNoEncontrada e) {
-            return new ModelAndView("pagina-no-encontrada");
+        List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
+
+        try{
+            if(bicis.size() == 0){
+                model.put("error", "No se encontraron Bicicletas");
+            }else {
+                model.put("bicicletas", bicis);
+            }
+        }catch (Exception e){
+            model.put("error", "520");
+            return new ModelAndView("error", model);
         }
-        return new ModelAndView("detalle-bicicleta", model);
+
+        return  new ModelAndView("bicicletas", model);
+    }
+
+    @RequestMapping(path = "bicicleta/{id}/detalle", method = RequestMethod.GET)
+    public ModelAndView detalleBicicleta(@ModelAttribute("usuario") Usuario usuario, @PathVariable("id") Integer id) throws BicicletaNoEncontrada {
+        if (usuario != null) {
+            Long biciId = id.longValue();
+            ModelMap model = new ModelMap();
+            try {
+                Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
+                List<Resena> resenas = servicioResena.obtenerResenasDeUnaBicicleta(bicicleta);
+                model.put("bicicleta", bicicleta);
+                model.put("resenas", resenas);
+                model.put("datosAlquiler", new DatosAlquiler());
+
+            } catch (BicicletaNoEncontrada e) {
+                return new ModelAndView("pagina-no-encontrada");
+            }
+            return new ModelAndView("detalle-bicicleta", model);
+        }
+        return new ModelAndView("redirect:/login");
+    }
+
+    @RequestMapping(path = "propietario/{id}/bicicletas", method = RequestMethod.GET)
+    public ModelAndView bicicletasDelPropietario(@ModelAttribute("usuario") Usuario usuario, @PathVariable("id") Long id) {
+        if (usuario != null) {
+            ModelMap model = new ModelMap();
+            try {
+                List<Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(id);
+                model.put("bicicletas", bicicletas);
+            } catch (Exception e) {
+                return new ModelAndView("pagina-no-encontrada");
+            }
+            return new ModelAndView("bicicletas", model);
+        }
+        return new ModelAndView("redirect:/login");
     }
 
     private boolean verificarSiEsPropietario(Usuario usuario) {

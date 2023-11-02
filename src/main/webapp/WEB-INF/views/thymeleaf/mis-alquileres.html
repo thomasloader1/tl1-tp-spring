@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Mis alquileres</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -13,16 +13,16 @@
         <div class="w-full my-5 sm:my-0 sm:h-full sm:flex sm:flex-col sm:items-center sm:justify-center">
             <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Alquileres</p>
             <div class="flex flex-wrap justify-center">
-                <div th:if="${#lists.isEmpty(datosAlquiler)}">
+                <div th:if="${#lists.isEmpty(alquileres)}">
                     <p class="font-medium text-gray-900 text-center text-lg">No tenés alquileres registrados</p>
                 </div>
                 <div th:each="alquiler: ${alquileres}">
-                    <form th:action="@{/alquiler/{idAlquiler}/finalizar-alquiler(idAlquiler=${alquiler.id})}"
-                          class="bg-white rounded-lg px-2 py-3">
+                    <form class="bg-white rounded-lg px-2 py-3"
+                          th:action="@{/alquiler/{idAlquiler}/finalizar-alquiler(idAlquiler=${alquiler.id})}">
                         <p th:text="${alquiler.id}"></p>
                         <p th:text="${alquiler.cantidadHoras}"></p>
                         <p th:text="${alquiler.bicicleta.descripcion}"></p>
-                        <button type="submit" class="px-3 py-2 bg-primary">Finalizar Alquiler</button>
+                        <button class="px-3 py-2 bg-primary" type="submit">Finalizar Alquiler</button>
                     </form>
                 </div>
             </div>

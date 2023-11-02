@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,18 +11,13 @@
     <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
 
         <div th:replace="~{partials/nav}"></div>
-        <div th:if="${rol == 'Propietario'}">
-            <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">Bienvenido, <span th:text="${usuario.nombre}"></span></h1>
-            <h1 class="text-2xl text-center mb-4">Desde aquí, podrás administrar tus bicicletas</h1>
-            <h1 class="text-2xl text-center mb-4">Te aseguramos que si alquilas tu bicicleta durante 50 horas, ganarás tanto como si la vendieras, e incluso un poco más</h1>
-            <h1 class="text-2xl text-center mb-4">Esto se debe a que consideramos el desgaste de la bicicleta en nuestros cálculos</h1>
-            <h1 class="text-2xl text-center mb-4">Para determinar el valor por hora, simplemente ingresa el precio actual al que tienes en venta la bicicleta cuando la registres para alquiler</h1>
-            <h1 class="text-2xl text-center">¡Esto hará que el cálculo sea más preciso y rentable para ti!</h1>
+
+        <div th:if="${usuario.getRol() == 'Propietario'}">
+            <p class="text-3xl font-bold text-gray-900">Vista Propietario</p>
         </div>
 
-        <div th:if="${rol == 'Cliente'}">
-            <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Bienvenido, <span th:text="${usuario.nombre}"></span></h1>
-            <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">¡Explora la oferta de bicis que tenemos en alquiler!</h1>
+        <div th:if="${usuario.getRol() == 'Cliente'}">
+            <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Vista Cliente</h1>
 
             <div th:replace="~{components/listaBicicletas}"></div>
         </div>

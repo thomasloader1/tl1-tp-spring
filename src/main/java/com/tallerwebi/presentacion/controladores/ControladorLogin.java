@@ -1,11 +1,11 @@
 package com.tallerwebi.presentacion.controladores;
 
-import com.tallerwebi.dominio.servicios.ServicioBicicleta;
-import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
+import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,19 +90,17 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
 
 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
-
-        ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("usuario", usuario);
-        modelAndView.addObject("rol", usuario.getRol());
-        modelAndView.addObject("bicicletas", bicicletas);
-
-        return modelAndView;
+        
+        model.put("bicicletas" , bicicletas);
+        model.put("usuario", usuario);
+        return new ModelAndView("home", model);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)

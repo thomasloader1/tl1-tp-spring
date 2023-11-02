@@ -32,6 +32,7 @@ public class ControladorLoginTest {
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
+    private ServicioBicicleta servicioBicicletaMock;
 
     private ServicioBicicleta servicioBicicletaMock;
 
@@ -52,6 +53,7 @@ public class ControladorLoginTest {
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
         controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
+
     }
 
     @Test
@@ -191,16 +193,30 @@ public class ControladorLoginTest {
         sessionMock.setAttribute("usuario", usuarioMock);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
-        when(sessionMock.getAttribute("bicicletas")).thenReturn(bicicletasMock);
+
         when(servicioBicicletaMock.obtenerTodasLasBicicletasDisponibles()).thenReturn(bicicletasMock);
         // ejecución
         ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
         // validación
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+
         List<Bicicleta> bicicletasEnVista = (List<Bicicleta>) modelAndView.getModel().get("bicicletas");
         // Verifica que las listas sean iguales en contenido
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
+ /*   @Test
+    public void queSeMuestrenEnVistaClienteSoloLasBicicletasDisponibles(){
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(usuarioMock.getRol()).thenReturn("Cliente");
+
+        //ejecucion
+            ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
+            // validacion
+            assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
+            verify(servicioBicicletamock, times(1)).obtenerBicicletasDisponibles();
+
+    }*/
 
     @Test
     public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {

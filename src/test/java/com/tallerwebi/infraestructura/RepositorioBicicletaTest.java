@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class RepositorioBicicletaTest {
-
     private SessionFactory sessionFactory;
     private Session sessionMock;
     private RepositorioBicicletaImpl repositorioBicicleta;
@@ -105,42 +105,58 @@ public class RepositorioBicicletaTest {
         assertEquals(0, bicicletas.size());
     }
 
+   @Test
+   @Rollback
+   @Transactional
+   public void queSePuedaObtenerUnaListaDeLasBicicletasDisponibles() {
+       // preparación
+       Query queryMock = mock(Query.class);
+       when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
+       when(queryMock.list()).thenReturn(List.of());
+
+       // ejecución
+       List<Bicicleta> bicicletasDisponibles = repositorioBicicleta.obtenerBicicletasDisponibles();
+
+       // validación
+       verify(sessionMock, times(1)).createQuery(anyString());
+       verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estadoBicicleta");
+       verify(queryMock).setParameter("estadoBicicleta", EstadoBicicleta.DISPONIBLE);
+       verify(queryMock).list();
+       assertEquals(0, bicicletasDisponibles.size());
+    }
+
     @Test
     @Rollback
     @Transactional
-    public void queSePuedaObtenerUnaListaDeTodasLasBicicletas() {
+    public void queSePuedaObtenerUnaListaDeTodasLasBicicletasDisponiblesDeUnPropietario() {
         // preparación
         Query queryMock = mock(Query.class);
         when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
-        when(queryMock.list()).thenReturn(List.of());
+
+        Usuario propietarioMock = mock(Usuario.class);
+
+        Bicicleta bicicleta1 = mock(Bicicleta.class);
+        when(bicicleta1.getUsuario()).thenReturn(propietarioMock);
+        when(bicicleta1.getEstadoBicicleta()).thenReturn(EstadoBicicleta.DISPONIBLE);
+
+        Bicicleta bicicleta2 = mock(Bicicleta.class);
+        when(bicicleta2.getUsuario()).thenReturn(propietarioMock);
+        when(bicicleta2.getEstadoBicicleta()).thenReturn(EstadoBicicleta.DISPONIBLE);
+
+        List<Bicicleta> bicicletasMock = new ArrayList<>();
+        bicicletasMock.add(bicicleta1);
+        bicicletasMock.add(bicicleta2);
+
+        when(repositorioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(propietarioMock.getId())).thenReturn(bicicletasMock);
 
         // ejecución
-        List<Bicicleta> bicicletas = repositorioBicicleta.obtenerBicicletas();
+        List<Bicicleta> bicicletas = repositorioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(propietarioMock.getId());
 
         // validación
-        verify(sessionMock, times(1)).createQuery(anyString());
-        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b");
-        verify(queryMock).list();
-        assertEquals(0, bicicletas.size());
+        assertEquals(2, bicicletas.size());
+        assertEquals(bicicleta1, bicicletas.get(0));
+        assertEquals(bicicleta2, bicicletas.get(1));
     }
-//    @Test
-//    @Rollback
-//    @Transactional
-//    public void queSePuedaObtenerUnaListaDeLasBicicletasDisponibles() {
-//        // preparación
-//        Query queryMock = mock(Query.class);
-//        when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
-//        when(queryMock.list()).thenReturn(List.of());
-//
-//        // ejecución
-//        List<Bicicleta> bicicletasDisponibles = repositorioBicicleta.obtenerBicicletasDisponibles();
-//
-//        // validación
-//        verify(sessionMock, times(1)).createQuery(anyString());
-//        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estadoBicicleta");
-//        verify(queryMock).setParameter("estadoBicicleta", EstadoBicicleta.DISPONIBLE);
-//        verify(queryMock).list();
-//        assertEquals(0, bicicletasDisponibles.size());
-//    }
+
 
 }

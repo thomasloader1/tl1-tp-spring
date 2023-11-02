@@ -3,34 +3,40 @@
         <div class="w-full md:block md:w-auto">
             <ul class="flex font-medium mt-4 md:space-x-8 md:mt-0 md:border-0">
                 <li>
-                    <a th:href="@{'/home'}"
+                    <a aria-current="page"
                        th:class="${#httpServletRequest.requestURI == '/home'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'"
-                       aria-current="page">
+                       th:href="@{'/home'}">
                         Home
                     </a>
                 </li>
-                <li th:if="${rol == 'Propietario'}">
-                    <a th:href="@{'/registrar-bicicleta'}"
-                       th:class="${#httpServletRequest.requestURI == '/registrar-bicicleta'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'">
+                <li th:if="${usuario.getRol() == 'Cliente'}">
+                    <a th:class="${#httpServletRequest.requestURI == '/mapa'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'"
+                       th:href="@{'/mapa'}">
+                        Mapa
+                    </a>
+                </li>
+                <li th:if="${usuario.getRol() == 'Propietario'}">
+                    <a th:class="${#httpServletRequest.requestURI == '/registrar-bicicleta'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'"
+                       th:href="@{'/registrar-bicicleta'}">
                         Registrar bicicleta
                     </a>
                 </li>
-                <li th:if="${rol == 'Propietario'}">
-                    <a th:href="@{'/mis-bicicletas'}"
-                       th:class="${#httpServletRequest.requestURI == '/mis-bicicletas'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'">
+                <li th:if="${usuario.getRol() == 'Propietario'}">
+                    <a th:class="${#httpServletRequest.requestURI == '/mis-bicicletas'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'"
+                       th:href="@{'/mis-bicicletas'}">
                         Mis bicicletas
                     </a>
                 </li>
-                <li th:if="${rol == 'Cliente'}">
-                    <a th:href="@{'/mis-alquileres'}"
-                       th:class="${#httpServletRequest.requestURI == '/mis-bicicletas'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'">
+                <li th:if="${usuario.getRol() == 'Cliente'}">
+                    <a th:class="${#httpServletRequest.requestURI == '/mis-alquileres'} ? 'block p-2 text-blue-700 md:p-0' : 'block p-2 text-gray-900 hover:text-blue-700 md:p-0'"
+                       th:href="@{'/mis-alquileres'}">
                         Mis alquileres
                     </a>
                 </li>
             </ul>
         </div>
-        <form action="#" th:action="@{/cerrar-sesion}" method="POST">
-            <button type="submit" class="block p-2 text-gray-900 hover:text-blue-700 md:p-0">
+        <form action="#" method="POST" th:action="@{/cerrar-sesion}">
+            <button class="block p-2 text-gray-900 hover:text-blue-700 md:p-0" type="submit">
                 Cerrar sesión
             </button>
         </form>

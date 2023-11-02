@@ -1,16 +1,36 @@
 <!DOCTYPE html>
-<html lang="es">
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Mapa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
-<div id="map" style="width: 100%; height: 100vh"></div>
+
+<div th:replace="~{partials/nav}"></div>
+<div class="flex">
+    <div id="map" class="w-3/4 h-[90vh]"></div>
+    <div class="w-1/4 h-[90vh] max-h-[90vh] overflow-y-auto flex flex-col items-center bg-white py-3 border-2 rounded-sm">
+        <h1 class="text-center text-2xl font-bold py-2">Bicicleterías más cercanas</h1>
+        <div th:each="propietario, index : ${propietarios}" class="w-[95%] border-2 rounded m-2 py-2 px-3">
+            <div class="p-2 m-1 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
+                <span th:text="${distancias[index.index]}" class="font-medium"></span>
+            </div>
+            <h2 th:text="${propietario.nombre}" class="text-xl font-semi-bold"></h2>
+            <a th:href="@{/propietario/{id}/bicicletas(id=${propietario.id})}"
+               class="text-blue-500 hover:text-blue-800">Ver bicicletas</a>
+        </div>
+    </div>
+</div>
 <script th:inline="javascript">
+    const userLatitude = [[${latitudActual}]];
+    const userLongitude = [[${longitudActual}]];
     const propietarios = [[${propietarios}]];
 
     let map;
@@ -24,11 +44,7 @@
             maxZoom: 25
         }).addTo(map);
 
-        navigator.geolocation.getCurrentPosition(function (position) {
-            const userLatitude = position.coords.latitude;
-            const userLongitude = position.coords.longitude;
-            map.setView([userLatitude, userLongitude]);
-        });
+        map.setView([userLatitude, userLongitude]);
 
         for (let i = 0; i < propietarios.length; i++) {
             const marker = L.marker([propietarios[i].latitud, propietarios[i].longitud]);
