@@ -7,6 +7,7 @@ import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.controladores.ControladorLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
@@ -33,6 +34,7 @@ public class ControladorLoginTest {
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
     private ServicioBicicleta servicioBicicletaMock;
+    private ServicioResena servicioResena;
 
     @BeforeEach
     public void init() {
@@ -41,16 +43,17 @@ public class ControladorLoginTest {
         bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
 
         // Agregar al menos dos bicicletas a la lista
-        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
-        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar"));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar",50000.0,600.0));
+        bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar",50000.0,600.0));
 
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
+        servicioResena = mock(ServicioResena.class);
         //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
+        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock,servicioResena);
 
     }
 
@@ -215,7 +218,6 @@ public class ControladorLoginTest {
             verify(servicioBicicletamock, times(1)).obtenerBicicletasDisponibles();
 
     }*/
-
 
     @Test
     public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {

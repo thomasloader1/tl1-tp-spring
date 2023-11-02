@@ -38,4 +38,9 @@ public class ServicioResenaImpl implements ServicioResena {
     public List<Resena> obtenerResenasDeUnaBicicleta(Bicicleta bicicleta) {
         return repositorioResena.obtenerResenasDeUnaBicicleta(bicicleta);
     }
+
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorId(Long id) {
+        return repositorioResena.obtenerResenasDeUnaClientePorId(id);
+    }
 }

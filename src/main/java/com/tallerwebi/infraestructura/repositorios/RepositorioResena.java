@@ -9,4 +9,5 @@ public interface RepositorioResena {
     void subirResena(Resena resena);
 
     List<Resena> obtenerResenasDeUnaBicicleta(Bicicleta bicicleta);
+    List<Resena> obtenerResenasDeUnaClientePorId(Long id);
 }
