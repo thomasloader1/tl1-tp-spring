@@ -119,8 +119,7 @@ public class RepositorioBicicletaTest {
 
        // validación
        verify(sessionMock, times(1)).createQuery(anyString());
-       verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estadoBicicleta");
-       verify(queryMock).setParameter("estadoBicicleta", EstadoBicicleta.DISPONIBLE);
+       verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
        verify(queryMock).list();
        assertEquals(0, bicicletasDisponibles.size());
     }
