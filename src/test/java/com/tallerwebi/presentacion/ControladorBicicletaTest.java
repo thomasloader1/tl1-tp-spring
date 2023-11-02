@@ -126,8 +126,28 @@ public class ControladorBicicletaTest {
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
-        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnUsoPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnReparacionPorIdUsuario(usuarioMock.getId());
     }
+    @Test
+    public void unUsuarioConRolPropietarioPuedeVerSusBicicletasRegistradasDivididasPorEstadoYSusResenas() {
+        // preparacion
+        when(requestMock.getSession()).thenReturn(sessionMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
+        when(usuarioMock.getRol()).thenReturn("Propietario");
+
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.irAMisBicicletas(usuarioMock);
+
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnUsoPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnReparacionPorIdUsuario(usuarioMock.getId());
+
+    }
+
 
 
     @Test

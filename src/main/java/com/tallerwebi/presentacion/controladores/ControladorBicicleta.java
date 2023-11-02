@@ -68,6 +68,7 @@ public class ControladorBicicleta {
         if (verificarSiEsPropietario(usuario)) {
             ModelMap modelo = new ModelMap();
             modelo.put("rol", usuario.getRol());
+            modelo.put("resenas", servicioResena.obtenerResenasDeUnaClientePorId(usuario.getId()));
             modelo.put("bicicletasUso" , servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId()));
             modelo.put("bicicletasRotas" , servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId()));
             modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId()));

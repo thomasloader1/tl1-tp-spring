@@ -2,10 +2,12 @@ package com.tallerwebi.presentacion.controladores;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,12 @@ import java.util.List;
 public class ControladorLogin {
     private final ServicioLogin servicioLogin;
     private final ServicioBicicleta servicioBicicleta;
-
+    private final ServicioResena servicioResena;
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta, ServicioResena servicioResena) {
         this.servicioLogin = servicioLogin;
         this.servicioBicicleta = servicioBicicleta;
+        this.servicioResena = servicioResena;
     }
 
     @RequestMapping("/login")
@@ -95,12 +98,15 @@ public class ControladorLogin {
         List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());
- 
+        List<Resena> resenasTotales = servicioResena.obtenerResenasDeUnaClientePorId(usuario.getId());
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
         
         model.put("bicicletas" , bicicletas);
+        if (resenasTotales != null){
+            model.put("resenasTotales", resenasTotales);
+        }
         if (bicicletasPropDispo != null) {
             model.put("bicicletasPropDispo" ,bicicletasPropDispo);
         }
