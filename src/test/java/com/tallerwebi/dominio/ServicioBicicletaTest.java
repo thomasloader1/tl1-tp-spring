@@ -10,16 +10,12 @@ import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
 import com.tallerwebi.dominio.servicios.ServicioVehicleStatus;
 import com.tallerwebi.dominio.servicios.ServicioVehicleStatusIMP;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
-import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
 import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -166,19 +162,58 @@ public class ServicioBicicletaTest {
     @Test
     public void queSePuedaObtenerUnaListaDeTodasLasBicicletasDelUsuario() {
         // preparación
-        Usuario usuarioMock = mock(Usuario.class);
-        Bicicleta bicicletaMock = mock(Bicicleta.class);
-        when(repositorioBicicletaMock.obtenerBicicletasDelUsuario(usuarioMock)).thenReturn(List.of(bicicletaMock));
+        Usuario propietarioMock = mock(Usuario.class);
+
+        Bicicleta bicicleta1 = mock(Bicicleta.class);
+        when(bicicleta1.getUsuario()).thenReturn(propietarioMock);
+
+        Bicicleta bicicleta2 = mock(Bicicleta.class);
+        when(bicicleta2.getUsuario()).thenReturn(propietarioMock);
+
+        List<Bicicleta> bicicletasMock = new ArrayList<>();
+        bicicletasMock.add(bicicleta1);
+        bicicletasMock.add(bicicleta2);
+
+        when(repositorioBicicletaMock.obtenerBicicletasDelUsuario(propietarioMock)).thenReturn(bicicletasMock);
 
         // ejecución
-        List<Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDelUsuario(usuarioMock);
+        List<Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDelUsuario(propietarioMock);
 
         // validación
-        verify(repositorioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
-        assertEquals(1, bicicletas.size());
-        assertEquals(bicicletaMock, bicicletas.get(0));
+        assertEquals(2, bicicletas.size());
+        assertEquals(bicicleta1, bicicletas.get(0));
+        assertEquals(bicicleta2, bicicletas.get(1));
+        verify(repositorioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(propietarioMock);
     }
 
+    @Test
+    public void queSePuedaObtenerUnaListaDeTodasLasBicicletasDisponiblesDeUnPropietario() {
+        // preparación
+        Usuario propietarioMock = mock(Usuario.class);
+
+        Bicicleta bicicleta1 = mock(Bicicleta.class);
+        when(bicicleta1.getUsuario()).thenReturn(propietarioMock);
+        when(bicicleta1.getEstadoBicicleta()).thenReturn(EstadoBicicleta.DISPONIBLE);
+
+        Bicicleta bicicleta2 = mock(Bicicleta.class);
+        when(bicicleta2.getUsuario()).thenReturn(propietarioMock);
+        when(bicicleta2.getEstadoBicicleta()).thenReturn(EstadoBicicleta.DISPONIBLE);
+
+        List<Bicicleta> bicicletasMock = new ArrayList<>();
+        bicicletasMock.add(bicicleta1);
+        bicicletasMock.add(bicicleta2);
+
+        when(repositorioBicicletaMock.obtenerBicicletasDisponiblesPorIdUsuario(propietarioMock.getId())).thenReturn(bicicletasMock);
+
+        // ejecución
+        List<Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(propietarioMock.getId());
+
+        // validación
+        assertEquals(2, bicicletas.size());
+        assertEquals(bicicleta1, bicicletas.get(0));
+        assertEquals(bicicleta2, bicicletas.get(1));
+        verify(repositorioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(propietarioMock.getId());
+    }
 
     private BicicletaStatus makeStatus() {
         BicicletaStatus status = new BicicletaStatus();

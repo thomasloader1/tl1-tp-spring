@@ -1,11 +1,11 @@
 package com.tallerwebi.presentacion.controladores;
 
-import com.tallerwebi.dominio.servicios.ServicioBicicleta;
-import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
+import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,12 +96,10 @@ public class ControladorLogin {
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
+        
         model.put("bicicletas" , bicicletas);
-        ModelAndView modelAndView = new ModelAndView("home" , model);
-        modelAndView.addObject("rol", usuario.getRol());
-
-
-        return modelAndView;
+        model.put("usuario", usuario);
+        return new ModelAndView("home", model);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)

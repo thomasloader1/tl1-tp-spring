@@ -1,25 +1,21 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Bicicletas</title>
-
-    <!-- Boostrap core css -->
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<main role="main" class="container">
-    <div class = "container">
-        <h1 th:text="${message}"></h1>
-
-        <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
+<main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
+    <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+        <div th:replace="~{partials/nav :: nav}"></div>
+        <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Bicicletas disponibles</h1>
+        <div th:if="${#lists.isEmpty(bicicletas)}">
+            <p class="mt-16 font-medium text-gray-900 text-center text-lg">No hay bicicletas</p>
+        </div>
+        <div th:replace="~{components/listaBicicletas}"></div>
     </div>
 </main>
-<script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
-
 </body>
-
 </html>
