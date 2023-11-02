@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion.controladores;
 
+
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.servicios.DistanciaComparador;
@@ -17,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpSession;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
+
 
 @Controller
 public class ControladorMapa {
@@ -55,6 +56,7 @@ public class ControladorMapa {
     }
 
     @RequestMapping(path = "/mapa", method = RequestMethod.GET)
+
     public ModelAndView irAMapa(@ModelAttribute("usuario") Usuario usuario) {
         if (usuario != null) {
             ModelMap modelo = new ModelMap();
@@ -80,5 +82,4 @@ public class ControladorMapa {
         }
         return new ModelAndView("redirect:/login");
     }
-
 }

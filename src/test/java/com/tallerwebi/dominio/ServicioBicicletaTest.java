@@ -14,8 +14,10 @@ import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,6 +62,7 @@ public class ServicioBicicletaTest {
         when(datosBicicletaMock.getEstadoBicicleta()).thenReturn(EstadoBicicleta.DISPONIBLE);
         when(datosBicicletaMock.getDescripcion()).thenReturn("Bicicleta de paseo");
         when(datosBicicletaMock.getUsuario()).thenReturn(usuarioMock);
+        when(datosBicicletaMock.getPrecioVenta()).thenReturn(50000.0);
 
         // ejecución
         servicioBicicleta.darDeAltaUnaBicicleta(datosBicicletaMock);

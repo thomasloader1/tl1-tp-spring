@@ -1,5 +1,12 @@
 package com.tallerwebi.presentacion;
 
+
+import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.servicios.ServicioMapa;
+import com.tallerwebi.presentacion.controladores.ControladorMapa;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.servicios.ServicioMapa;
@@ -10,16 +17,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 public class ControladorMapaTest {
@@ -42,7 +57,9 @@ public class ControladorMapaTest {
     @Test
     public void irAMapaDebeDevolverLaVistaDeMapa() {
         // ejecución
+
         ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mapa"));
@@ -51,7 +68,9 @@ public class ControladorMapaTest {
     @Test
     public void irAMapaDebeDevolverLaVistaDeMapaConLosPropietarios() {
         // ejecucion
+
         ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+
 
         // validacion
         assertNotNull(modelAndView.getModel().get("propietarios"));

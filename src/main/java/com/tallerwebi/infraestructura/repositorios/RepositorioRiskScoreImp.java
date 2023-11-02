@@ -22,9 +22,4 @@ public class RepositorioRiskScoreImp implements RepositorioRiskScore {
         query.setParameter("id", bici_id);
         return (Condition) query.uniqueResult();
     }
-
-    @Override
-    public void guardarBici(Bicicleta bicicleta) {
-        sessionFactory.getCurrentSession().save(bicicleta);
-    }
 }

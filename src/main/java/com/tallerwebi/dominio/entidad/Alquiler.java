@@ -8,7 +8,7 @@ public class Alquiler {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-      //  private Double precioAlquiler;
+         private Double precioAlquiler;
         private Integer cantidadHoras;
         @Enumerated(EnumType.STRING)
         private EstadoBicicleta estadoAlquiler;
@@ -61,6 +61,14 @@ public class Alquiler {
 
     public EstadoBicicleta getEstadoAlquiler() {
         return estadoAlquiler;
+    }
+
+    public Double getPrecioAlquiler() {
+        return precioAlquiler;
+    }
+
+    public void setPrecioAlquiler(Double precioAlquiler) {
+        this.precioAlquiler = precioAlquiler;
     }
 
     public void setEstadoAlquiler(EstadoBicicleta estadoAlquiler) {

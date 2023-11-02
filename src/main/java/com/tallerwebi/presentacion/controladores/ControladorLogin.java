@@ -93,6 +93,7 @@ public class ControladorLogin {
         ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
 
+
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }

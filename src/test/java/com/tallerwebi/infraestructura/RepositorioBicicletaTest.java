@@ -105,23 +105,24 @@ public class RepositorioBicicletaTest {
         assertEquals(0, bicicletas.size());
     }
 
-    @Test
-    @Rollback
-    @Transactional
-    public void queSePuedaObtenerUnaListaDeTodasLasBicicletasDisponibles() {
-        // preparación
-        Query queryMock = mock(Query.class);
-        when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
-        when(queryMock.list()).thenReturn(List.of());
+   @Test
+   @Rollback
+   @Transactional
+   public void queSePuedaObtenerUnaListaDeLasBicicletasDisponibles() {
+       // preparación
+       Query queryMock = mock(Query.class);
+       when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
+       when(queryMock.list()).thenReturn(List.of());
 
-        // ejecución
-        List<Bicicleta> bicicletas = repositorioBicicleta.obtenerBicicletasDisponibles();
+       // ejecución
+       List<Bicicleta> bicicletasDisponibles = repositorioBicicleta.obtenerBicicletasDisponibles();
 
-        // validación
-        verify(sessionMock, times(1)).createQuery(anyString());
-        verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
-        verify(queryMock).list();
-        assertEquals(0, bicicletas.size());
+       // validación
+       verify(sessionMock, times(1)).createQuery(anyString());
+       verify(sessionMock).createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estadoBicicleta");
+       verify(queryMock).setParameter("estadoBicicleta", EstadoBicicleta.DISPONIBLE);
+       verify(queryMock).list();
+       assertEquals(0, bicicletasDisponibles.size());
     }
 
     @Test
@@ -156,5 +157,6 @@ public class RepositorioBicicletaTest {
         assertEquals(bicicleta1, bicicletas.get(0));
         assertEquals(bicicleta2, bicicletas.get(1));
     }
+
 
 }
