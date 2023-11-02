@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,11 +11,11 @@
     <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
 
         <div th:replace="~{partials/nav}"></div>
-        <div th:if="${rol == 'Propietario'}">
+        <div th:if="${usuario.getRol() == 'Propietario'}">
             <p class="text-3xl font-bold text-gray-900">Vista Propietario</p>
         </div>
 
-        <div th:if="${rol == 'Cliente'}">
+        <div th:if="${usuario.getRol() == 'Cliente'}">
             <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Vista Cliente</h1>
             <div th:replace="~{components/listaBicicletas}"></div>
         </div>

@@ -15,7 +15,7 @@ public interface RepositorioBicicleta {
 
     List<Bicicleta> obtenerBicicletasDelUsuario(Usuario usuario);
 
-
+    List<Bicicleta> obtenerBicicletasDisponiblesPorIdUsuario(Long id);
 
     void updateEstado(Long id, EstadoBicicleta nuevoEstado);
 

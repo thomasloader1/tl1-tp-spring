@@ -99,7 +99,7 @@ public class ControladorResenaTest {
         when(usuarioMock.getRol()).thenReturn("Cliente");
 
         // ejecución
-        ModelAndView modelAndView = controladorResena.irAResenasDeUnaBicicleta(bicicletaMock.getId());
+        ModelAndView modelAndView = controladorResena.irAResenasDeUnaBicicleta(usuarioMock, bicicletaMock.getId());
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("resenas"));

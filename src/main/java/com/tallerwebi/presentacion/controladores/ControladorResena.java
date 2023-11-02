@@ -37,16 +37,19 @@ public class ControladorResena {
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/crear-resena", method = RequestMethod.GET)
     public ModelAndView irACrearResena(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario) {
-        ModelMap modelo = new ModelMap();
-        try {
-            servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
-        } catch (BicicletaNoEncontrada e) {
-            return new ModelAndView("pagina-no-encontrada");
+        if (usuario != null) {
+            ModelMap modelo = new ModelMap();
+            try {
+                servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
+            } catch (BicicletaNoEncontrada e) {
+                return new ModelAndView("pagina-no-encontrada");
+            }
+            modelo.put("datosResena", new DatosResena());
+            modelo.put("rol", usuario.getRol());
+            modelo.put("idBicicleta", idBicicleta);
+            return new ModelAndView("crear-resena", modelo);
         }
-        modelo.put("datosResena", new DatosResena());
-        modelo.put("rol", usuario.getRol());
-        modelo.put("idBicicleta", idBicicleta);
-        return new ModelAndView("crear-resena", modelo);
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/subir-resena", method = RequestMethod.POST)
@@ -71,14 +74,17 @@ public class ControladorResena {
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/resenas", method = RequestMethod.GET)
-    public ModelAndView irAResenasDeUnaBicicleta(@PathVariable Long idBicicleta) {
-        ModelMap modelo = new ModelMap();
-        try {
-            Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
-            modelo.put("resenas", servicioResena.obtenerResenasDeUnaBicicleta(bicicleta));
-        } catch (BicicletaNoEncontrada e) {
-            return new ModelAndView("pagina-no-encontrada");
+    public ModelAndView irAResenasDeUnaBicicleta(@ModelAttribute("usuario") Usuario usuario, @PathVariable Long idBicicleta) {
+        if (usuario != null) {
+            ModelMap modelo = new ModelMap();
+            try {
+                Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
+                modelo.put("resenas", servicioResena.obtenerResenasDeUnaBicicleta(bicicleta));
+            } catch (BicicletaNoEncontrada e) {
+                return new ModelAndView("pagina-no-encontrada");
+            }
+            return new ModelAndView("resenas", modelo);
         }
-        return new ModelAndView("resenas", modelo);
+        return new ModelAndView("redirect:/login");
     }
 }

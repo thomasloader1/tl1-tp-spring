@@ -42,7 +42,7 @@ public class ControladorMapaTest {
     @Test
     public void irAMapaDebeDevolverLaVistaDeMapa() {
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa();
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mapa"));
@@ -51,7 +51,7 @@ public class ControladorMapaTest {
     @Test
     public void irAMapaDebeDevolverLaVistaDeMapaConLosPropietarios() {
         // ejecucion
-        ModelAndView modelAndView = controladorMapa.irAMapa();
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
         // validacion
         assertNotNull(modelAndView.getModel().get("propietarios"));
@@ -64,7 +64,7 @@ public class ControladorMapaTest {
         Coordenada coordenada = obtenerUbicacionActual();
 
         // ejecucion
-        ModelAndView modelAndView = controladorMapa.irAMapa();
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
         // validacion
         assertEquals(coordenada.getLatitude(), modelAndView.getModel().get("latitudActual"));
@@ -91,7 +91,7 @@ public class ControladorMapaTest {
         }});
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa();
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
         // validación
         // el orden de la lista es propietario3, propietario2, propietario1
@@ -121,7 +121,7 @@ public class ControladorMapaTest {
         }});
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa();
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
         // validación
         List<String> distancias = (List<String>) modelAndView.getModel().get("distancias");

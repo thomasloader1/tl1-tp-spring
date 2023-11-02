@@ -55,27 +55,30 @@ public class ControladorMapa {
     }
 
     @RequestMapping(path = "/mapa", method = RequestMethod.GET)
-    public ModelAndView irAMapa() {
-        ModelMap modelo = new ModelMap();
-        Dotenv dotenv = Dotenv.configure().load();
-        String apiKey = dotenv.get("IPDATA_API_KEY");
-        String apiUrl = "https://api.ipdata.co?fields=latitude,longitude&api-key=" + apiKey;
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Coordenada> response = restTemplate.exchange(apiUrl, HttpMethod.GET, null, Coordenada.class);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            Coordenada coordenada = response.getBody();
-            modelo.put("latitudActual", coordenada.getLatitude());
-            modelo.put("longitudActual", coordenada.getLongitude());
-            List<Usuario> propietarios = servicioMapa.obtenerPropietarios();
-            DistanciaComparador comparador = new DistanciaComparador(coordenada.getLatitude(), coordenada.getLongitude());
-            propietarios.sort(comparador);
-            modelo.put("propietarios", propietarios);
-            modelo.put("distancias", obtenerDistancias(propietarios, coordenada));
-        } else {
-            modelo.put("error", "Hubo un error al llamar a la API");
-        }
+    public ModelAndView irAMapa(@ModelAttribute("usuario") Usuario usuario) {
+        if (usuario != null) {
+            ModelMap modelo = new ModelMap();
+            Dotenv dotenv = Dotenv.configure().load();
+            String apiKey = dotenv.get("IPDATA_API_KEY");
+            String apiUrl = "https://api.ipdata.co?fields=latitude,longitude&api-key=" + apiKey;
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Coordenada> response = restTemplate.exchange(apiUrl, HttpMethod.GET, null, Coordenada.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                Coordenada coordenada = response.getBody();
+                modelo.put("latitudActual", coordenada.getLatitude());
+                modelo.put("longitudActual", coordenada.getLongitude());
+                List<Usuario> propietarios = servicioMapa.obtenerPropietarios();
+                DistanciaComparador comparador = new DistanciaComparador(coordenada.getLatitude(), coordenada.getLongitude());
+                propietarios.sort(comparador);
+                modelo.put("propietarios", propietarios);
+                modelo.put("distancias", obtenerDistancias(propietarios, coordenada));
+            } else {
+                modelo.put("error", "Hubo un error al llamar a la API");
+            }
 
-        return new ModelAndView("mapa", modelo);
+            return new ModelAndView("mapa", modelo);
+        }
+        return new ModelAndView("redirect:/login");
     }
 
 }

@@ -6,9 +6,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
-import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
-import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
 import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +61,8 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     @Override
-    public Bicicleta obtenerBicicletaPorIdUsuario(Long id) throws BicicletaNoEncontrada {
-        return null;
+    public List<Bicicleta> obtenerBicicletasDisponiblesPorIdUsuario(Long id) {
+        return repositorioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(id);
     }
 
     @Override
