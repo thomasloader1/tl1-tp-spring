@@ -109,7 +109,7 @@ public class ControladorBicicletaTest {
     }
 
     @Test
-    public void unUsuarioConRolPropietarioPuedeVerSusBicicletasRegistradas() {
+    public void unUsuarioConRolPropietarioPuedeVerSusBicicletasRegistradasDivididasPorEstado() {
         // preparacion
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
