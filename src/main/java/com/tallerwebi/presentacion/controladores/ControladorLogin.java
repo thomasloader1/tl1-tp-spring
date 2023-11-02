@@ -92,12 +92,24 @@ public class ControladorLogin {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
-
+        List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
         
         model.put("bicicletas" , bicicletas);
+        if (bicicletasPropDispo != null) {
+            model.put("bicicletasPropDispo" ,bicicletasPropDispo);
+        }
+        if (bicicletasPropEnUso != null) {
+            model.put("bicicletasPropEnUso" ,bicicletasPropEnUso);
+        }
+        if (bicicletasPropEnRepa != null) {
+            model.put("bicicletasPropEnRepa" ,bicicletasPropEnRepa);
+        }
+
         model.put("usuario", usuario);
         return new ModelAndView("home", model);
     }
