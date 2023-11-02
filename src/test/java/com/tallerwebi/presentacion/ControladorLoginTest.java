@@ -34,7 +34,6 @@ public class ControladorLoginTest {
     private ServicioLogin servicioLoginMock;
     private ServicioBicicleta servicioBicicletaMock;
 
-    private ServicioBicicleta servicioBicicletaMock;
 
     @BeforeEach
     public void init() {
