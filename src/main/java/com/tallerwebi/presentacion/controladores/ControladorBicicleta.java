@@ -53,7 +53,7 @@ public class ControladorBicicleta {
         ModelMap modelo = new ModelMap();
         try {
             datosBicicleta.setUsuario(usuario);
-            datosBicicleta.setPrecioVenta(1000.0);
+
             servicioBicicleta.darDeAltaUnaBicicleta(datosBicicleta);
         } catch (BicicletaValidacion e) {
             modelo.put("error", "Debe completar todos los campos");

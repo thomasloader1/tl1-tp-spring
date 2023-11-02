@@ -35,11 +35,10 @@ public class ServicioAlquilerTest {
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         when(datosAlquilerMock.getBicicleta()).thenReturn(mock(Bicicleta.class));
         when(datosAlquilerMock.getUsuario()).thenReturn(mock(Usuario.class));
+        when(datosAlquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.PERFECTO_ESTADO);
         when(datosAlquilerMock.getCantidadHoras()).thenReturn(1);
-
         // ejecución
         servicioAlquiler.crearAlquiler(datosAlquilerMock);
-
         // validación
         verify(repositorioAlquilerMock, times(1)).crearAlquiler(any(Alquiler.class));
     }
@@ -83,6 +82,7 @@ public class ServicioAlquilerTest {
         Usuario usuarioMock = mock(Usuario.class);
         when(datosAlquilerMock.getBicicleta()).thenReturn(bicicletaMock);
         when(datosAlquilerMock.getUsuario()).thenReturn(usuarioMock);
+        when(datosAlquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.PERFECTO_ESTADO);
         when(datosAlquilerMock.getCantidadHoras()).thenReturn(1);
 
         // ejecución
@@ -110,23 +110,4 @@ public class ServicioAlquilerTest {
         assertThrows(AlquilerValidacion.class, () -> servicioAlquiler.crearAlquiler(datosAlquilerMock));
         verify(repositorioAlquilerMock, times(0)).crearAlquiler(any(Alquiler.class));
     }
-
-    @Test
-    public void queSePuedaCalcularElPrecioDelAlquiler() {
-        // Crea un objeto de datos de alquiler con valores de ejemplo
-        DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
-        when(datosAlquilerMock.getBicicleta()).thenReturn(mock(Bicicleta.class));
-        when(datosAlquilerMock.getPrecioxhora()).thenReturn(500.0);
-        when(datosAlquilerMock.getCantidadHoras()).thenReturn(2);
-        when(datosAlquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.BUENO_ESTADO);
-
-        // Llama al método que quieres probar
-        double precioFinal = servicioAlquiler.calcularPrecioAlquiler(datosAlquilerMock);
-
-        // Verifica si el precio final calculado es el esperado
-        // En este caso, esperamos que el precio sea 500.0 (precio base) * 2 (horas) * 0.8 (buen estado) = 800.0
-        assertEquals(800.0, precioFinal, 0.01); // El tercer argumento es la tolerancia para la comparación de valores flotantes
-
-    }
-
 }

@@ -7,7 +7,7 @@ import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
-import com.tallerwebi.presentacion.dto.DatosAlquiler;
+import com.tallerwebi.presentacion.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,6 +43,7 @@ public class ControladorAlquiler {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
             datosAlquiler.setBicicleta(bicicleta);
             datosAlquiler.setUsuario(usuario);
+
             servicioAlquiler.crearAlquiler(datosAlquiler);
         } catch (AlquilerValidacion e) {
             modelo.put("error", "Error al crear el Alquiler");

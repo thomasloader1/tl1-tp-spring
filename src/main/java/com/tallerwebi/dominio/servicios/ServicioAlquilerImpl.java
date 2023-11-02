@@ -33,6 +33,7 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
         }
         Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
         alquiler.setEstadoAlquiler(EstadoBicicleta.EN_USO);
+        alquiler.setPrecioAlquiler(calcularPrecioAlquiler(datosAlquiler));
 
         repositorioBicicleta.updateEstado(datosAlquiler.getBicicleta().getId(), EstadoBicicleta.EN_USO);
         repositorioAlquiler.crearAlquiler(alquiler);
@@ -63,8 +64,13 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public double calcularPrecioAlquiler(DatosAlquiler datosAlquiler) {
-        double precioBasePorHora = datosAlquiler.getPrecioxhora();
+    public Alquiler obtenerAlquilerPorId(Long id) {
+        return repositorioAlquiler.obtenerAlquilerporId(id);
+    }
+
+
+    private double  calcularPrecioAlquiler(DatosAlquiler datosAlquiler) {
+        double precioBasePorHora = datosAlquiler.getBicicleta().getPrecioAlquilerPorHora();
         int cantidadHoras = datosAlquiler.getCantidadHoras();
         Condition estadoBicicleta = datosAlquiler.getBicicleta().getCondicion();
 
@@ -84,7 +90,7 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
                 valorEstado = 1.0;
         }
         double precioFinal = precioBasePorHora * cantidadHoras * valorEstado;
-        return precioFinal;
+            return precioFinal;
 
     }
 

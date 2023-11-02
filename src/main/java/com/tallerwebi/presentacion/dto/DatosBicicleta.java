@@ -7,7 +7,6 @@ public class DatosBicicleta {
     private EstadoBicicleta estadoBicicleta;
     private String descripcion;
     private Usuario usuario;
-
     private double precioAlquilerPorHora;
     private double precioVenta;
     private String urlImagen;
@@ -61,11 +60,9 @@ public class DatosBicicleta {
     public void setPrecioVenta(double precioVenta) {
         this.precioVenta = precioVenta;
     }
-
     public double getPrecioAlquilerPorHora() {
         return precioAlquilerPorHora;
     }
-
     public void setPrecioAlquilerPorHora(double precioAlquilerPorHora) {
         this.precioAlquilerPorHora = precioAlquilerPorHora;
     }

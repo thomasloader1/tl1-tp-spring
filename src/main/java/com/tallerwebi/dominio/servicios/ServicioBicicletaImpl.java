@@ -39,7 +39,8 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
         if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()|| datosBicicleta.getPrecioVenta() <= 0) {
             throw new BicicletaValidacion();
         }
-        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen(),datosBicicleta.getPrecioVenta());
+        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen(),datosBicicleta.getPrecioVenta(), datosBicicleta.getPrecioAlquilerPorHora());
+
         bicicleta.setPrecioVenta(datosBicicleta.getPrecioVenta());
         bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
         repositorioBicicleta.registrarBicicleta(bicicleta);
@@ -115,4 +116,4 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
           List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
           return bicicleta;
     }
-}
+    }

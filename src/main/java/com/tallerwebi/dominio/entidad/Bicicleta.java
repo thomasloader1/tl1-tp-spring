@@ -11,7 +11,7 @@ public class Bicicleta {
     private EstadoBicicleta estadoBicicleta;
     private String descripcion;
     private String urlImagen;
-
+    private double precioAlquilerPorHora;
     private double precioVenta;
     @ManyToOne
     private Usuario usuario;
@@ -29,12 +29,13 @@ public class Bicicleta {
         this.condicion = condicion;
     }
 
-    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, String urlImagen,double precioVenta) {
+    public Bicicleta(EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario, String urlImagen,double precioVenta, double precioAlquilerPorHora) {
         this.estadoBicicleta = estadoBicicleta;
         this.descripcion = descripcion;
         this.usuario = usuario;
         this.urlImagen = urlImagen;
         this.precioVenta = precioVenta;
+        this.precioAlquilerPorHora = (precioVenta * 1.2) / 100;
     }
 
     public Bicicleta(Long id, EstadoBicicleta estadoBicicleta, String descripcion, Usuario usuario) {
@@ -102,5 +103,11 @@ public class Bicicleta {
 
     public void setPrecioVenta(double precioVenta) {
         this.precioVenta = precioVenta;
+    }
+    public double getPrecioAlquilerPorHora() {
+        return precioAlquilerPorHora;
+    }
+    public void setPrecioAlquilerPorHora(double precioAlquilerPorHora) {
+        this.precioAlquilerPorHora = precioAlquilerPorHora;
     }
 }
