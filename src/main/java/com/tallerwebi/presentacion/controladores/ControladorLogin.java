@@ -95,6 +95,7 @@ public class ControladorLogin {
         List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());
+ 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }

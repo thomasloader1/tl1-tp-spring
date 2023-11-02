@@ -24,19 +24,21 @@
                           th:action="@{/bicicleta/{bicicletaId}/crear-alquiler(bicicletaId=${bicicleta.id})}"
                           th:object="${datosAlquiler}">
                         <div>
-                            <h3 class="mb-2  text-2xl">Estado:</h3>
-                            <span class="py-2 px-3 shadow-md rounded-full bg-blue text-white font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getEstadoBicicleta()}"></span>
-                            <h3 class="mb-3 text-2xl">Descripcion:</h3>
-                            <p th:text="${bicicleta.getDescripcion()}"></p>
+                            <h3 class="mb-2  text-1xl">Estado: <span class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getEstadoBicicleta()}"></span></h3>
+                            <h3 class="mb-3 text-1xl">Descripcion: <span class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getDescripcion()}"></span></h3>
+                            <h3 for="precioPorHora" class="mb-3 text-1xl">Precio por hora:<span id="precioPorHora" class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"th:text="${bicicleta.getPrecioAlquilerPorHora()}"></span></h3>
+
                         </div>
                         <div class="w-80 mx-auto mb-6">
-                            <label class="block mb-2 text-sm font-medium text-gray-900"
-                                   for="cantidadHoras">Horas</label>
-                            <input autocomplete="off"
-                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                   id="cantidadHoras" name="horas"
-                                   required
-                                   th:field="*{cantidadHoras}" type="number"/>
+
+                            <label for="cantidadHoras" class="block mb-2 text-m font-medium text-gray-900">Horas a alquilar</label>
+                            <input th:field="*{cantidadHoras}" id="cantidadHoras" type="number" name="cantidadHoras" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        </div>
+
+                        <div>
+                            <label for="precioFinal" class="block mb-2 text-sm font-medium text-gray-900">Precio final del alquiler:</label>
+                            <p id="precioFinal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"></p>
+
                         </div>
 
                         <div class="text-center">
@@ -63,5 +65,25 @@
         </div>
     </div>
 </main>
+<script>
+var cantidadHorasInput = document.getElementById("cantidadHoras");
+var precioFinalOutPut= document.getElementById("precioFinal");
+var precioPorHora =  [[${bicicleta.getPrecioAlquilerPorHora()}]];
+
+
+cantidadHoras.addEventListener("input", function () {
+    var cantidadHoras = parseFloat(cantidadHorasInput.value);
+
+console.log(cantidadHoras);
+console.log(precioPorHora);
+
+    var precioFinal = cantidadHoras * precioPorHora;
+
+console.log(precioFinal);
+
+    precioFinalOutPut.innerHTML   = precioFinal.toFixed(2);
+});
+</script>
+
 </body>
 </html>
