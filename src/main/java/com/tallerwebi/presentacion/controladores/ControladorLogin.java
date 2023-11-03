@@ -7,6 +7,7 @@ import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
@@ -98,15 +99,20 @@ public class ControladorLogin {
     public ModelAndView registrarme(@ModelAttribute("datosUsuario") DatosUsuario datosUsuario) {
         ModelMap model = new ModelMap();
         try {
-            Coordenada coordenada = obtenerCoordenadas(datosUsuario);
-            datosUsuario.setLatitud(coordenada.getLatitude());
-            datosUsuario.setLongitud(coordenada.getLongitude());
+            if (datosUsuario.getDireccion() != null) {
+                Coordenada coordenada = obtenerCoordenadas(datosUsuario);
+                datosUsuario.setLatitud(coordenada.getLatitude());
+                datosUsuario.setLongitud(coordenada.getLongitude());
+            }
             servicioLogin.registrar(datosUsuario);
         } catch (UsuarioExistente e) {
             model.put("error", "El usuario ya existe");
             return new ModelAndView("nuevo-usuario", model);
         } catch (UsuarioSinRol e) {
             model.put("error", "Tenés que seleccionar tu tipo de usuario");
+            return new ModelAndView("nuevo-usuario", model);
+        } catch (UsuarioSinDireccion e) {
+            model.put("error", "Tenés que ingresar tu dirección");
             return new ModelAndView("nuevo-usuario", model);
         } catch (Exception e) {
             model.put("error", "Error al registrar el nuevo usuario");
