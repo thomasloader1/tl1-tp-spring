@@ -19,10 +19,13 @@ public interface ServicioBicicleta {
 
     List<Bicicleta> obtenerBicicletasDisponiblesPorIdUsuario(Long id);
     List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id);
+    List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id);
+
     Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta);
     boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
  
-    List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id);
+
+
  
     List<Bicicleta> obtenerBicicletasDisponibles();
 

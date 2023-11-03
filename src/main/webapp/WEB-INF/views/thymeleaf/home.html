@@ -17,7 +17,14 @@
             <br>
             <!-- Statats-->
 
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-4 gap-4">
+                <div>
+
+                    <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-slate-900		 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white"th:text="${#lists.size(bicicletasDelUsuarioTotal)}"></h5>
+                        <p class="font-normal  text-center text-gray-700 dark:text-gray-400">Total Bicicletas</p>
+                    </a>
+                </div>
                 <div>
 
                     <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-amber-400	 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
@@ -43,6 +50,27 @@
 
                         <h5 class="mb-2 text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white"th:text="${#lists.size(resenasTotales)}"></h5>
                         <p class="font-normal  text-center text-gray-700 dark:text-gray-400">Total de Reseñas</p>
+                    </a>
+                </div>
+                <div>
+                    <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-lime-400	 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+                        <h5 class="mb-2 text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white"th:text="${#lists.size(resenasBuenas)}"></h5>
+                        <p class="font-normal  text-center text-gray-700 dark:text-gray-400">Reseñas Buenas</p>
+                    </a>
+                </div>
+                <div>
+                    <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-lime-400	 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+                        <h5 class="mb-2 text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white"th:text="${#lists.size(resenasRegulares)}"></h5>
+                        <p class="font-normal  text-center text-gray-700 dark:text-gray-400">Reseñas Regulares</p>
+                    </a>
+                </div>
+                <div>
+                    <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-lime-400	 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+                        <h5 class="mb-2 text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white"th:text="${#lists.size(resenasMalas)}"></h5>
+                        <p class="font-normal  text-center text-gray-700 dark:text-gray-400">Reseñas Malas</p>
                     </a>
                 </div>
                 <div>

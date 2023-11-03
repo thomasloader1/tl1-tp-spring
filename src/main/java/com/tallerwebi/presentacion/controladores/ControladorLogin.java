@@ -98,25 +98,21 @@ public class ControladorLogin {
         List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasDelUsuarioTotal= servicioBicicleta.obtenerBicicletasDelUsuario(usuario);
         List<Resena> resenasTotales = servicioResena.obtenerResenasDeUnaClientePorId(usuario.getId());
-        if (usuario == null) {
-            return new ModelAndView("redirect:/login");
-        }
-        
-        model.put("bicicletas" , bicicletas);
-        if (resenasTotales != null){
-            model.put("resenasTotales", resenasTotales);
-        }
-        if (bicicletasPropDispo != null) {
-            model.put("bicicletasPropDispo" ,bicicletasPropDispo);
-        }
-        if (bicicletasPropEnUso != null) {
-            model.put("bicicletasPropEnUso" ,bicicletasPropEnUso);
-        }
-        if (bicicletasPropEnRepa != null) {
-            model.put("bicicletasPropEnRepa" ,bicicletasPropEnRepa);
-        }
+        List<Resena> resenasBuenas = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeBueno(usuario.getId());
+        List<Resena> resenasMalas = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeMalo(usuario.getId());
+        List<Resena> resenasRegulares = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeRegular(usuario.getId());
 
+        model.put("resenasTotales", resenasTotales);
+        model.put("resenasBuenas", resenasBuenas);
+        model.put("resenasRegulares", resenasRegulares);
+        model.put("resenasMalas", resenasMalas);
+        model.put("bicicletasDelUsuarioTotal",bicicletasDelUsuarioTotal );
+        model.put("bicicletasPropEnUso" , bicicletasPropEnUso);
+        model.put("bicicletasPropEnRepa" , bicicletasPropEnRepa);
+        model.put("bicicletasPropDispo" , bicicletasPropDispo);
+        model.put("bicicletas", bicicletas);
         model.put("usuario", usuario);
         return new ModelAndView("home", model);
     }

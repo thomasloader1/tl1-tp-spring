@@ -135,4 +135,21 @@ public class ServicioResenaTest {
         assertEquals(2,resenasPorId.size());
         assertEquals(resenaMock, resenasPorId.get(0));
     }
+    @Test
+    public void queSePuedaObtenerUnaListaDeLasResenasIgualesACincoEnPuntajeDeUnCliente(){
+        //preparacion
+        Resena resenaMock = mock(Resena.class);
+        resenaMock.setPuntaje(5);
+        Resena resenaMock2 = mock(Resena.class);
+        resenaMock2.setPuntaje(5);
+        Usuario usuarioMock = mock(Usuario.class);
+        when(repositorioResenaMock.obtenerResenasDeUnaClientePorId(usuarioMock.getId())).thenReturn(List.of(resenaMock, resenaMock2));
+
+        // ejecucion
+        List <Resena> resenasPorId = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeBueno(usuarioMock.getId());
+        // validacion
+        verify(repositorioResenaMock ,times(1)).obtenerResenasDeUnaClientePorId(usuarioMock.getId());
+        assertEquals(2,resenasPorId.size());
+        assertEquals(resenaMock, resenasPorId.get(0));
+    }
 }

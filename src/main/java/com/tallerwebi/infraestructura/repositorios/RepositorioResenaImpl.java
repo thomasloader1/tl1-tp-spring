@@ -35,13 +35,33 @@ public class RepositorioResenaImpl implements RepositorioResena {
     @Override
     public List<Resena> obtenerResenasDeUnaClientePorId(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "SELECT r FROM Resena r " +
-                "JOIN r.bicicleta b " +
-                "JOIN b.usuario c " +
-                "WHERE c.id = :clienteId";
-
         Query query = session.createQuery( "SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId");
         query.setParameter("clienteId", id);
       return  (List<Resena>) query.list();
+    }
+
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorIdPuntajeBueno(Long id) {
+
+            Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId AND r.puntaje >= 5");
+            query.setParameter("clienteId", id);
+            return  (List<Resena>) query.list();
+    }
+
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorIdPuntajeRegular(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId AND (r.puntaje >= 3 AND r.puntaje < 5)");
+        query.setParameter("clienteId", id);
+        return  (List<Resena>) query.list();
+    }
+
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorIdPuntajeMalo(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId AND r.puntaje >= 2 ");
+        query.setParameter("clienteId", id);
+        return  (List<Resena>) query.list();
     }
 }
