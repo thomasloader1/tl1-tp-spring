@@ -69,8 +69,6 @@ public class ControladorBicicleta {
             ModelMap modelo = new ModelMap();
             modelo.put("usuario", usuario);
 
-            modelo.put("resenas", servicioResena.obtenerResenasDeUnaClientePorId(usuario.getId()));
-
             modelo.put("bicicletasUso" , servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId()));
             modelo.put("bicicletasRotas" , servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId()));
             modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId()));
