@@ -13,6 +13,7 @@ public class Bicicleta {
     private String urlImagen;
     private double precioAlquilerPorHora;
     private double precioVenta;
+    private int puntaje;
     @ManyToOne
     private Usuario usuario;
     @OneToOne
@@ -109,5 +110,13 @@ public class Bicicleta {
     }
     public void setPrecioAlquilerPorHora(double precioAlquilerPorHora) {
         this.precioAlquilerPorHora = precioAlquilerPorHora;
+    }
+
+    public int getPuntaje() {
+        return puntaje;
+    }
+
+    public void setPuntaje(int puntaje) {
+        this.puntaje = puntaje;
     }
 }

@@ -24,4 +24,6 @@ public interface RepositorioBicicleta {
     List<Bicicleta> obtenerBicicletasDisponibles();
 
     List<Bicicleta> obtenerBiciclestasEnReparacion();
+
+    void actualizarPuntajeBici(Bicicleta bicicleta);
 }

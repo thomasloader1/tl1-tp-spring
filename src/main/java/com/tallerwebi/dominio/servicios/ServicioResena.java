@@ -12,4 +12,6 @@ public interface ServicioResena {
     void subirResena(DatosResena datosResena) throws ResenaValidacion, ResenaPuntajeValidacion;
 
     List<Resena> obtenerResenasDeUnaBicicleta(Bicicleta bicicleta);
+
+    int calcularPuntaje(Bicicleta bicicleta);
 }

@@ -22,4 +22,6 @@ public interface ServicioBicicleta {
     boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
 
     List<Bicicleta> obtenerBicicletasDisponibles();
+
+
 }

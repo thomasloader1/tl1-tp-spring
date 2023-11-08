@@ -62,6 +62,7 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         bicicleta.setEstadoBicicleta(estadoBicicleta);
         session.update(bicicleta);
     }
+
     public List<Bicicleta> obtenerBicicletas() {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT b FROM Bicicleta b");
@@ -72,7 +73,7 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
     public List<Bicicleta> obtenerBicicletasDisponibles() {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
-        query.setParameter("estado",EstadoBicicleta.DISPONIBLE);
+        query.setParameter("estado", EstadoBicicleta.DISPONIBLE);
 
         return (List<Bicicleta>) query.list();
     }
@@ -83,5 +84,11 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
         query.setParameter("estado", EstadoBicicleta.REQUIERE_REPARACION);
         return (List<Bicicleta>) query.list();
+    }
+
+    @Override
+    public void actualizarPuntajeBici(Bicicleta bicicleta) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(bicicleta);
     }
 }

@@ -15,6 +15,9 @@ public class RepositorioResenaImpl implements RepositorioResena {
     private final SessionFactory sessionFactory;
 
     @Autowired
+    private RepositorioBicicleta repositorioBicicleta;
+
+    @Autowired
     public RepositorioResenaImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -22,6 +25,10 @@ public class RepositorioResenaImpl implements RepositorioResena {
     @Override
     public void subirResena(Resena resena) {
         sessionFactory.getCurrentSession().save(resena);
+        Bicicleta bicicleta = resena.getBicicleta();
+        bicicleta.setPuntaje(bicicleta.getPuntaje() + resena.getPuntaje());
+
+        repositorioBicicleta.actualizarPuntajeBici(bicicleta);
     }
 
     @Override
@@ -31,4 +38,13 @@ public class RepositorioResenaImpl implements RepositorioResena {
         query.setParameter("bicicleta", bicicleta);
         return (List<Resena>) query.list();
     }
+
+    @Override
+    public int obtenerCantidadDeResenasParaUnaBicicleta(Bicicleta bicicleta) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT COUNT(*) FROM Resena r WHERE r.bicicleta = :bicicleta");
+        query.setParameter("bicicleta", bicicleta);
+        return ((Long)query.uniqueResult()).intValue() ;
+    }
+
 }

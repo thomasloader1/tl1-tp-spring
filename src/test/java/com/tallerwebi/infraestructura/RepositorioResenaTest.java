@@ -39,10 +39,15 @@ public class RepositorioResenaTest {
         when(resenaMock.getId()).thenReturn(1L);
         when(sessionMock.get(Resena.class, resenaMock.getId())).thenReturn(resenaMock);
 
+        when(resenaMock.getPuntaje()).thenReturn(10);
+        Bicicleta bicicleta = new Bicicleta();
+        bicicleta.setPuntaje(5);
+        when(resenaMock.getBicicleta()).thenReturn(bicicleta);
+
         // ejecución
         repositorioResena.subirResena(resenaMock);
 
-        // validación
+        // validaciónAntonell@101097
         verify(sessionMock, times(1)).save(resenaMock);
     }
 
@@ -66,4 +71,5 @@ public class RepositorioResenaTest {
         verify(queryMock).list();
         assertEquals(0, resenas.size());
     }
+
 }

@@ -8,6 +8,7 @@ import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.controladores.ControladorLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
@@ -52,7 +53,7 @@ public class ControladorLoginTest {
         servicioLoginMock = mock(ServicioLogin.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
+        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock, mock(ServicioResena.class));
 
     }
 
