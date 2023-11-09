@@ -20,5 +20,6 @@ public interface ServicioBicicleta {
     List<Bicicleta> obtenerBicicletasDisponiblesPorIdUsuario(Long id);
     Bicicleta actualizarEstadoBicicleta(Bicicleta bicicleta);
     boolean verificarDisponibilidad(Integer id) throws BicicletaNoEncontrada, BicicletaNoDisponible;
+
     List<Bicicleta> obtenerBicicletasDisponibles();
 }
