@@ -149,6 +149,64 @@ public class ControladorMapaTest {
         assertTrue(distancias.get(2).contains("metros") || distancias.get(2).contains("km"));
     }
 
+    @Test
+    public void irAMapaDebeDevolverElTiempoDeLlegadaCaminandoAUnDestinoDesdeLaUbicacionActual() {
+        // preparación
+        Coordenada coordenada = obtenerUbicacionActual();
+        Usuario propietario1 = mock(Usuario.class);
+        when(propietario1.getLatitud()).thenReturn(coordenada.getLatitude() + 0.03);
+        when(propietario1.getLongitud()).thenReturn(coordenada.getLongitude() + 0.03);
+        when(servicioMapaMock.obtenerPropietarios()).thenReturn(new LinkedList<>() {{
+            add(propietario1);
+        }});
+
+        // ejecución
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+
+        // validación
+        List<String> tiemposDeLlegadaCaminando = (List<String>) modelAndView.getModel().get("tiemposDeLlegadaCaminando");
+        assertTrue(tiemposDeLlegadaCaminando.get(0).contains("min"));
+    }
+
+    @Test
+    public void irAMapaDebeDevolverElTiempoDeLlegadaEnBicicletaAUnDestinoDesdeLaUbicacionActual() {
+        // preparación
+        Coordenada coordenada = obtenerUbicacionActual();
+        Usuario propietario1 = mock(Usuario.class);
+        when(propietario1.getLatitud()).thenReturn(coordenada.getLatitude() + 0.03);
+        when(propietario1.getLongitud()).thenReturn(coordenada.getLongitude() + 0.03);
+        when(servicioMapaMock.obtenerPropietarios()).thenReturn(new LinkedList<>() {{
+            add(propietario1);
+        }});
+
+        // ejecución
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+
+        // validación
+        List<String> tiemposDeLlegadaCaminando = (List<String>) modelAndView.getModel().get("tiemposDeLlegadaEnBicicleta");
+        assertTrue(tiemposDeLlegadaCaminando.get(0).contains("min"));
+    }
+
+    @Test
+    public void irAMapaDebeDevolverElTiempoDeLlegadaEnAutoAUnDestinoDesdeLaUbicacionActual() {
+        // preparación
+        Coordenada coordenada = obtenerUbicacionActual();
+        Usuario propietario1 = mock(Usuario.class);
+        when(propietario1.getLatitud()).thenReturn(coordenada.getLatitude() + 0.03);
+        when(propietario1.getLongitud()).thenReturn(coordenada.getLongitude() + 0.03);
+        when(servicioMapaMock.obtenerPropietarios()).thenReturn(new LinkedList<>() {{
+            add(propietario1);
+        }});
+
+        // ejecución
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+
+        // validación
+        List<String> tiemposDeLlegadaCaminando = (List<String>) modelAndView.getModel().get("tiemposDeLlegadaEnAuto");
+        assertTrue(tiemposDeLlegadaCaminando.get(0).contains("min"));
+    }
+
+
     private Coordenada obtenerUbicacionActual() {
         Dotenv dotenv = Dotenv.configure().load();
         String apiKey = dotenv.get("IPDATA_API_KEY");

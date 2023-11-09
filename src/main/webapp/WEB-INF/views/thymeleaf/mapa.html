@@ -5,61 +5,135 @@
     <meta charset="UTF-8">
     <title>Mapa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+    <script crossorigin=""
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-
 <div th:replace="~{partials/nav}"></div>
 <div class="flex">
-    <div id="map" class="w-3/4 h-[90vh]"></div>
+    <div class="w-3/4 h-[90vh]" id="map"></div>
     <div class="w-1/4 h-[90vh] max-h-[90vh] overflow-y-auto flex flex-col items-center bg-white py-3 border-2 rounded-sm">
         <h1 class="text-center text-2xl font-bold py-2">Bicicleterías más cercanas</h1>
-        <div th:each="propietario, index : ${propietarios}" class="w-[95%] border-2 rounded m-2 py-2 px-3">
+        <div class="w-[95%] border-2 rounded m-2 py-2 px-3" th:each="propietario, index : ${propietarios}">
             <div class="p-2 m-1 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
-                <span th:text="${distancias[index.index]}" class="font-medium"></span>
+                <span class="font-medium" th:text="${distancias[index.index]}"></span>
             </div>
-            <h2 th:text="${propietario.nombre}" class="text-xl font-semi-bold"></h2>
-            <a th:href="@{/propietario/{id}/bicicletas(id=${propietario.id})}"
-               class="text-blue-500 hover:text-blue-800">Ver bicicletas</a>
+            <div class="flex justify-around my-2">
+                <div class="opcion-ruta p-2 flex items-center cursor-pointer rounded hover:bg-gray-200"
+                     th:onclick="'crearRuta(' + ${propietario.latitud} + ', ' + ${propietario.longitud} + ', \'WALKING\')'">
+                    <img alt="Persona caminando" class="w-9 mx-1" src="https://abs-0.twimg.com/emoji/v2/svg/1f6b6.svg"/>
+                    <span class="font-medium" th:text="${tiemposDeLlegadaCaminando[index.index]}"></span>
+                </div>
+                <div class="opcion-ruta p-2 flex items-center cursor-pointer rounded hover:bg-gray-200"
+                     th:onclick="'crearRuta(' + ${propietario.latitud} + ', ' + ${propietario.longitud} + ', \'BICYCLING\')'">
+                    <img alt="Bicicleta" class="w-9 mx-1"
+                         src="https://abs-0.twimg.com/emoji/v2/svg/1f6b4-200d-2640-fe0f.svg"/>
+                    <span class="font-medium" th:text="${tiemposDeLlegadaEnBicicleta[index.index]}"></span>
+                </div>
+                <div class="opcion-ruta p-2 flex items-center cursor-pointer rounded hover:bg-gray-200"
+                     th:onclick="'crearRuta(' + ${propietario.latitud} + ', ' + ${propietario.longitud} + ', \'DRIVING\')'">
+                    <img alt="Auto" class="w-9 mx-1" src="https://abs-0.twimg.com/emoji/v2/svg/1f698.svg"/>
+                    <span class="font-medium" th:text="${tiemposDeLlegadaEnAuto[index.index]}"></span>
+                </div>
+            </div>
+            <h2 class="text-xl font-semi-bold" th:text="${propietario.nombre}"></h2>
+            <a class="text-blue-500 hover:text-blue-800"
+               th:href="@{/propietario/{id}/bicicletas(id=${propietario.id})}">Ver bicicletas</a>
         </div>
     </div>
 </div>
 <script th:inline="javascript">
-    const userLatitude = [[${latitudActual}]];
-    const userLongitude = [[${longitudActual}]];
+    const opcionesRuta = document.getElementsByClassName('opcion-ruta');
+
+    for (var i = 0; i < opcionesRuta.length; i++) {
+        opcionesRuta[i].addEventListener('click', function () {
+            for (var j = 0; j < opcionesRuta.length; j++) {
+                opcionesRuta[j].classList.remove('bg-gray-200');
+            }
+
+            this.classList.add('bg-gray-200');
+        });
+    }
+
     const propietarios = [[${propietarios}]];
 
     let map;
+    let directionsRenderer;
 
-    function initializeMap() {
-        map = L.map('map', {
-            zoom: 15
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {lat: [[${latitudActual}]], lng: [[${longitudActual}]]},
+            zoom: 16,
+            disableDefaultUI: true
         });
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 25
-        }).addTo(map);
+        const noPoi = [
+            {
+                featureType: "poi",
+                stylers: [{visibility: "off"}],
+            },
+        ];
 
-        map.setView([userLatitude, userLongitude]);
+        map.setOptions({styles: noPoi});
 
         for (let i = 0; i < propietarios.length; i++) {
-            const marker = L.marker([propietarios[i].latitud, propietarios[i].longitud]);
-            marker.addTo(map);
+            const contentString = `<p class="text-md font-semibold">${propietarios[i].nombre}</p><a href="/propietario/${propietarios[i].id}/bicicletas">Ver bicicletas</a>`;
 
-            const propietarioInfo = `
-                <b>${propietarios[i].nombre}</b><br>
-                <a href="/propietario/${propietarios[i].id}/bicicletas">Ver bicicletas</a>
-            `;
+            const infowindow = new google.maps.InfoWindow({
+                content: contentString,
+            });
 
-            marker.bindPopup(propietarioInfo);
+            const marker = new google.maps.Marker({
+                position: {lat: propietarios[i].latitud, lng: propietarios[i].longitud},
+                map,
+                title: propietarios[i].nombre,
+            });
+
+            marker.addListener("click", () => {
+                infowindow.open({
+                    anchor: marker,
+                    map,
+                });
+            });
         }
     }
 
-    initializeMap();
+    function crearRuta(latitud, longitud, mode) {
+        if (directionsRenderer) {
+            directionsRenderer.setMap(null);
+        }
+
+        const request = {
+            origin: {lat: [[${latitudActual}]], lng: [[${longitudActual}]]},
+            destination: {lat: latitud, lng: longitud},
+            travelMode: mode
+        }
+
+        const rendererOptions = {
+            map: map,
+            suppressMarkers: true
+        }
+
+        directionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
+        directionsRenderer.setMap(map);
+
+        const directionsService = new google.maps.DirectionsService();
+
+        directionsService.route(request, function (result, status) {
+            if (status == 'OK') {
+                directionsRenderer.setDirections(result);
+            }
+        });
+    }
+
+    window.initMap = initMap;
 </script>
+<script
+        defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmBjxcRAeaXJMcpuavdRihYDOAQCp0y7w&callback=initMap&v=weekly"
+></script>
 </body>
 </html>
