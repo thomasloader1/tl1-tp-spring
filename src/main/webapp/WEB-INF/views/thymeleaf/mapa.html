@@ -20,17 +20,20 @@
             <div class="p-2 m-1 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
                 <span class="font-medium" th:text="${distancias[index.index]}"></span>
             </div>
-            <div class="flex justify-around my-1">
-                <div class="flex items-center">
+            <div class="flex justify-around my-2">
+                <div class="opcion-ruta p-2 flex items-center cursor-pointer rounded hover:bg-gray-200"
+                     th:onclick="'crearRuta(' + ${propietario.latitud} + ', ' + ${propietario.longitud} + ', \'WALKING\')'">
                     <img alt="Persona caminando" class="w-9 mx-1" src="https://abs-0.twimg.com/emoji/v2/svg/1f6b6.svg"/>
                     <span class="font-medium" th:text="${tiemposDeLlegadaCaminando[index.index]}"></span>
                 </div>
-                <div class="flex items-center">
+                <div class="opcion-ruta p-2 flex items-center cursor-pointer rounded hover:bg-gray-200"
+                     th:onclick="'crearRuta(' + ${propietario.latitud} + ', ' + ${propietario.longitud} + ', \'BICYCLING\')'">
                     <img alt="Bicicleta" class="w-9 mx-1"
                          src="https://abs-0.twimg.com/emoji/v2/svg/1f6b4-200d-2640-fe0f.svg"/>
                     <span class="font-medium" th:text="${tiemposDeLlegadaEnBicicleta[index.index]}"></span>
                 </div>
-                <div class="flex items-center">
+                <div class="opcion-ruta p-2 flex items-center cursor-pointer rounded hover:bg-gray-200"
+                     th:onclick="'crearRuta(' + ${propietario.latitud} + ', ' + ${propietario.longitud} + ', \'DRIVING\')'">
                     <img alt="Auto" class="w-9 mx-1" src="https://abs-0.twimg.com/emoji/v2/svg/1f698.svg"/>
                     <span class="font-medium" th:text="${tiemposDeLlegadaEnAuto[index.index]}"></span>
                 </div>
@@ -42,10 +45,24 @@
     </div>
 </div>
 <script th:inline="javascript">
+    const opcionesRuta = document.getElementsByClassName('opcion-ruta');
+
+    for (var i = 0; i < opcionesRuta.length; i++) {
+        opcionesRuta[i].addEventListener('click', function () {
+            for (var j = 0; j < opcionesRuta.length; j++) {
+                opcionesRuta[j].classList.remove('bg-gray-200');
+            }
+
+            this.classList.add('bg-gray-200');
+        });
+    }
+
     const propietarios = [[${propietarios}]];
+    let map;
+    let directionsRenderer;
 
     function initMap() {
-        const map = new google.maps.Map(document.getElementById("map"), {
+        map = new google.maps.Map(document.getElementById("map"), {
             center: {lat: [[${latitudActual}]], lng: [[${longitudActual}]]},
             zoom: 16,
             disableDefaultUI: true
@@ -80,6 +97,34 @@
                 });
             });
         }
+    }
+
+    function crearRuta(latitud, longitud, mode) {
+        if (directionsRenderer) {
+            directionsRenderer.setMap(null);
+        }
+
+        const request = {
+            origin: {lat: [[${latitudActual}]], lng: [[${longitudActual}]]},
+            destination: {lat: latitud, lng: longitud},
+            travelMode: mode
+        }
+
+        const rendererOptions = {
+            map: map,
+            suppressMarkers: true
+        }
+
+        directionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
+        directionsRenderer.setMap(map);
+
+        const directionsService = new google.maps.DirectionsService();
+
+        directionsService.route(request, function (result, status) {
+            if (status == 'OK') {
+                directionsRenderer.setDirections(result);
+            }
+        });
     }
 
     window.initMap = initMap;
