@@ -53,5 +53,5 @@ public class ControladorMapa {
         }
         return new ModelAndView("redirect:/login");
     }
-    
+
 }
