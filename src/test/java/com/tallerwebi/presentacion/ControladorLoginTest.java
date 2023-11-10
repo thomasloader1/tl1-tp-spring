@@ -1,14 +1,15 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.servicios.ServicioBicicleta;
-import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.controladores.ControladorBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.presentacion.controladores.ControladorLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
@@ -111,7 +112,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente, UsuarioSinRol {
+    public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
 
@@ -124,7 +125,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol {
+    public void registrarmeSiUsuarioExisteDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
         doThrow(UsuarioExistente.class).when(servicioLoginMock).registrar(datosUsuarioMock);
@@ -138,7 +139,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol {
+    public void errorEnRegistrarmeDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
         doThrow(RuntimeException.class).when(servicioLoginMock).registrar(datosUsuarioMock);
@@ -152,7 +153,7 @@ public class ControladorLoginTest {
     }
 
     @Test
-    public void errorEnRegistrarmeSiNoSeleccioneTipoDeUsuarioDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol {
+    public void errorEnRegistrarmeSiNoSeleccioneTipoDeUsuarioDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
         doThrow(UsuarioSinRol.class).when(servicioLoginMock).registrar(datosUsuarioMock);
@@ -163,6 +164,20 @@ public class ControladorLoginTest {
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
         assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Tenés que seleccionar tu tipo de usuario"));
+    }
+
+    @Test
+    public void errorEnRegistrarmeSiNoIngreseDireccionDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
+        // preparación
+        DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
+        doThrow(UsuarioSinDireccion.class).when(servicioLoginMock).registrar(datosUsuarioMock);
+
+        // ejecución
+        ModelAndView modelAndView = controladorLogin.registrarme(datosUsuarioMock);
+
+        // validación
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Tenés que ingresar tu dirección"));
     }
 
     @Test

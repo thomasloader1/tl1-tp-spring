@@ -1,26 +1,35 @@
 package com.tallerwebi.presentacion.controladores;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
 import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
 
 @Controller
 public class ControladorLogin {
@@ -32,6 +41,34 @@ public class ControladorLogin {
         this.servicioLogin = servicioLogin;
         this.servicioBicicleta = servicioBicicleta;
         this.servicioResena = servicioResena;
+    }
+
+    @NotNull
+    private static String getApiUrl(DatosUsuario datosUsuario) {
+        Dotenv dotenv = Dotenv.configure().load();
+        String apiKey = dotenv.get("GEOAPIFY_API_KEY");
+        String apiUrl = "https://api.geoapify.com/v1/geocode/search?apiKey=" + apiKey;
+
+        if (!datosUsuario.getDireccion().isEmpty()) {
+            apiUrl += "&text=" + datosUsuario.getDireccion();
+        }
+
+        if (!datosUsuario.getCiudad().isEmpty()) {
+            apiUrl += "&city=" + datosUsuario.getCiudad();
+        }
+
+        if (!datosUsuario.getProvincia().isEmpty()) {
+            apiUrl += "&state=" + datosUsuario.getProvincia();
+        }
+
+        if (!datosUsuario.getCodigoPostal().isEmpty()) {
+            apiUrl += "&postcode=" + datosUsuario.getCodigoPostal();
+        }
+
+        if (!datosUsuario.getPais().isEmpty()) {
+            apiUrl += "&country=" + datosUsuario.getPais();
+        }
+        return apiUrl;
     }
 
     @RequestMapping("/login")
@@ -65,12 +102,20 @@ public class ControladorLogin {
     public ModelAndView registrarme(@ModelAttribute("datosUsuario") DatosUsuario datosUsuario) {
         ModelMap model = new ModelMap();
         try {
+            if (datosUsuario.getDireccion() != null) {
+                Coordenada coordenada = obtenerCoordenadas(datosUsuario);
+                datosUsuario.setLatitud(coordenada.getLatitude());
+                datosUsuario.setLongitud(coordenada.getLongitude());
+            }
             servicioLogin.registrar(datosUsuario);
         } catch (UsuarioExistente e) {
             model.put("error", "El usuario ya existe");
             return new ModelAndView("nuevo-usuario", model);
         } catch (UsuarioSinRol e) {
             model.put("error", "Tenés que seleccionar tu tipo de usuario");
+            return new ModelAndView("nuevo-usuario", model);
+        } catch (UsuarioSinDireccion e) {
+            model.put("error", "Tenés que ingresar tu dirección");
             return new ModelAndView("nuevo-usuario", model);
         } catch (Exception e) {
             model.put("error", "Error al registrar el nuevo usuario");
@@ -113,6 +158,11 @@ public class ControladorLogin {
         model.put("bicicletasPropEnRepa" , bicicletasPropEnRepa);
         model.put("bicicletasPropDispo" , bicicletasPropDispo);
         model.put("bicicletas", bicicletas);
+
+        if (usuario == null) {
+            return new ModelAndView("redirect:/login");
+        }
+        
         model.put("usuario", usuario);
         return new ModelAndView("home", model);
     }
@@ -130,5 +180,32 @@ public class ControladorLogin {
     public ModelAndView logout(HttpSession session) {
         session.invalidate();
         return new ModelAndView("redirect:/login");
+    }
+
+    private Coordenada obtenerCoordenadas(DatosUsuario datosUsuario) throws JsonProcessingException {
+        String apiUrl = getApiUrl(datosUsuario);
+        RestTemplate restTemplate = new RestTemplate();
+        String response = restTemplate.getForObject(apiUrl, String.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(response);
+        JsonNode features = jsonNode.get("features");
+        JsonNode firstFeature = features.get(0);
+        JsonNode geometry = firstFeature.get("geometry");
+
+        if (geometry != null && geometry.has("coordinates")) {
+            JsonNode coordinates = geometry.get("coordinates");
+            if (coordinates.isArray() && coordinates.size() == 2) {
+                Double latitude = coordinates.get(1).asDouble();
+                Double longitude = coordinates.get(0).asDouble();
+
+                Coordenada coordenada = new Coordenada();
+                coordenada.setLatitude(latitude);
+                coordenada.setLongitude(longitude);
+
+                return coordenada;
+            }
+        }
+        return null;
     }
 }

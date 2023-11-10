@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
@@ -26,7 +27,7 @@ public class ServicioLoginImpl implements ServicioLogin {
     }
 
     @Override
-    public void registrar(DatosUsuario datosUsuario) throws UsuarioExistente, UsuarioSinRol {
+    public void registrar(DatosUsuario datosUsuario) throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         Usuario usuarioEncontrado = servicioLoginDao.buscarUsuarioPorEmail(datosUsuario.getEmail());
         if (usuarioEncontrado != null) {
             throw new UsuarioExistente();
@@ -34,6 +35,10 @@ public class ServicioLoginImpl implements ServicioLogin {
         if (datosUsuario.getRol() == null) {
             throw new UsuarioSinRol();
         }
+        if (datosUsuario.getRol() != null && datosUsuario.getDireccion() == null) {
+            throw new UsuarioSinDireccion();
+        }
+
         Usuario usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getNombre(), datosUsuario.getPassword(), datosUsuario.getRol(), datosUsuario.getLatitud(), datosUsuario.getLongitud());
         servicioLoginDao.guardar(usuario);
     }

@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioLoginImpl;
 import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
@@ -42,12 +43,13 @@ public class ServicioLoginTest {
     }
 
     @Test
-    public void queSePuedaRegistrarUnUsuario() throws UsuarioSinRol, UsuarioExistente {
+    public void queSePuedaRegistrarUnUsuario() throws UsuarioSinRol, UsuarioExistente, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
         when(datosUsuarioMock.getEmail()).thenReturn("usuario@mail.com");
         when(datosUsuarioMock.getPassword()).thenReturn("1234");
         when(datosUsuarioMock.getRol()).thenReturn("Propietario");
+        when(datosUsuarioMock.getDireccion()).thenReturn("Calle 123");
         when(repositorioUsuarioMock.buscarUsuarioPorEmail(datosUsuarioMock.getEmail())).thenReturn(null);
 
         // ejecución
@@ -81,5 +83,19 @@ public class ServicioLoginTest {
 
         // ejecución y validación
         assertThrows(UsuarioSinRol.class, () -> servicioLogin.registrar(datosUsuarioMock));
+    }
+
+    @Test
+    public void queLanceUnaExcepcionSiLaDireccionEsNuloYNoSePuedeRegistrarAlUsuario() {
+        // preparación
+        DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
+        when(datosUsuarioMock.getEmail()).thenReturn("usuario@mail.com");
+        when(datosUsuarioMock.getPassword()).thenReturn("1234");
+        when(datosUsuarioMock.getRol()).thenReturn("Propietario");
+        when(datosUsuarioMock.getDireccion()).thenReturn(null);
+        when(repositorioUsuarioMock.buscarUsuarioPorEmail(datosUsuarioMock.getEmail())).thenReturn(null);
+
+        // ejecución y validación
+        assertThrows(UsuarioSinDireccion.class, () -> servicioLogin.registrar(datosUsuarioMock));
     }
 }
