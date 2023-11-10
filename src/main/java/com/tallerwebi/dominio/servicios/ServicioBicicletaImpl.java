@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
@@ -33,10 +34,13 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
 
     @Override
     public void darDeAltaUnaBicicleta(DatosBicicleta datosBicicleta) throws BicicletaValidacion {
-        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()) {
+        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()|| datosBicicleta.getPrecioVenta() <= 0) {
             throw new BicicletaValidacion();
         }
-        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen());
+        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen(),datosBicicleta.getPrecioVenta(), datosBicicleta.getPrecioAlquilerPorHora());
+
+        bicicleta.setPrecioVenta(datosBicicleta.getPrecioVenta());
+        bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
         repositorioBicicleta.registrarBicicleta(bicicleta);
     }
 
@@ -64,7 +68,9 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     public List<Bicicleta> obtenerBicicletasDisponiblesPorIdUsuario(Long id) {
         return repositorioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(id);
     }
-
+    public List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id){
+        return repositorioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(id);
+    };
     @Override
     public List<Bicicleta> obtenerTodasLasBicicleta() {
         return repositorioBicicleta.obtenerBicicletas();
@@ -105,10 +111,14 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
         }
     }
+    @Override
+    public List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id) {
+        return repositorioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(id);
+    }
 
     public List<Bicicleta> obtenerBicicletasDisponibles() {
           List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
           return bicicleta;
-
     }
+
 }

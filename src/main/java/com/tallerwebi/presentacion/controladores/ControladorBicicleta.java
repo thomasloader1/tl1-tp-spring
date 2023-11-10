@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,6 +54,7 @@ public class ControladorBicicleta {
         ModelMap modelo = new ModelMap();
         try {
             datosBicicleta.setUsuario(usuario);
+
             servicioBicicleta.darDeAltaUnaBicicleta(datosBicicleta);
         } catch (BicicletaValidacion e) {
             modelo.put("error", "Debe completar todos los campos");
@@ -65,8 +67,11 @@ public class ControladorBicicleta {
     public ModelAndView irAMisBicicletas(@ModelAttribute("usuario") Usuario usuario) {
         if (verificarSiEsPropietario(usuario)) {
             ModelMap modelo = new ModelMap();
-            modelo.put("rol", usuario.getRol());
-            modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDelUsuario(usuario));
+            modelo.put("usuario", usuario);
+
+            modelo.put("bicicletasUso" , servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId()));
+            modelo.put("bicicletasRotas" , servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId()));
+            modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId()));
             return new ModelAndView("mis-bicicletas", modelo);
         }
         return new ModelAndView("redirect:/home");
@@ -81,6 +86,28 @@ public class ControladorBicicleta {
 
     @RequestMapping(path = "/bicicletas", method = RequestMethod.GET)
     public ModelAndView verBicicletas(){
+
+        ModelMap model = new ModelMap();
+        List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
+
+        try{
+            if(bicis.size() == 0){
+                model.put("error", "No se encontraron Bicicletas");
+            }else {
+                model.put("bicicletas", bicis);
+            }
+        }catch (Exception e){
+            model.put("error", "520");
+            return new ModelAndView("error", model);
+        }
+
+        return  new ModelAndView("bicicletas", model);
+    }
+
+    @RequestMapping(path = "bicicleta/detalle/{id}", method = RequestMethod.GET)
+    public ModelAndView detalleBicicleta(@PathVariable("id") Integer id) throws BicicletaNoEncontrada {
+        Long biciId = id.longValue();
+
         ModelMap model = new ModelMap();
         List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
 

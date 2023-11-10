@@ -14,10 +14,10 @@
             <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas</p>
             <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas en Alquier:</p>
             <div class="flex flex-wrap justify-center">
-                <div th:if="${#lists.isEmpty(bicicletas)}">
-                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas registradas</p>
+                <div th:if="${#lists.isEmpty(bicicletasUso)}">
+                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas en uso</p>
                 </div>
-                <div class="m-2 border border-gray-300 rounded-lg" th:each="bicicleta : ${bicicletas}">
+                <div class="m-2 border border-gray-300 rounded-lg" th:each="bicicleta : ${bicicletasUso}">
                     <div class="max-w-[320px] pb-4">
                         <img  alt="" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" th:src="${bicicleta.urlImagen}"/>
                         <div class="p-2">
@@ -43,13 +43,13 @@
                     </div>
                 </div>
             </div>
-            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas Disponibles:</p>
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas en Reparacion:</p>
             <div class="flex flex-wrap justify-center">
 
-                <div th:if="${#lists.isEmpty(bicicletas)}">
-                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas registradas</p>
+                <div th:if="${#lists.isEmpty(bicicletasRotas)}">
+                    <p class="font-medium text-gray-900 text-center text-lg">No tenés bicicletas en reparacion</p>
                 </div>
-                <div class="m-2 border border-gray-300 rounded-lg" th:each="bicicleta : ${bicicletas}">
+                <div class="m-2 border border-gray-300 rounded-lg" th:each="bicicleta : ${bicicletasRotas}">
                     <div class="max-w-[320px] pb-4">
                         <img  alt="" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" style="width: 400px; height: 300px;" th:src="${bicicleta.urlImagen}"/>
                         <div class="p-2">
@@ -75,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas en Reparación:</p>
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Bicicletas disponibles:</p>
             <div class="flex flex-wrap justify-center">
 
 
