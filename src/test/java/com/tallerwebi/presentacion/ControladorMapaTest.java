@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.servicios.ServicioMapa;
@@ -40,7 +41,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverLaVistaDeMapa() {
+    public void irAMapaDebeDevolverLaVistaDeMapa() throws JsonProcessingException {
         // ejecución
         ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
@@ -49,7 +50,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverLaVistaDeMapaConLosPropietarios() {
+    public void irAMapaDebeDevolverLaVistaDeMapaConLosPropietarios() throws JsonProcessingException {
         // ejecucion
         ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
@@ -59,7 +60,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeObtenerLasCoordenadasDeLatitudYLongitudActualesDelUsuario() {
+    public void irAMapaDebeObtenerLasCoordenadasDeLatitudYLongitudActualesDelUsuario() throws JsonProcessingException {
         // preparación
         Coordenada coordenada = obtenerUbicacionActual();
 
@@ -72,7 +73,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverUnaListaDePropietariosOrdenadosPorDistanciaALaUbicacionActual() {
+    public void irAMapaDebeDevolverUnaListaDePropietariosOrdenadosPorDistanciaALaUbicacionActual() throws JsonProcessingException {
         // preparación
         Coordenada coordenada = obtenerUbicacionActual();
         Usuario propietario1 = mock(Usuario.class);
@@ -102,7 +103,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverUnaListaDeLasDistanciasALaUbicacionActual() {
+    public void irAMapaDebeDevolverUnaListaDeLasDistanciasALaUbicacionActual() throws JsonProcessingException {
         // preparación
         Coordenada coordenada = obtenerUbicacionActual();
         Usuario propietario1 = mock(Usuario.class);
@@ -131,7 +132,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverElTiempoDeLlegadaCaminandoAUnDestinoDesdeLaUbicacionActual() {
+    public void irAMapaDebeDevolverElTiempoDeLlegadaCaminandoAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
         // preparación
         Coordenada coordenada = obtenerUbicacionActual();
         Usuario propietario1 = mock(Usuario.class);
@@ -150,7 +151,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverElTiempoDeLlegadaEnBicicletaAUnDestinoDesdeLaUbicacionActual() {
+    public void irAMapaDebeDevolverElTiempoDeLlegadaEnBicicletaAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
         // preparación
         Coordenada coordenada = obtenerUbicacionActual();
         Usuario propietario1 = mock(Usuario.class);
@@ -169,7 +170,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverElTiempoDeLlegadaEnAutoAUnDestinoDesdeLaUbicacionActual() {
+    public void irAMapaDebeDevolverElTiempoDeLlegadaEnAutoAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
         // preparación
         Coordenada coordenada = obtenerUbicacionActual();
         Usuario propietario1 = mock(Usuario.class);
