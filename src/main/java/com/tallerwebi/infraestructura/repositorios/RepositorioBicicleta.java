@@ -23,5 +23,7 @@ public interface RepositorioBicicleta {
 
     List<Bicicleta> obtenerBicicletasDisponibles();
 
-    List<Bicicleta> obtenerBiciclestasEnReparacion();
+    List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id);
+
+    List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id);
 }

@@ -67,8 +67,11 @@ public class ControladorBicicleta {
     public ModelAndView irAMisBicicletas(@ModelAttribute("usuario") Usuario usuario) {
         if (verificarSiEsPropietario(usuario)) {
             ModelMap modelo = new ModelMap();
-            modelo.put("rol", usuario.getRol());
-            modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDelUsuario(usuario));
+            modelo.put("usuario", usuario);
+
+            modelo.put("bicicletasUso" , servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId()));
+            modelo.put("bicicletasRotas" , servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId()));
+            modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId()));
             return new ModelAndView("mis-bicicletas", modelo);
         }
         return new ModelAndView("redirect:/home");

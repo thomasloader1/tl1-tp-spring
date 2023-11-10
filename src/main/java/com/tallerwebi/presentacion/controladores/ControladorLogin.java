@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -33,11 +35,12 @@ import java.util.List;
 public class ControladorLogin {
     private final ServicioLogin servicioLogin;
     private final ServicioBicicleta servicioBicicleta;
-
+    private final ServicioResena servicioResena;
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta, ServicioResena servicioResena) {
         this.servicioLogin = servicioLogin;
         this.servicioBicicleta = servicioBicicleta;
+        this.servicioResena = servicioResena;
     }
 
     @NotNull
@@ -137,13 +140,29 @@ public class ControladorLogin {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
+        List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasDelUsuarioTotal= servicioBicicleta.obtenerBicicletasDelUsuario(usuario);
+        List<Resena> resenasTotales = servicioResena.obtenerResenasDeUnaClientePorId(usuario.getId());
+        List<Resena> resenasBuenas = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeBueno(usuario.getId());
+        List<Resena> resenasMalas = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeMalo(usuario.getId());
+        List<Resena> resenasRegulares = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeRegular(usuario.getId());
 
+        model.put("resenasTotales", resenasTotales);
+        model.put("resenasBuenas", resenasBuenas);
+        model.put("resenasRegulares", resenasRegulares);
+        model.put("resenasMalas", resenasMalas);
+        model.put("bicicletasDelUsuarioTotal",bicicletasDelUsuarioTotal );
+        model.put("bicicletasPropEnUso" , bicicletasPropEnUso);
+        model.put("bicicletasPropEnRepa" , bicicletasPropEnRepa);
+        model.put("bicicletasPropDispo" , bicicletasPropDispo);
+        model.put("bicicletas", bicicletas);
 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
-
-        model.put("bicicletas" , bicicletas);
+        
         model.put("usuario", usuario);
         return new ModelAndView("home", model);
     }

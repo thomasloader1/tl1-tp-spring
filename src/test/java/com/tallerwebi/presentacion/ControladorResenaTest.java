@@ -106,4 +106,5 @@ public class ControladorResenaTest {
         assertThat(modelAndView.getModel().get("resenas"), instanceOf(List.class));
         verify(servicioResenaMock, times(1)).obtenerResenasDeUnaBicicleta(bicicletaMock);
     }
+
 }

@@ -115,7 +115,7 @@ public class ControladorBicicletaTest {
     }
 
     @Test
-    public void unUsuarioConRolPropietarioPuedeVerSusBicicletasRegistradas() {
+    public void unUsuarioConRolPropietarioPuedeVerSusBicicletasRegistradasDivididasPorEstado() {
         // preparacion
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
@@ -126,7 +126,11 @@ public class ControladorBicicletaTest {
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
-        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
+
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnUsoPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnReparacionPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
+
     }
 
 
