@@ -6,10 +6,10 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
-import com.tallerwebi.dominio.servicios.ServicioResena;
-import com.tallerwebi.presentacion.controladores.ControladorBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
+import com.tallerwebi.dominio.servicios.ServicioResena;
+import com.tallerwebi.presentacion.controladores.ControladorBicicleta;
 import com.tallerwebi.presentacion.controladores.ControladorLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
@@ -44,23 +44,17 @@ public class ControladorLoginTest {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
         usuarioMock = mock(Usuario.class);
         bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
-
         // Agregar al menos dos bicicletas a la lista
         bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar",50000.0,600.0));
         bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar",50000.0,600.0));
-
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
-
-
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         servicioResena = mock(ServicioResena.class);
         controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock, servicioResena);
-        //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
         controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock,servicioResena);
-
     }
 
     @Test
@@ -237,27 +231,10 @@ public class ControladorLoginTest {
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
-
-
         verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnUsoPorIdUsuario(usuarioMock.getId());
         verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnReparacionPorIdUsuario(usuarioMock.getId());
         verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
-
-
     }
- /*   @Test
-    public void queSeMuestrenEnVistaClienteSoloLasBicicletasDisponibles(){
-        when(requestMock.getSession()).thenReturn(sessionMock);
-        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
-        when(usuarioMock.getRol()).thenReturn("Cliente");
-
-        //ejecucion
-            ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
-            // validacion
-            assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-            verify(servicioBicicletamock, times(1)).obtenerBicicletasDisponibles();
-
-    }*/
 
     @Test
     public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {
