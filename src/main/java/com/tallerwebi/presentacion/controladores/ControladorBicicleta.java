@@ -101,27 +101,6 @@ public class ControladorBicicleta {
         return  new ModelAndView("bicicletas", model);
     }
 
-    @RequestMapping(path = "bicicleta/detalle/{id}", method = RequestMethod.GET)
-    public ModelAndView detalleBicicleta(@PathVariable("id") Integer id) throws BicicletaNoEncontrada {
-        Long biciId = id.longValue();
-
-        ModelMap model = new ModelMap();
-        List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
-
-        try{
-            if(bicis.size() == 0){
-                model.put("error", "No se encontraron Bicicletas");
-            }else {
-                model.put("bicicletas", bicis);
-            }
-        }catch (Exception e){
-            model.put("error", "520");
-            return new ModelAndView("error", model);
-        }
-
-        return  new ModelAndView("bicicletas", model);
-    }
-
     @RequestMapping(path = "bicicleta/{id}/detalle", method = RequestMethod.GET)
     public ModelAndView detalleBicicleta(@ModelAttribute("usuario") Usuario usuario, @PathVariable("id") Integer id) throws BicicletaNoEncontrada {
         if (usuario != null) {

@@ -1,11 +1,14 @@
 package com.tallerwebi.presentacion;
 
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioMercadoPago;
 import com.tallerwebi.presentacion.controladores.ControladorAlquiler;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
 import org.junit.jupiter.api.Assertions;
@@ -29,6 +32,8 @@ public class ControladorAlquilerTest {
     private HttpSession sessionMock;
     private ServicioBicicleta servicioBicicletaMock;
     private ServicioAlquiler servicioAlquilerMock;
+
+    private ServicioMercadoPago servicioMercadoPagoMock;
     private Usuario usuarioMock;
 
     @BeforeEach
@@ -37,15 +42,16 @@ public class ControladorAlquilerTest {
         sessionMock = mock(HttpSession.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         servicioAlquilerMock = mock(ServicioAlquiler.class);
+        servicioMercadoPagoMock = mock(ServicioMercadoPago.class);
         usuarioMock = mock(Usuario.class);
 
         sessionMock.setAttribute("usuario", usuarioMock);
 
-        controladorAlquiler = new ControladorAlquiler(servicioAlquilerMock, servicioBicicletaMock);
+        controladorAlquiler = new ControladorAlquiler(servicioAlquilerMock, servicioBicicletaMock, servicioMercadoPagoMock);
     }
 
     @Test
-    public void QueSePuedaCrearUnAlquiler() throws AlquilerValidacion {
+    public void QueSePuedaCrearUnAlquiler() throws AlquilerValidacion, MPException, MPApiException {
         // preparación
 
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -82,7 +88,7 @@ public class ControladorAlquilerTest {
     }
 
 
-    /*@Test
+    /* @Test
     public void testVerAlquilerExitoso() {
         // Configura tus objetos de prueba, como idBicicleta, usuario, datosAlquiler, bicicleta y alquileres
         Usuario usuario = new Usuario();
@@ -103,7 +109,7 @@ public class ControladorAlquilerTest {
         Assertions.assertEquals("mis-alquileres", modelAndView.getViewName());
         Assertions.assertSame(usuario.getId(), userInModel.getId());
         Assertions.assertSame(alquileres, modelAndView.getModel().get("alquileres"));
-    }*/
+    } */
 
     @Test
     public void testVerAlquiler() {

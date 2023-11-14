@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <title>Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+ </head>
+<body>
+<main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
+  <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+    <div th:replace="~{partials/nav :: nav}"></div>
+    <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Estas por alquilar una bicicleta</h1>
+
+
+    <div class="grid grid-cols-1 md:grid-rows-[2fr_auto] gap-4 md:grid-cols-2 ">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 md:col-start-1 md:col-end-3">
+
+        <div id="wallet_container"></div>
+
+      </div>
+
+    </div>
+
+    <div th:if="${usuario.getRol() == 'Propietario'}">
+      <p class="text-3xl font-bold text-gray-900">Vista Propietario</p>
+    </div>
+  </div>
+</main>
+<script>
+
+var idPreferencia = "[[${idPreferencia}]]";
+
+const mp = new MercadoPago('APP_USR-b2139e3c-af90-4734-a93c-c78b90444843');
+const bricksBuilder = mp.bricks();
+ console.log(idPreferencia);
+mp.bricks().create("wallet", "wallet_container", {
+    initialization: {
+        preferenceId: idPreferencia,
+    },
+    onSubmit: function (data) {
+
+        console.log(data);
+        window.location.href = "/home";
+    },
+});
+</script>
+
+</body>
+</html>

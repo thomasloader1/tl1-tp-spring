@@ -1,9 +1,11 @@
 package com.tallerwebi.presentacion.controladores;
 
 
+import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.servicios.DistanciaComparador;
+import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioMapa;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
@@ -27,10 +30,13 @@ import java.util.List;
 @Controller
 public class ControladorMapa {
     private final ServicioMapa servicioMapa;
+    private final ServicioAlquiler servicioAlquiler;
+
 
     @Autowired
-    public ControladorMapa(ServicioMapa servicioMapa) {
+    public ControladorMapa(ServicioMapa servicioMapa, ServicioAlquiler servicioAlquiler) {
         this.servicioMapa = servicioMapa;
+        this.servicioAlquiler = servicioAlquiler;
     }
 
     @NotNull

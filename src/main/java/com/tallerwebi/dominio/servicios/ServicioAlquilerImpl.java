@@ -33,7 +33,6 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
         }
         Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
         alquiler.setEstadoAlquiler(EstadoBicicleta.EN_USO);
-        alquiler.setPrecioAlquiler(calcularPrecioAlquiler(datosAlquiler));
 
         repositorioBicicleta.updateEstado(datosAlquiler.getBicicleta().getId(), EstadoBicicleta.EN_USO);
         repositorioAlquiler.crearAlquiler(alquiler);
