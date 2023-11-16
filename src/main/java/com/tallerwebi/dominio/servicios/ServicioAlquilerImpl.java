@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.entidad.EstadoBicicleta;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
@@ -26,22 +27,29 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public void crearAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion {
+    public void crearAlquiler(Alquiler alquiler) {
+
+         alquiler.setEstadoAlquiler(EstadoBicicleta.EN_USO);
+
+        repositorioBicicleta.updateEstado(alquiler.getBicicleta().getId(), EstadoBicicleta.EN_USO);
+        repositorioAlquiler.crearAlquiler(alquiler);
+    }
+    @Override
+    public Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion {
+        Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
+
         if (datosAlquiler.getCantidadHoras() < 1) {
             throw new AlquilerValidacion();
         }
-        Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
-        alquiler.setEstadoAlquiler(EstadoBicicleta.EN_USO);
-
-        repositorioBicicleta.updateEstado(datosAlquiler.getBicicleta().getId(), EstadoBicicleta.EN_USO);
-        repositorioAlquiler.crearAlquiler(alquiler);
+        alquiler.setPrecioAlquiler(calcularPrecioAlquiler(datosAlquiler));
+        return alquiler;
     }
 
     @Override
     public void finalizarAlquiler(Long id) {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
         alquiler.setEstadoAlquiler(EstadoBicicleta.DISPONIBLE);
-        repositorioBicicleta.updateEstado(id,alquiler.getEstadoAlquiler());
+        repositorioBicicleta.updateEstado(alquiler.getBicicleta().getId(),EstadoBicicleta.DISPONIBLE);
         repositorioAlquiler.eliminarAlquiler(alquiler);
     }
 
@@ -59,6 +67,36 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     @Override
     public List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(DatosAlquiler datosAlquiler) {
         return repositorioAlquiler.obtenerTodosLosAlquileresDeUnaBicicleta(datosAlquiler.getBicicleta());
+    }
+
+    @Override
+    public Alquiler obtenerAlquilerPorId(Long id) {
+        return repositorioAlquiler.obtenerAlquilerporId(id);
+    }
+
+
+    private double  calcularPrecioAlquiler(DatosAlquiler datosAlquiler) {
+        double precioBasePorHora = datosAlquiler.getBicicleta().getPrecioAlquilerPorHora();
+        int cantidadHoras = datosAlquiler.getCantidadHoras();
+        Condition estadoBicicleta = datosAlquiler.getBicicleta().getCondicion();
+
+        double valorEstado;
+
+        switch (estadoBicicleta){
+            case PERFECTO_ESTADO:
+                valorEstado = 1.0;
+                break;
+            case BUENO_ESTADO:
+                valorEstado = 0.8;
+                break;
+            case MAL_ESTADO:
+                valorEstado = 0.5;
+                break;
+            default:
+                valorEstado = 1.0;
+        }
+        double precioFinal = precioBasePorHora * cantidadHoras * valorEstado;
+            return precioFinal;
     }
 
     @Override

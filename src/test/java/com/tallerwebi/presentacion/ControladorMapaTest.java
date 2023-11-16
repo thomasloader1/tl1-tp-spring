@@ -3,26 +3,39 @@ package com.tallerwebi.presentacion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioMapa;
 import com.tallerwebi.presentacion.controladores.ControladorMapa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.tallerwebi.dominio.entidad.Coordenada;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 public class ControladorMapaTest {
     private ControladorMapa controladorMapa;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
+    private ServicioAlquiler servicioAlquilerMock;
     private ServicioMapa servicioMapaMock;
     private Usuario usuarioMock;
 
@@ -31,7 +44,8 @@ public class ControladorMapaTest {
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioMapaMock = mock(ServicioMapa.class);
-        controladorMapa = new ControladorMapa(servicioMapaMock);
+        servicioAlquilerMock =mock(ServicioAlquiler.class);
+        controladorMapa = new ControladorMapa(servicioMapaMock, servicioAlquilerMock);
         usuarioMock = mock(Usuario.class);
         sessionMock.setAttribute("usuario", usuarioMock);
     }
@@ -44,6 +58,7 @@ public class ControladorMapaTest {
         // ejecución
         ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
 
+
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mapa"));
     }
@@ -54,7 +69,9 @@ public class ControladorMapaTest {
         prepararControlador();
 
         // ejecucion
+
         ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+
 
         // validacion
         assertNotNull(modelAndView.getModel().get("propietarios"));

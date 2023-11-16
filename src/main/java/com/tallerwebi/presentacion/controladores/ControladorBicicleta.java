@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -53,6 +54,7 @@ public class ControladorBicicleta {
         ModelMap modelo = new ModelMap();
         try {
             datosBicicleta.setUsuario(usuario);
+
             servicioBicicleta.darDeAltaUnaBicicleta(datosBicicleta);
         } catch (BicicletaValidacion e) {
             modelo.put("error", "Debe completar todos los campos");
@@ -81,6 +83,7 @@ public class ControladorBicicleta {
 
     @RequestMapping(path = "/bicicletas", method = RequestMethod.GET)
     public ModelAndView verBicicletas(){
+
         ModelMap model = new ModelMap();
         List <Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
 

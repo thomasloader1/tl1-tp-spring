@@ -1,6 +1,12 @@
 package com.tallerwebi.presentacion;
 
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Condition;
+import com.tallerwebi.dominio.entidad.Resena;
+import com.tallerwebi.dominio.entidad.Usuario;
+
 import com.tallerwebi.dominio.entidad.*;
+
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
@@ -229,6 +235,7 @@ public class ControladorBicicletaTest {
         assertEquals("error", mv.getViewName());
         assertEquals(mv.getModel().size(), 1);
         assertTrue(mv.getModel().keySet().contains("error"));
+
     }
 
     @Test
@@ -258,5 +265,6 @@ public class ControladorBicicletaTest {
         assertThat(modelAndView.getModel().get("bicicletas"), instanceOf(List.class));
         assertThat(((List<Bicicleta>) modelAndView.getModel().get("bicicletas")).size(), equalTo(2));
         verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
+
     }
 }

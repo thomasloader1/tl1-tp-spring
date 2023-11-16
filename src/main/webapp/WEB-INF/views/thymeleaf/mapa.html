@@ -15,6 +15,9 @@
 <div class="flex">
     <div class="w-3/4 h-[90vh]" id="map"></div>
     <div class="w-1/4 h-[90vh] max-h-[90vh] overflow-y-auto flex flex-col items-center bg-white py-3 border-2 rounded-sm">
+        <div>
+            <span th:text="${idPreferencia}"></span>
+        </div>
         <h1 class="text-center text-2xl font-bold py-2">Bicicleterías más cercanas</h1>
         <div class="w-[95%] border-2 rounded m-2 py-2 px-3" th:each="propietario, index : ${propietarios}">
             <div class="p-2 m-1 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
@@ -58,6 +61,7 @@
     }
 
     const propietarios = [[${propietarios}]];
+    console.log([[${idPreferencia}]]);
     let map;
     let directionsRenderer;
 
