@@ -27,7 +27,9 @@ public class Alquiler {
             this.estadoAlquiler = EstadoBicicleta.EN_USO;
         }
 
-        public Long getId() {
+
+
+    public Long getId() {
             return id;
         }
 

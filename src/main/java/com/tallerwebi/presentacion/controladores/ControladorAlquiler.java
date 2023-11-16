@@ -20,6 +20,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -42,26 +43,34 @@ public class ControladorAlquiler {
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/crear-alquiler", method = RequestMethod.POST)
-    public ModelAndView crearAlquiler(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) throws MPException, MPApiException {
+    public ModelAndView crearAlquiler(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler, HttpServletRequest request) throws MPException, MPApiException, BicicletaNoEncontrada, AlquilerValidacion {
         ModelMap modelo = new ModelMap();
-        try {
+
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
             datosAlquiler.setBicicleta(bicicleta);
             datosAlquiler.setUsuario(usuario);
-            servicioAlquiler.crearAlquiler(datosAlquiler);
-        } catch (AlquilerValidacion e) {
-            modelo.put("error", "Error al crear el Alquiler");
-            return new ModelAndView("crear-alquiler", modelo);
-        } catch (BicicletaNoEncontrada e) {
-            modelo.put("error", "Error al crear el Alquiler");
-            return new ModelAndView("crear-alquiler", modelo);
-        }
-      Preference preference = servicioMercadoPago.crearPreferenciaPago(datosAlquiler);
-      modelo.put("idPreferencia",preference);
-      return new ModelAndView("detalle-pago", modelo);
+            Alquiler alquiler = servicioAlquiler.comenzarAlquiler(datosAlquiler);
+        DatosPreferencia preference = servicioMercadoPago.crearPreferenciaPago(alquiler);
+        request.getSession().setAttribute("alquiler", alquiler);
+        modelo.put("idPreferencia",preference);
+        return new ModelAndView("redirect:"+preference.urlCheckout, modelo);
     }
+    @RequestMapping(path = "/validar-pago", method = RequestMethod.GET)
+    public ModelAndView validarPago(@RequestParam("status") String status,  HttpSession session) throws AlquilerValidacion {
+        ModelMap modelo = new ModelMap();
 
-    @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
+        Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+
+        if(status.equals("approved")){
+            modelo.put("estado","Alquiler comenzado con éxito!");
+            servicioAlquiler.crearAlquiler(alquiler);
+        }else{
+            modelo.put("error","Error al procesar el pago.");
+            return new ModelAndView("detalle-bicicleta", modelo);
+        }
+        return new ModelAndView("mapa", modelo);
+    }
+        @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
     public ModelAndView verAlquiler(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
         if (usuario != null) {
             ModelMap modelo = new ModelMap();
@@ -73,7 +82,6 @@ public class ControladorAlquiler {
         }
         return new ModelAndView("redirect:/login");
     }
-
     @RequestMapping(path = "/alquiler/{idAlquiler}/finalizar-alquiler", method = RequestMethod.GET)
     public ModelAndView finalizarAlquiler(@PathVariable("idAlquiler") Long id) {
 
@@ -84,34 +92,5 @@ public class ControladorAlquiler {
         mav.getModel().put("message", "Se fina");
 
         return mav;
-    }
-
-    @RequestMapping(path = "/bicicleta/{idBicicleta}/crear-pago", method = RequestMethod.POST)
-    public ModelAndView crearPago(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
-        ModelMap modelo = new ModelMap();
-        try {
-            Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
-            datosAlquiler.setBicicleta(bicicleta);
-            datosAlquiler.setUsuario(usuario);
-            servicioAlquiler.crearAlquiler(datosAlquiler);
-
-            // Crear preferencia de pago con Mercado Pago
-            Preference idPreferencia = servicioMercadoPago.crearPreferenciaPago(datosAlquiler);
-
-            // Pasa el idPreferencia a la vista
-            modelo.put("idPreferencia", idPreferencia);
-
-            // Redirigir al usuario a la página de pago de Mercado Pago con el idPreferencia generado
-            return new ModelAndView("redirect:/mapa", modelo);
-        } catch (BicicletaNoEncontrada e) {
-            modelo.put("error", "Error al crear el Alquiler");
-            return new ModelAndView("redirect:/mapa", modelo);
-        } catch (MPException e) {
-            throw new RuntimeException(e);
-        } catch (MPApiException e) {
-            throw new RuntimeException(e);
-        } catch (AlquilerValidacion e) {
-            throw new RuntimeException(e);
-        }
     }
 }

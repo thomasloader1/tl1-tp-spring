@@ -27,15 +27,22 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public void crearAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion {
+    public void crearAlquiler(Alquiler alquiler) {
+
+         alquiler.setEstadoAlquiler(EstadoBicicleta.EN_USO);
+
+        repositorioBicicleta.updateEstado(alquiler.getBicicleta().getId(), EstadoBicicleta.EN_USO);
+        repositorioAlquiler.crearAlquiler(alquiler);
+    }
+    @Override
+    public Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion {
+        Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
+
         if (datosAlquiler.getCantidadHoras() < 1) {
             throw new AlquilerValidacion();
         }
-        Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
-        alquiler.setEstadoAlquiler(EstadoBicicleta.EN_USO);
-
-        repositorioBicicleta.updateEstado(datosAlquiler.getBicicleta().getId(), EstadoBicicleta.EN_USO);
-        repositorioAlquiler.crearAlquiler(alquiler);
+        alquiler.setPrecioAlquiler(calcularPrecioAlquiler(datosAlquiler));
+        return alquiler;
     }
 
     @Override
@@ -90,7 +97,6 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
         }
         double precioFinal = precioBasePorHora * cantidadHoras * valorEstado;
             return precioFinal;
-
     }
 
     @Override

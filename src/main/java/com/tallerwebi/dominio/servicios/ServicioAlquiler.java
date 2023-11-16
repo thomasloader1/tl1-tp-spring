@@ -9,7 +9,9 @@ import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import java.util.List;
 
 public interface ServicioAlquiler {
-    void crearAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion;
+    void crearAlquiler(Alquiler alquiler) throws AlquilerValidacion;
+
+    Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion;
 
     void finalizarAlquiler(Long id);
 

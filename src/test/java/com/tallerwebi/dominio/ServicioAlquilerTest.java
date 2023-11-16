@@ -32,18 +32,20 @@ public class ServicioAlquilerTest {
     @Test
     public void queSePuedaCrearUnAlquiler() throws AlquilerValidacion {
         // preparación
-        DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
-        when(datosAlquilerMock.getBicicleta()).thenReturn(mock(Bicicleta.class));
-        when(datosAlquilerMock.getUsuario()).thenReturn(mock(Usuario.class));
-        when(datosAlquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.PERFECTO_ESTADO);
-        when(datosAlquilerMock.getCantidadHoras()).thenReturn(1);
+
+        Alquiler alquilerMock = mock(Alquiler.class);
+        when(alquilerMock.getBicicleta()).thenReturn(mock(Bicicleta.class));
+        when(alquilerMock.getUsuario()).thenReturn(mock(Usuario.class));
+        when(alquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.PERFECTO_ESTADO);
+        when(alquilerMock.getCantidadHoras()).thenReturn(1);
+
         // ejecución
-        servicioAlquiler.crearAlquiler(datosAlquilerMock);
+        servicioAlquiler.crearAlquiler(alquilerMock);
         // validación
         verify(repositorioAlquilerMock, times(1)).crearAlquiler(any(Alquiler.class));
     }
 
-  //  @Test
+//    @Test
 //    public void queSePuedaFinalizarUnAlquilerYLoElimine() {
 //        // preparación
 //        Alquiler alquilerMock = mock(Alquiler.class);
@@ -84,9 +86,10 @@ public class ServicioAlquilerTest {
         when(datosAlquilerMock.getUsuario()).thenReturn(usuarioMock);
         when(datosAlquilerMock.getBicicleta().getCondicion()).thenReturn(Condition.PERFECTO_ESTADO);
         when(datosAlquilerMock.getCantidadHoras()).thenReturn(1);
+        Alquiler alquilerMock = new Alquiler(datosAlquilerMock.getCantidadHoras(), datosAlquilerMock.getBicicleta(), datosAlquilerMock.getUsuario());
 
         // ejecución
-        servicioAlquiler.crearAlquiler(datosAlquilerMock);
+        servicioAlquiler.crearAlquiler(alquilerMock);
         when(repositorioAlquilerMock.obtenerTodosLosAlquileresDeUnaBicicleta(bicicletaMock)).thenReturn(List.of(new Alquiler(1, bicicletaMock, usuarioMock)));
         List<Alquiler> alquileres = servicioAlquiler.obtenerTodosLosAlquileresDeUnaBicicleta(datosAlquilerMock);
 
@@ -100,6 +103,7 @@ public class ServicioAlquilerTest {
     public void queLanceUnaExcepcionSiLaCantidadDeHorasDeAlquilerEsMenorAUnoYNoSePuedeCrearElAlquiler() {
         // preparación
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
+
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         Usuario usuarioMock = mock(Usuario.class);
         when(datosAlquilerMock.getBicicleta()).thenReturn(bicicletaMock);
@@ -107,7 +111,7 @@ public class ServicioAlquilerTest {
         when(datosAlquilerMock.getCantidadHoras()).thenReturn(0);
 
         // ejecución y validación
-        assertThrows(AlquilerValidacion.class, () -> servicioAlquiler.crearAlquiler(datosAlquilerMock));
+        assertThrows(AlquilerValidacion.class, () -> servicioAlquiler.comenzarAlquiler(datosAlquilerMock));
         verify(repositorioAlquilerMock, times(0)).crearAlquiler(any(Alquiler.class));
     }
 }

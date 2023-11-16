@@ -1,11 +1,19 @@
 package com.tallerwebi.dominio.servicios;
+import com.google.gson.Gson;
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
+import com.tallerwebi.presentacion.dto.DatosMPResponse;
+import com.tallerwebi.presentacion.dto.DatosPago;
+import com.tallerwebi.presentacion.dto.DatosPreferencia;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -20,54 +28,26 @@ public class ServicioMercadoPagoImpl implements ServicioMercadoPago {
     }
 
     @Override
-    public Preference crearPreferenciaPago(DatosAlquiler datosAlquiler) throws MPException, MPApiException {
+    public DatosPreferencia crearPreferenciaPago(Alquiler alquiler) throws MPException, MPApiException {
+        DatosPago datosPago = new DatosPago(alquiler.getPrecioAlquiler());
+        DatosPreferencia responsePago = null;
 
-        PreferenceItemRequest itemRequest =
-                PreferenceItemRequest.builder()
-                        .id("1234")
-                        .title("Games")
-                        .description("PS5")
-                        .pictureUrl("http://picture.com/PS5")
-                        .categoryId("games")
-                        .quantity(2)
-                        .currencyId("BRL")
-                        .unitPrice(new BigDecimal("4000"))
-                        .build();
-        List<PreferenceItemRequest> items = new ArrayList<>();
-        items.add(itemRequest);
-        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                .items(items).build();
-        PreferenceClient client = new PreferenceClient();
+        String url = "https://api.mercadopago.com/checkout/preferences";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization","Bearer TEST-5256638928768203-110817-6e7472820e8aa2267acbaecb118b76f0-1542079310");
+        headers.set("Content-Type","application/json");
 
-        Preference preference = client.create(preferenceRequest);
+        Gson gson = new Gson();
+        String jsonDatos = gson.toJson(datosPago);
 
-        return preference;
+        HttpEntity<String> entity = new HttpEntity<String>(jsonDatos, headers);
+        DatosMPResponse res = restTemplate.postForObject(url, entity, DatosMPResponse.class);
+
+        if (res != null) {
+            responsePago = new DatosPreferencia(res.id, res.payer.name, res.payer.surname, res.payer.phone.area_code + " " + res.payer.phone.number, res.payer.date_created, res.init_point);
+        }
+
+        return responsePago;
     }
-
-
-//        try {
-//        PreferenceItemRequest itemRequest =
-//                PreferenceItemRequest.builder()
-//                        .title("Alquiler de Bicicleta")
-//                        .description("Alquiler de bicicleta por " + datosAlquiler.getCantidadHoras() + " horas")
-//                        .quantity(datosAlquiler.getCantidadHoras())
-//                        .currencyId("ARS")
-//                        .unitPrice(new BigDecimal(datosAlquiler.getPrecioAlquiler()))
-//                        .build();
-//
-//        List<PreferenceItemRequest> items = new ArrayList<>();
-//        items.add(itemRequest);
-//
-//        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-//                .items(items).build();
-//
-//            PreferenceClient client = new PreferenceClient();
-//            Preference preference = client.create(preferenceRequest);
-//            return preference;
-//        } catch (MPException e) {
-//
-//            e.printStackTrace();
-//            throw e;
-//        }
-
 }
