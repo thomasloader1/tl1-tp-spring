@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet"/>
+    <script crossorigin=""
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+<div class="flex">
+    <div class="w-3/4 h-[90vh]" id="map"></div>
+    <div class="w-1/4 h-[90vh] max-h-[90vh] overflow-y-auto flex flex-col items-center justify-center bg-white py-3 border-2 rounded-sm">
+        <div class="m-6">
+            <h1 class="text-center text-2xl text-blue-700 font-bold py-2">Detalles del alquiler</h1>
+        </div>
+        <div class="m-6">
+            <p class="font-medium text-gray-900 text-6xl" th:text="${alquiler.cantidadHoras} + ' hs'"></p>
+        </div>
+        <div class="m-6">
+            <p class="font-medium text-gray-900 text-6xl" th:text="'$' + ${alquiler.precioAlquiler}"></p>
+        </div>
+        <div class="m-6 p-6">
+            <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-8 py-4 focus:outline-none"
+               th:href="@{/alquiler/{idAlquiler}/finalizar-alquiler(idAlquiler=${alquiler.id})}">
+                Finalizar alquiler
+            </a>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    let map;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {lat: [[${latitudActual}]], lng: [[${longitudActual}]]},
+            zoom: 16,
+            disableDefaultUI: true
+        });
+    }
+
+    window.initMap = initMap;
+</script>
+<script
+        defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmBjxcRAeaXJMcpuavdRihYDOAQCp0y7w&callback=initMap&v=weekly"
+></script>
+</body>
+</html>

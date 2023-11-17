@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion.controladores;
 
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
@@ -35,9 +36,17 @@ public class ControladorResena {
         return (Usuario) session.getAttribute("usuario");
     }
 
+    @ModelAttribute("alquiler")
+    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
+        return (Alquiler) session.getAttribute("alquiler");
+    }
+
     @RequestMapping(path = "/bicicleta/{idBicicleta}/crear-resena", method = RequestMethod.GET)
-    public ModelAndView irACrearResena(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView irACrearResena(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) {
         if (usuario != null) {
+            if (alquiler != null) {
+                return new ModelAndView("redirect:/mapa");
+            }
             ModelMap modelo = new ModelMap();
             try {
                 servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
@@ -74,8 +83,11 @@ public class ControladorResena {
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/resenas", method = RequestMethod.GET)
-    public ModelAndView irAResenasDeUnaBicicleta(@ModelAttribute("usuario") Usuario usuario, @PathVariable Long idBicicleta) {
+    public ModelAndView irAResenasDeUnaBicicleta(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) {
         if (usuario != null) {
+            if (alquiler != null) {
+                return new ModelAndView("redirect:/mapa");
+            }
             ModelMap modelo = new ModelMap();
             try {
                 Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);

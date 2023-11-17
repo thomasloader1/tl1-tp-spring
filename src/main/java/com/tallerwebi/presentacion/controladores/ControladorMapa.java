@@ -1,32 +1,29 @@
 package com.tallerwebi.presentacion.controladores;
 
-import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.servicios.DistanciaComparador;
-import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioMapa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 public class ControladorMapa {
     private final ServicioMapa servicioMapa;
-    private final ServicioAlquiler servicioAlquiler;
 
     @Autowired
-    public ControladorMapa(ServicioMapa servicioMapa, ServicioAlquiler servicioAlquiler) {
+    public ControladorMapa(ServicioMapa servicioMapa) {
         this.servicioMapa = servicioMapa;
-        this.servicioAlquiler = servicioAlquiler;
     }
 
     @ModelAttribute("usuario")
@@ -34,14 +31,24 @@ public class ControladorMapa {
         return (Usuario) session.getAttribute("usuario");
     }
 
+    @ModelAttribute("alquiler")
+    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
+        return (Alquiler) session.getAttribute("alquiler");
+    }
+
     @RequestMapping(path = "/mapa", method = RequestMethod.GET)
-    public ModelAndView irAMapa(@ModelAttribute("usuario") Usuario usuario) throws JsonProcessingException {
+    public ModelAndView irAMapa(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) throws JsonProcessingException {
         if (usuario != null) {
             ModelMap modelo = new ModelMap();
 
             Coordenada coordenada = servicioMapa.obtenerUbicacionActual();
             modelo.put("latitudActual", coordenada.getLatitude());
             modelo.put("longitudActual", coordenada.getLongitude());
+
+            if (alquiler != null) {
+                modelo.put("alquiler", alquiler);
+                return new ModelAndView("mapa-alquiler", modelo);
+            }
 
             List<Usuario> propietarios = servicioMapa.obtenerPropietarios();
             DistanciaComparador comparador = new DistanciaComparador(coordenada.getLatitude(), coordenada.getLongitude());

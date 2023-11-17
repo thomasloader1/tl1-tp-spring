@@ -3,6 +3,7 @@ package com.tallerwebi.presentacion.controladores;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
@@ -66,6 +67,11 @@ public class ControladorLogin {
             apiUrl += "&country=" + datosUsuario.getPais();
         }
         return apiUrl;
+    }
+
+    @ModelAttribute("alquiler")
+    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
+        return (Alquiler) session.getAttribute("alquiler");
     }
 
     @RequestMapping("/login")
@@ -135,15 +141,20 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+
+        if (alquiler != null) {
+            return new ModelAndView("redirect:/mapa");
+        }
+
         ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
-
 
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
 
-        model.put("bicicletas" , bicicletas);
+        model.put("bicicletas", bicicletas);
         model.put("usuario", usuario);
         return new ModelAndView("home", model);
     }

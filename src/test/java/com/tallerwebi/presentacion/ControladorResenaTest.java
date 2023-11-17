@@ -49,7 +49,7 @@ public class ControladorResenaTest {
         when(usuarioMock.getRol()).thenReturn("Cliente");
 
         // ejecución
-        ModelAndView modelAndView = controladorResena.irACrearResena(bicicletaMock.getId(), usuarioMock);
+        ModelAndView modelAndView = controladorResena.irACrearResena(bicicletaMock.getId(), usuarioMock, null);
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("crear-resena"));
@@ -99,7 +99,7 @@ public class ControladorResenaTest {
         when(usuarioMock.getRol()).thenReturn("Cliente");
 
         // ejecución
-        ModelAndView modelAndView = controladorResena.irAResenasDeUnaBicicleta(usuarioMock, bicicletaMock.getId());
+        ModelAndView modelAndView = controladorResena.irAResenasDeUnaBicicleta(bicicletaMock.getId(), usuarioMock, null);
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("resenas"));

@@ -1,77 +1,74 @@
 package com.tallerwebi.presentacion;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Coordenada;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioMapa;
 import com.tallerwebi.presentacion.controladores.ControladorMapa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import com.tallerwebi.dominio.entidad.Coordenada;
-import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.jupiter.api.Assertions.*;
-
 import static org.mockito.Mockito.*;
 
 public class ControladorMapaTest {
     private ControladorMapa controladorMapa;
-    private HttpServletRequest requestMock;
     private HttpSession sessionMock;
-    private ServicioAlquiler servicioAlquilerMock;
     private ServicioMapa servicioMapaMock;
     private Usuario usuarioMock;
+    private Alquiler alquilerMock;
 
     @BeforeEach
     public void init() {
-        requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioMapaMock = mock(ServicioMapa.class);
-        servicioAlquilerMock =mock(ServicioAlquiler.class);
-        controladorMapa = new ControladorMapa(servicioMapaMock, servicioAlquilerMock);
+        controladorMapa = new ControladorMapa(servicioMapaMock);
         usuarioMock = mock(Usuario.class);
+        alquilerMock = mock(Alquiler.class);
         sessionMock.setAttribute("usuario", usuarioMock);
+        sessionMock.setAttribute("alquiler", alquilerMock);
     }
 
     @Test
-    public void irAMapaDebeDevolverLaVistaDeMapa() throws JsonProcessingException {
+    public void irAMapaSinAlquilerEnCursoDebeDevolverLaVistaDeMapa() throws JsonProcessingException {
         // preparación
         prepararControlador();
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
-
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mapa"));
     }
 
     @Test
-    public void irAMapaDebeDevolverLaVistaDeMapaConLosPropietarios() throws JsonProcessingException {
+    public void irAMapaConAlquilerEnCursoDebeDevolverLaVistaDeMapaAlquiler() throws JsonProcessingException {
+        // preparación
+        prepararControlador();
+
+        // ejecución
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, alquilerMock);
+
+        // validación
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("mapa-alquiler"));
+    }
+
+    @Test
+    public void irAMapaSinAlquilerEnCursoDebeDevolverLaVistaDeMapaConLosPropietarios() throws JsonProcessingException {
         // preparación
         prepararControlador();
 
         // ejecucion
 
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
-
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validacion
         assertNotNull(modelAndView.getModel().get("propietarios"));
@@ -86,7 +83,7 @@ public class ControladorMapaTest {
         when(servicioMapaMock.obtenerUbicacionActual()).thenReturn(coordenada);
 
         // ejecucion
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, alquilerMock);
 
         // validacion
         assertEquals(coordenada.getLatitude(), modelAndView.getModel().get("latitudActual"));
@@ -94,7 +91,7 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverUnaListaDePropietariosOrdenadosPorDistanciaALaUbicacionActual() throws JsonProcessingException {
+    public void irAMapaSinAlquilerEnCursoDebeDevolverUnaListaDePropietariosOrdenadosPorDistanciaALaUbicacionActual() throws JsonProcessingException {
         // preparación
         prepararControlador();
         Usuario propietario1 = mock(Usuario.class);
@@ -113,7 +110,7 @@ public class ControladorMapaTest {
         }});
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validación
         // el orden de la lista es propietario3, propietario2, propietario1
@@ -124,12 +121,12 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverUnaListaDeLasDistanciasALaUbicacionActual() throws JsonProcessingException {
+    public void irAMapaSinAlquilerEnCursoDebeDevolverUnaListaDeLasDistanciasALaUbicacionActual() throws JsonProcessingException {
         // preparación
         prepararControlador();
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validación
         List<String> distancias = (List<String>) modelAndView.getModel().get("distancias");
@@ -139,12 +136,12 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverElTiempoDeLlegadaCaminandoAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
+    public void irAMapaSinAlquilerEnCursoDebeDevolverElTiempoDeLlegadaCaminandoAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
         // preparación
         prepararControlador();
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validación
         List<String> tiemposDeLlegadaCaminando = (List<String>) modelAndView.getModel().get("tiemposDeLlegadaCaminando");
@@ -152,12 +149,12 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverElTiempoDeLlegadaEnBicicletaAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
+    public void irAMapaSinAlquilerEnCursoDebeDevolverElTiempoDeLlegadaEnBicicletaAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
         // preparación
         prepararControlador();
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validación
         List<String> tiemposDeLlegadaEnBicicleta = (List<String>) modelAndView.getModel().get("tiemposDeLlegadaEnBicicleta");
@@ -166,12 +163,12 @@ public class ControladorMapaTest {
     }
 
     @Test
-    public void irAMapaDebeDevolverElTiempoDeLlegadaEnAutoAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
+    public void irAMapaSinAlquilerEnCursoDebeDevolverElTiempoDeLlegadaEnAutoAUnDestinoDesdeLaUbicacionActual() throws JsonProcessingException {
         // preparación
         prepararControlador();
 
         // ejecución
-        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock);
+        ModelAndView modelAndView = controladorMapa.irAMapa(usuarioMock, null);
 
         // validación
         List<String> tiemposDeLlegadaEnAuto = (List<String>) modelAndView.getModel().get("tiemposDeLlegadaEnAuto");

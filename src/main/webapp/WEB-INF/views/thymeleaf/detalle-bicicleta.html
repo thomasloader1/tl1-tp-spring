@@ -28,18 +28,24 @@
                         <div>
                             <h3 class="mb-2  text-1xl">Estado: <span class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getEstadoBicicleta()}"></span></h3>
                             <h3 class="mb-3 text-1xl">Descripcion: <span class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getDescripcion()}"></span></h3>
-                            <h3 for="precioPorHora" class="mb-3 text-1xl">Precio por hora:<span id="precioPorHora" class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"th:text="${bicicleta.getPrecioAlquilerPorHora()}"></span></h3>
+                            <h3 class="mb-3 text-1xl" for="precioPorHora">Precio por hora:<span
+                                    class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"
+                                    id="precioPorHora" th:text="${bicicleta.getPrecioAlquilerPorHora()}"></span></h3>
 
                         </div>
                         <div class="w-80 mx-auto mb-6">
 
-                            <label for="cantidadHoras" class="block mb-2 text-m font-medium text-gray-900">Horas a alquilar</label>
-                            <input th:field="*{cantidadHoras}" id="cantidadHoras" type="number" name="cantidadHoras" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                            <label class="block mb-2 text-m font-medium text-gray-900" for="cantidadHoras">Horas a
+                                alquilar</label>
+                            <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                   id="cantidadHoras" name="cantidadHoras" th:field="*{cantidadHoras}" type="number"/>
                         </div>
 
                         <div>
-                            <label for="precioFinal" class="block mb-2 text-sm font-medium text-gray-900">Precio final del alquiler:</label>
-                            <p id="precioFinal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"></p>
+                            <label class="block mb-2 text-sm font-medium text-gray-900" for="precioFinal">Precio final
+                                del alquiler:</label>
+                            <p class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                               id="precioFinal"></p>
 
                         </div>
 
@@ -50,6 +56,11 @@
                             </button>
                         </div>
 
+                        <div class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                             role="alert"
+                             th:if="${param.error != null}">
+                            <span class="font-medium" th:text="${param.error}"></span>
+                        </div>
                     </form>
                 </div>
 

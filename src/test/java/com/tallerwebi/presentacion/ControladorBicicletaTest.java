@@ -1,12 +1,6 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.Condition;
-import com.tallerwebi.dominio.entidad.Resena;
-import com.tallerwebi.dominio.entidad.Usuario;
-
 import com.tallerwebi.dominio.entidad.*;
-
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
@@ -100,14 +94,14 @@ public class ControladorBicicletaTest {
     }
 
     @Test
-    public void unUsuarioConRolPropietarioPuedeDarDeBajaUnaBicicleta() {
+    public void unUsuarioConRolPropietarioPuedeDarDeBajaUnaBicicleta() throws BicicletaNoEncontrada {
         // preparacion
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Propietario");
 
         // ejecucion
-        ModelAndView modelAndView = controladorBicicleta.darDeBajaUnaBicicleta(bicicletaMock.getId());
+        ModelAndView modelAndView = controladorBicicleta.darDeBajaUnaBicicleta(bicicletaMock.getId(), usuarioMock);
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/mis-bicicletas"));
@@ -129,7 +123,6 @@ public class ControladorBicicletaTest {
         verify(servicioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
     }
 
-
     @Test
     public void puedoVerElDetalleDeUnaBicicleta() throws BicicletaNoEncontrada {
         // Preparación
@@ -144,7 +137,7 @@ public class ControladorBicicletaTest {
         when(servicioBicicletaMock.obtenerBicicletaPorId(any())).thenReturn(bicicletaConId1);
 
         // Ejecución
-        ModelAndView modelAndView = controladorBicicleta.detalleBicicleta(usuarioMock, 1);
+        ModelAndView modelAndView = controladorBicicleta.detalleBicicleta(1, usuarioMock, null);
 
         // Validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("detalle-bicicleta"));
@@ -179,7 +172,7 @@ public class ControladorBicicletaTest {
 
         List<Resena> listaResenas = servicioResenaMock.obtenerResenasDeUnaBicicleta(bicicletaConId1);
         // Ejecución
-        ModelAndView modelAndView = controladorBicicleta.detalleBicicleta(usuarioMock, 1);
+        ModelAndView modelAndView = controladorBicicleta.detalleBicicleta(1, usuarioMock, null);
         // Validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("detalle-bicicleta"));
         // Verifica que el objeto en el modelo sea un registro de tipo Bicicleta
@@ -204,7 +197,7 @@ public class ControladorBicicletaTest {
         bicis.add(bicicleta);
         when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(bicis);
 
-        ModelAndView mv = controladorBicicleta.verBicicletas();
+        ModelAndView mv = controladorBicicleta.verBicicletas(usuarioMock, null);
 
         assertEquals("bicicletas", mv.getViewName());
         assertEquals(1, mv.getModel().size());
@@ -219,7 +212,7 @@ public class ControladorBicicletaTest {
         List<Bicicleta> bicis = new ArrayList<>();
         when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(bicis);
 
-        ModelAndView mv = controladorBicicleta.verBicicletas();
+        ModelAndView mv = controladorBicicleta.verBicicletas(usuarioMock, null);
 
         assertEquals("bicicletas", mv.getViewName());
         assertEquals(mv.getModel().size(), 1);
@@ -227,10 +220,10 @@ public class ControladorBicicletaTest {
     }
 
     @Test
-    public void errorDesconocidoEnviaAPaginaDeErrorConCodigo(){
+    public void errorDesconocidoEnviaAPaginaDeErrorConCodigo() {
         when(servicioBicicletaMock.obtenerTodasLasBicicleta()).thenReturn(null);
 
-        ModelAndView mv = controladorBicicleta.verBicicletas();
+        ModelAndView mv = controladorBicicleta.verBicicletas(usuarioMock, null);
 
         assertEquals("error", mv.getViewName());
         assertEquals(mv.getModel().size(), 1);
@@ -258,7 +251,7 @@ public class ControladorBicicletaTest {
         when(servicioBicicletaMock.obtenerBicicletasDisponiblesPorIdUsuario(propietarioMock.getId())).thenReturn(bicicletasMock);
 
         // ejecucion
-        ModelAndView modelAndView = controladorBicicleta.bicicletasDelPropietario(usuarioMock, propietarioMock.getId());
+        ModelAndView modelAndView = controladorBicicleta.bicicletasDelPropietario(propietarioMock.getId(), usuarioMock, null);
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("bicicletas"));

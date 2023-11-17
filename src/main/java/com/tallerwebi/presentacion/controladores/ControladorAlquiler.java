@@ -1,10 +1,7 @@
 package com.tallerwebi.presentacion.controladores;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
-import com.mercadopago.resources.preference.Preference;
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
@@ -13,7 +10,8 @@ import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioMercadoPago;
-import com.tallerwebi.presentacion.dto.*;
+import com.tallerwebi.presentacion.dto.DatosAlquiler;
+import com.tallerwebi.presentacion.dto.DatosPreferencia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,37 +40,48 @@ public class ControladorAlquiler {
         return (Usuario) session.getAttribute("usuario");
     }
 
+    @ModelAttribute("alquiler")
+    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
+        return (Alquiler) session.getAttribute("alquiler");
+    }
+
     @RequestMapping(path = "/bicicleta/{idBicicleta}/crear-alquiler", method = RequestMethod.POST)
     public ModelAndView crearAlquiler(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler, HttpServletRequest request) throws MPException, MPApiException, BicicletaNoEncontrada, AlquilerValidacion {
         ModelMap modelo = new ModelMap();
-
-            Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
-            datosAlquiler.setBicicleta(bicicleta);
-            datosAlquiler.setUsuario(usuario);
-            Alquiler alquiler = servicioAlquiler.comenzarAlquiler(datosAlquiler);
+        Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
+        datosAlquiler.setBicicleta(bicicleta);
+        datosAlquiler.setUsuario(usuario);
+        Alquiler alquiler = servicioAlquiler.comenzarAlquiler(datosAlquiler);
         DatosPreferencia preference = servicioMercadoPago.crearPreferenciaPago(alquiler);
         request.getSession().setAttribute("alquiler", alquiler);
-        modelo.put("idPreferencia",preference);
-        return new ModelAndView("redirect:"+preference.urlCheckout, modelo);
+        modelo.put("idPreferencia", preference);
+        return new ModelAndView("redirect:" + preference.urlCheckout, modelo);
     }
+
     @RequestMapping(path = "/validar-pago", method = RequestMethod.GET)
-    public ModelAndView validarPago(@RequestParam("status") String status,  HttpSession session) throws AlquilerValidacion {
+    public ModelAndView validarPago(@RequestParam("status") String status, HttpSession session) throws AlquilerValidacion {
         ModelMap modelo = new ModelMap();
 
         Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
 
-        if(status.equals("approved")){
-            modelo.put("estado","Alquiler comenzado con éxito!");
+        if (status.equals("approved")) {
             servicioAlquiler.crearAlquiler(alquiler);
-        }else{
-            modelo.put("error","Error al procesar el pago.");
-            return new ModelAndView("detalle-bicicleta", modelo);
+        } else {
+            session.removeAttribute("alquiler");
+            modelo.put("error", "Error al procesar el pago.");
+            modelo.put("bicicleta", alquiler.getBicicleta());
+            String viewName = "redirect:/bicicleta/" + alquiler.getBicicleta().getId() + "/detalle";
+            return new ModelAndView(viewName, modelo);
         }
-        return new ModelAndView("mapa", modelo);
+        return new ModelAndView("redirect:/mapa");
     }
-        @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
-    public ModelAndView verAlquiler(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
+
+    @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
+    public ModelAndView verAlquiler(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler, @ModelAttribute("alquiler") Alquiler alquiler) {
         if (usuario != null) {
+            if (alquiler != null) {
+                return new ModelAndView("redirect:/mapa");
+            }
             ModelMap modelo = new ModelMap();
             datosAlquiler.setUsuario(usuario);
             List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDelUsuario(datosAlquiler);
@@ -82,15 +91,17 @@ public class ControladorAlquiler {
         }
         return new ModelAndView("redirect:/login");
     }
+
     @RequestMapping(path = "/alquiler/{idAlquiler}/finalizar-alquiler", method = RequestMethod.GET)
-    public ModelAndView finalizarAlquiler(@PathVariable("idAlquiler") Long id) {
-
-        Bicicleta bicicleta = servicioAlquiler.obtenerBicicletaPorIdDeAlquiler(id);
-        servicioAlquiler.finalizarAlquiler(id);
-        String viewName = "redirect:/bicicleta/" + bicicleta.getId() + "/crear-resena";
-        ModelAndView mav = new ModelAndView(viewName);
-        mav.getModel().put("message", "Se fina");
-
-        return mav;
+    public ModelAndView finalizarAlquiler(@PathVariable("idAlquiler") Long id, @ModelAttribute("alquiler") Alquiler alquiler, HttpSession session) {
+        if (alquiler != null) {
+            Bicicleta bicicleta = servicioAlquiler.obtenerBicicletaPorIdDeAlquiler(id);
+            servicioAlquiler.finalizarAlquiler(id);
+            String viewName = "redirect:/bicicleta/" + bicicleta.getId() + "/crear-resena";
+            session.removeAttribute("alquiler");
+            return new ModelAndView(viewName);
+        }
+        return new ModelAndView("redirect:/home");
     }
+
 }
