@@ -9,7 +9,6 @@ import com.tallerwebi.dominio.servicios.ServicioMapa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,25 +19,25 @@ import java.util.List;
 @Controller
 public class ControladorMapa {
     private final ServicioMapa servicioMapa;
+    private final HttpSession session;
 
     @Autowired
-    public ControladorMapa(ServicioMapa servicioMapa) {
+    public ControladorMapa(ServicioMapa servicioMapa, HttpSession session) {
         this.servicioMapa = servicioMapa;
-    }
-
-    @ModelAttribute("usuario")
-    public Usuario obtenerUsuarioDeSesion(HttpSession session) {
-        return (Usuario) session.getAttribute("usuario");
-    }
-
-    @ModelAttribute("alquiler")
-    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
-        return (Alquiler) session.getAttribute("alquiler");
+        this.session = session;
     }
 
     @RequestMapping(path = "/mapa", method = RequestMethod.GET)
-    public ModelAndView irAMapa(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) throws JsonProcessingException {
+    public ModelAndView irAMapa() throws JsonProcessingException {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
         if (usuario != null) {
+            Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+
+            if (session.getAttribute("resena") != null) {
+                return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+            }
+
             ModelMap modelo = new ModelMap();
 
             Coordenada coordenada = servicioMapa.obtenerUbicacionActual();
@@ -54,6 +53,7 @@ public class ControladorMapa {
             DistanciaComparador comparador = new DistanciaComparador(coordenada.getLatitude(), coordenada.getLongitude());
             propietarios.sort(comparador);
 
+            modelo.put("usuario", usuario);
             modelo.put("propietarios", propietarios);
             modelo.put("distancias", servicioMapa.obtenerDistancias(propietarios));
             modelo.put("tiemposDeLlegadaCaminando", servicioMapa.obtenerTiempoDeLlegadaCaminando(propietarios));

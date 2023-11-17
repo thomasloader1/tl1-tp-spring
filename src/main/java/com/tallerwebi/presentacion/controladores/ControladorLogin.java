@@ -141,19 +141,18 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
-
-        if (alquiler != null) {
-            return new ModelAndView("redirect:/mapa");
-        }
-
-        ModelMap model = new ModelMap();
-        List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
-
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
-
+        Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+        if (alquiler != null) {
+            return new ModelAndView("redirect:/mapa");
+        }
+        if (session.getAttribute("resena") != null) {
+            return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+        }
+        ModelMap model = new ModelMap();
+        List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
         model.put("bicicletas", bicicletas);
         model.put("usuario", usuario);
         return new ModelAndView("home", model);

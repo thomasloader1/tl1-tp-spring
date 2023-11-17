@@ -26,30 +26,23 @@ import java.util.List;
 public class ControladorBicicleta {
     private final ServicioBicicleta servicioBicicleta;
     private final ServicioResena servicioResena;
+    private final HttpSession session;
 
     @Autowired
-    public ControladorBicicleta(ServicioBicicleta servicioBicicleta, ServicioResena servicioResena) {
+    public ControladorBicicleta(ServicioBicicleta servicioBicicleta, ServicioResena servicioResena, HttpSession session) {
         this.servicioBicicleta = servicioBicicleta;
         this.servicioResena = servicioResena;
-    }
-
-    @ModelAttribute("usuario")
-    public Usuario obtenerUsuarioDeSesion(HttpSession session) {
-        return (Usuario) session.getAttribute("usuario");
-    }
-
-    @ModelAttribute("alquiler")
-    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
-        return (Alquiler) session.getAttribute("alquiler");
+        this.session = session;
     }
 
     @RequestMapping(path = "/registrar-bicicleta", method = RequestMethod.GET)
-    public ModelAndView irARegistrarBicicleta(@ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView irARegistrarBicicleta() {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
             if (verificarSiEsPropietario(usuario)) {
                 ModelMap modelo = new ModelMap();
                 modelo.put("datosBicicleta", new DatosBicicleta());
-                modelo.put("rol", usuario.getRol());
+                modelo.put("usuario", usuario);
                 return new ModelAndView("registrar-bicicleta", modelo);
             }
             return new ModelAndView("redirect:/home");
@@ -58,11 +51,11 @@ public class ControladorBicicleta {
     }
 
     @RequestMapping(path = "/alta-bicicleta", method = RequestMethod.POST)
-    public ModelAndView darDeAltaUnaBicicleta(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosBicicleta") DatosBicicleta datosBicicleta) {
+    public ModelAndView darDeAltaUnaBicicleta(@ModelAttribute("datosBicicleta") DatosBicicleta datosBicicleta) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         ModelMap modelo = new ModelMap();
         try {
             datosBicicleta.setUsuario(usuario);
-
             servicioBicicleta.darDeAltaUnaBicicleta(datosBicicleta);
         } catch (BicicletaValidacion e) {
             modelo.put("error", "Debe completar todos los campos");
@@ -72,11 +65,12 @@ public class ControladorBicicleta {
     }
 
     @RequestMapping(path = "/mis-bicicletas", method = RequestMethod.GET)
-    public ModelAndView irAMisBicicletas(@ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView irAMisBicicletas() {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
             if (verificarSiEsPropietario(usuario)) {
                 ModelMap modelo = new ModelMap();
-                modelo.put("rol", usuario.getRol());
+                modelo.put("usuario", usuario);
                 modelo.put("bicicletas", servicioBicicleta.obtenerBicicletasDelUsuario(usuario));
                 return new ModelAndView("mis-bicicletas", modelo);
             }
@@ -86,7 +80,8 @@ public class ControladorBicicleta {
     }
 
     @RequestMapping(path = "/baja-bicicleta/{id}", method = RequestMethod.GET)
-    public ModelAndView darDeBajaUnaBicicleta(@PathVariable("id") Long id, @ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView darDeBajaUnaBicicleta(@PathVariable("id") Long id) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
             if (verificarSiEsPropietario(usuario)) {
                 servicioBicicleta.darDeBajaUnaBicicleta(id);
@@ -97,71 +92,85 @@ public class ControladorBicicleta {
     }
 
     @RequestMapping(path = "/bicicletas", method = RequestMethod.GET)
-    public ModelAndView verBicicletas(@ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) {
+    public ModelAndView verBicicletas() {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
+            Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
             if (alquiler != null) {
                 return new ModelAndView("redirect:/mapa");
             }
-            ModelMap model = new ModelMap();
-            List<Bicicleta> bicis = servicioBicicleta.obtenerTodasLasBicicleta();
-
+            if (session.getAttribute("resena") != null) {
+                return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+            }
+            ModelMap modelo = new ModelMap();
+            List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicleta();
             try {
-                if (bicis.size() == 0) {
-                    model.put("error", "No se encontraron Bicicletas");
+                if (bicicletas.size() == 0) {
+                    modelo.put("error", "No se encontraron Bicicletas");
                 } else {
-                    model.put("bicicletas", bicis);
+                    modelo.put("bicicletas", bicicletas);
                 }
             } catch (Exception e) {
-                model.put("error", "520");
-                return new ModelAndView("error", model);
+                modelo.put("error", "520");
+                return new ModelAndView("error", modelo);
             }
-
-            return new ModelAndView("bicicletas", model);
+            return new ModelAndView("bicicletas", modelo);
         }
         return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(path = "bicicleta/{id}/detalle", method = RequestMethod.GET)
-    public ModelAndView detalleBicicleta(@PathVariable("id") Integer id, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) {
+    public ModelAndView detalleBicicleta(@PathVariable("id") Long id) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
+            Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
             if (alquiler != null) {
                 return new ModelAndView("redirect:/mapa");
             }
-            Long biciId = id.longValue();
-            ModelMap model = new ModelMap();
+            if (session.getAttribute("resena") != null) {
+                return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+            }
+            ModelMap modelo = new ModelMap();
             try {
-                Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(biciId);
+                Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(id);
                 List<Resena> resenas = servicioResena.obtenerResenasDeUnaBicicleta(bicicleta);
-                model.put("bicicleta", bicicleta);
-                model.put("resenas", resenas);
-                model.put("datosAlquiler", new DatosAlquiler());
+                modelo.put("usuario", usuario);
+                modelo.put("bicicleta", bicicleta);
+                modelo.put("resenas", resenas);
+                modelo.put("datosAlquiler", new DatosAlquiler());
 
             } catch (BicicletaNoEncontrada e) {
                 return new ModelAndView("pagina-no-encontrada");
             }
-            return new ModelAndView("detalle-bicicleta", model);
+            return new ModelAndView("detalle-bicicleta", modelo);
         }
         return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(path = "propietario/{id}/bicicletas", method = RequestMethod.GET)
-    public ModelAndView bicicletasDelPropietario(@PathVariable("id") Long id, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("alquiler") Alquiler alquiler) {
+    public ModelAndView bicicletasDelPropietario(@PathVariable("id") Long id) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
+            Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
             if (alquiler != null) {
                 return new ModelAndView("redirect:/mapa");
             }
-            ModelMap model = new ModelMap();
+            if (session.getAttribute("resena") != null) {
+                return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+            }
+            ModelMap modelo = new ModelMap();
             try {
                 List<Bicicleta> bicicletas = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(id);
-                model.put("bicicletas", bicicletas);
+                modelo.put("usuario", usuario);
+                modelo.put("bicicletas", bicicletas);
             } catch (Exception e) {
                 return new ModelAndView("pagina-no-encontrada");
             }
-            return new ModelAndView("bicicletas", model);
+            return new ModelAndView("bicicletas", modelo);
         }
         return new ModelAndView("redirect:/login");
     }
-
+    
     private boolean verificarSiEsPropietario(Usuario usuario) {
         return usuario != null && usuario.getRol().equals("Propietario");
     }
