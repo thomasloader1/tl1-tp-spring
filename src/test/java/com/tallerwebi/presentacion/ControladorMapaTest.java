@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +53,10 @@ public class ControladorMapaTest {
     public void irAMapaConAlquilerEnCursoDebeDevolverLaVistaDeMapaAlquiler() throws JsonProcessingException {
         // preparación
         prepararControlador();
+
+        LocalDateTime fechaAlquilerMock = LocalDateTime.now().minusHours(2);
+        when(alquilerMock.getFechaAlquiler()).thenReturn(fechaAlquilerMock);
+        when(alquilerMock.getCantidadHoras()).thenReturn(3);
         when(sessionMock.getAttribute("alquiler")).thenReturn(alquilerMock);
 
         // ejecución
@@ -66,11 +71,10 @@ public class ControladorMapaTest {
         // preparación
         prepararControlador();
 
-        // ejecucion
-
+        // ejecución
         ModelAndView modelAndView = controladorMapa.irAMapa();
 
-        // validacion
+        // validación
         assertNotNull(modelAndView.getModel().get("propietarios"));
         verify(servicioMapaMock, times(1)).obtenerPropietarios();
     }
@@ -83,10 +87,10 @@ public class ControladorMapaTest {
         Coordenada coordenada = new Coordenada();
         when(servicioMapaMock.obtenerUbicacionActual()).thenReturn(coordenada);
 
-        // ejecucion
+        // ejecución
         ModelAndView modelAndView = controladorMapa.irAMapa();
 
-        // validacion
+        // validación
         assertEquals(coordenada.getLatitude(), modelAndView.getModel().get("latitudActual"));
         assertEquals(coordenada.getLongitude(), modelAndView.getModel().get("longitudActual"));
     }
@@ -95,14 +99,19 @@ public class ControladorMapaTest {
     public void irAMapaConAlquilerEnCursoDebeObtenerLasCoordenadasDeLatitudYLongitudActualesDelUsuario() throws JsonProcessingException {
         // preparación
         prepararControlador();
+
+        LocalDateTime fechaAlquilerMock = LocalDateTime.now().minusHours(2);
+        when(alquilerMock.getFechaAlquiler()).thenReturn(fechaAlquilerMock);
+        when(alquilerMock.getCantidadHoras()).thenReturn(3);
         when(sessionMock.getAttribute("alquiler")).thenReturn(alquilerMock);
+        
         Coordenada coordenada = new Coordenada();
         when(servicioMapaMock.obtenerUbicacionActual()).thenReturn(coordenada);
 
-        // ejecucion
+        // ejecución
         ModelAndView modelAndView = controladorMapa.irAMapa();
 
-        // validacion
+        // validación
         assertEquals(coordenada.getLatitude(), modelAndView.getModel().get("latitudActual"));
         assertEquals(coordenada.getLongitude(), modelAndView.getModel().get("longitudActual"));
     }

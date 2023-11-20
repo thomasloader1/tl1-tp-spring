@@ -53,7 +53,7 @@ public class ControladorMapa {
 
                 modelo.put("alquiler", alquiler);
                 modelo.put("tiempoRestante", Duration.between(alquiler.getFechaAlquiler(), LocalDateTime.now()));
-                
+
                 return new ModelAndView("mapa-alquiler", modelo);
             }
 
