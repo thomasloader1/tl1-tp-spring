@@ -15,13 +15,19 @@
     <div class="w-3/4 h-[90vh]" id="map"></div>
     <div class="w-1/4 h-[90vh] max-h-[90vh] overflow-y-auto flex flex-col items-center justify-center bg-white py-3 border-2 rounded-sm">
         <div class="m-6">
-            <h1 class="text-center text-2xl text-blue-700 font-bold py-2">Detalles del alquiler</h1>
+            <span class="text-center text-4xl text-blue-700 font-bold py-2">Detalles del alquiler</span>
         </div>
         <div class="m-6">
-            <p class="font-medium text-gray-900 text-6xl" th:text="${alquiler.cantidadHoras} + ' hs'"></p>
+            <p class="font-medium text-gray-900 text-4xl" th:text="${alquiler.cantidadHoras} + ' hs'"></p>
         </div>
         <div class="m-6">
-            <p class="font-medium text-gray-900 text-6xl" th:text="'$' + ${alquiler.precioAlquiler}"></p>
+            <p class="font-medium text-gray-900 text-4xl" th:text="'$' + ${alquiler.precioAlquiler}"></p>
+        </div>
+        <div class="m-6 text-center">
+            <span class="text-center text-4xl text-blue-700 font-bold py-2">Tiempo restante</span>
+        </div>
+        <div class="m-6">
+            <p class="font-medium text-gray-900 text-4xl" id="cuentaRegresiva"></p>
         </div>
         <div class="m-6 p-6">
             <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-8 py-4 focus:outline-none"
@@ -43,6 +49,37 @@
     }
 
     window.initMap = initMap;
+
+    let tiempoRestante = [[${tiempoRestante}]];
+    let horasMaximas = [[${alquiler.cantidadHoras}]];
+
+    actualizarCuentaRegresiva();
+
+    setInterval(actualizarCuentaRegresiva, 1000);
+
+    function actualizarCuentaRegresiva() {
+        let tiempoDiferencia = (horasMaximas * 3600) - tiempoRestante;
+
+        if (tiempoDiferencia === 0) {
+            window.location.href = "/alquiler/" + [[${alquiler.id}]] + "/finalizar-alquiler";
+        }
+
+        if (tiempoDiferencia < 3600) {
+            tiempoDiferencia = Math.max(0, tiempoDiferencia);
+        }
+        
+        let horas = Math.floor(tiempoDiferencia / 3600);
+        let minutos = Math.floor((tiempoDiferencia % 3600) / 60);
+        let segundos = Math.floor(tiempoDiferencia % 60);
+
+        let horasFormateadas = horas.toString().padStart(2, '0');
+        let minutosFormateados = minutos.toString().padStart(2, '0');
+        let segundosFormateados = segundos.toString().padStart(2, '0');
+
+        document.getElementById("cuentaRegresiva").innerText = `${horasFormateadas}:${minutosFormateados}:${segundosFormateados}`;
+
+        tiempoRestante++;
+    }
 </script>
 <script
         defer

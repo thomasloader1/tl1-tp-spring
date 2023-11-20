@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -45,7 +47,13 @@ public class ControladorMapa {
             modelo.put("longitudActual", coordenada.getLongitude());
 
             if (alquiler != null) {
+                if (Duration.between(alquiler.getFechaAlquiler(), LocalDateTime.now()).getSeconds() > (alquiler.getCantidadHoras() * 3600)) {
+                    return new ModelAndView("redirect:/alquiler/" + alquiler.getId() + "/finalizar-alquiler");
+                }
+
                 modelo.put("alquiler", alquiler);
+                modelo.put("tiempoRestante", Duration.between(alquiler.getFechaAlquiler(), LocalDateTime.now()));
+                
                 return new ModelAndView("mapa-alquiler", modelo);
             }
 
