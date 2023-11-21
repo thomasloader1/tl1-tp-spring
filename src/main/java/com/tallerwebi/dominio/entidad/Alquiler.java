@@ -1,55 +1,57 @@
 package com.tallerwebi.dominio.entidad;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Alquiler {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-         private Double precioAlquiler;
-        private Integer cantidadHoras;
-        @Enumerated(EnumType.STRING)
-        private EstadoBicicleta estadoAlquiler;
-        @ManyToOne
-        private Bicicleta bicicleta;
-        @ManyToOne
-        private Usuario usuario;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Double precioAlquiler;
+    private Integer cantidadHoras;
+    @Enumerated(EnumType.STRING)
+    private EstadoBicicleta estadoAlquiler;
+    @ManyToOne
+    private Bicicleta bicicleta;
+    @ManyToOne
+    private Usuario usuario;
+    private LocalDateTime fechaAlquiler;
 
-        public Alquiler() {
-        }
+    public Alquiler() {
+    }
 
-        public Alquiler(Integer cantidadHoras, Bicicleta bicicleta, Usuario usuario) {
-            this.cantidadHoras = cantidadHoras;
-            this.bicicleta = bicicleta;
-            this.usuario = usuario;
-            this.estadoAlquiler = EstadoBicicleta.EN_USO;
-        }
+    public Alquiler(Integer cantidadHoras, Bicicleta bicicleta, Usuario usuario) {
+        this.cantidadHoras = cantidadHoras;
+        this.bicicleta = bicicleta;
+        this.usuario = usuario;
+        this.estadoAlquiler = EstadoBicicleta.EN_USO;
+    }
 
-        public Long getId() {
-            return id;
-        }
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public Bicicleta getBicicleta() {
-            return bicicleta;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public void setBicicleta(Bicicleta bicicleta) {
-            this.bicicleta = bicicleta;
-        }
+    public Bicicleta getBicicleta() {
+        return bicicleta;
+    }
 
-        public Usuario getUsuario() {
-            return usuario;
-        }
+    public void setBicicleta(Bicicleta bicicleta) {
+        this.bicicleta = bicicleta;
+    }
 
-        public void setUsuario(Usuario usuario) {
-            this.usuario = usuario;
-        }
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public Integer getCantidadHoras() {
         return cantidadHoras;
@@ -63,6 +65,10 @@ public class Alquiler {
         return estadoAlquiler;
     }
 
+    public void setEstadoAlquiler(EstadoBicicleta estadoAlquiler) {
+        this.estadoAlquiler = estadoAlquiler;
+    }
+
     public Double getPrecioAlquiler() {
         return precioAlquiler;
     }
@@ -71,9 +77,11 @@ public class Alquiler {
         this.precioAlquiler = precioAlquiler;
     }
 
-    public void setEstadoAlquiler(EstadoBicicleta estadoAlquiler) {
-        this.estadoAlquiler = estadoAlquiler;
+    public LocalDateTime getFechaAlquiler() {
+        return fechaAlquiler;
+    }
+
+    public void setFechaAlquiler(LocalDateTime fechaAlquiler) {
+        this.fechaAlquiler = fechaAlquiler;
     }
 }
-
-
