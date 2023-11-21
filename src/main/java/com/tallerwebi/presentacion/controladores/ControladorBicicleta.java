@@ -170,7 +170,7 @@ public class ControladorBicicleta {
         }
         return new ModelAndView("redirect:/login");
     }
-    
+
     private boolean verificarSiEsPropietario(Usuario usuario) {
         return usuario != null && usuario.getRol().equals("Propietario");
     }
