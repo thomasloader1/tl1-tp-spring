@@ -115,7 +115,10 @@ public class ControladorBicicletaTest {
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
-        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDelUsuario(usuarioMock);
+
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnUsoPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnReparacionPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
     }
 
     @Test

@@ -8,6 +8,8 @@ import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
+import com.tallerwebi.dominio.servicios.ServicioResena;
+import com.tallerwebi.presentacion.controladores.ControladorBicicleta;
 import com.tallerwebi.presentacion.controladores.ControladorLogin;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
@@ -26,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ControladorLoginTest {
+    private ControladorBicicleta controladorBicicleta;
     private ControladorLogin controladorLogin;
     private Usuario usuarioMock;
     private List<Bicicleta> bicicletasMock;
@@ -34,26 +37,24 @@ public class ControladorLoginTest {
     private HttpSession sessionMock;
     private ServicioLogin servicioLoginMock;
     private ServicioBicicleta servicioBicicletaMock;
-
+    private ServicioResena servicioResena;
 
     @BeforeEach
     public void init() {
         datosLoginMock = new DatosLogin("usuario@mail.com", "1234");
         usuarioMock = mock(Usuario.class);
         bicicletasMock = new ArrayList<>(); // Crear una lista de Bicicletas
-
         // Agregar al menos dos bicicletas a la lista
         bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar",50000.0,600.0));
         bicicletasMock.add(new Bicicleta(EstadoBicicleta.DISPONIBLE, "MALO", usuarioMock, "google.com.ar",50000.0,600.0));
-
         when(usuarioMock.getEmail()).thenReturn("usuario@mail.com");
         requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioLoginMock = mock(ServicioLogin.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
-        //ServicioBicicleta servicioBicicletaMock = mock(ServicioBicicleta.class);
-        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock);
-
+        servicioResena = mock(ServicioResena.class);
+        controladorBicicleta = new ControladorBicicleta(servicioBicicletaMock, servicioResena);
+        controladorLogin = new ControladorLogin(servicioLoginMock, servicioBicicletaMock,servicioResena);
     }
 
     @Test
@@ -218,19 +219,22 @@ public class ControladorLoginTest {
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
         assertEquals(bicicletasMock.size(), bicicletasEnVista.size());
     }
- /*   @Test
-    public void queSeMuestrenEnVistaClienteSoloLasBicicletasDisponibles(){
+    @Test
+    public void queEnElHomeDelPropietarioSeVeanLosStatsDeLosAlquileresYResenas() {
+        // preparacion
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
-        when(usuarioMock.getRol()).thenReturn("Cliente");
+        when(usuarioMock.getRol()).thenReturn("Propietario");
 
-        //ejecucion
-            ModelAndView modelAndView = controladorLogin.irAHome(sessionMock);
-            // validacion
-            assertThat(modelAndView.getViewName(), equalToIgnoringCase("home"));
-            verify(servicioBicicletamock, times(1)).obtenerBicicletasDisponibles();
+        // ejecucion
+        ModelAndView modelAndView = controladorBicicleta.irAMisBicicletas(usuarioMock);
 
-    }*/
+        // validacion
+        assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-bicicletas"));
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnUsoPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasEnReparacionPorIdUsuario(usuarioMock.getId());
+        verify(servicioBicicletaMock, times(1)).obtenerBicicletasDisponiblesPorIdUsuario(usuarioMock.getId());
+    }
 
     @Test
     public void loginConUsuarioPropietarioPuedeVerClientesQueAlquilaronSusBicicletas() {

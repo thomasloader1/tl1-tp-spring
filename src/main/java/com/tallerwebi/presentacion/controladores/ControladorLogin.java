@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Coordenada;
+import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
 import com.tallerwebi.dominio.servicios.ServicioLogin;
+import com.tallerwebi.dominio.servicios.ServicioResena;
 import com.tallerwebi.presentacion.dto.DatosLogin;
 import com.tallerwebi.presentacion.dto.DatosUsuario;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -34,11 +36,12 @@ import java.util.List;
 public class ControladorLogin {
     private final ServicioLogin servicioLogin;
     private final ServicioBicicleta servicioBicicleta;
-
+    private final ServicioResena servicioResena;
     @Autowired
-    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta) {
+    public ControladorLogin(ServicioLogin servicioLogin, ServicioBicicleta servicioBicicleta, ServicioResena servicioResena) {
         this.servicioLogin = servicioLogin;
         this.servicioBicicleta = servicioBicicleta;
+        this.servicioResena = servicioResena;
     }
 
     @NotNull

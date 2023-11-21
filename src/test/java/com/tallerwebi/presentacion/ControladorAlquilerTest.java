@@ -28,7 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-public class ControladorAlquilerTest {
+public class
+ControladorAlquilerTest {
     private ControladorAlquiler controladorAlquiler;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
