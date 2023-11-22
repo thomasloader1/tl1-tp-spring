@@ -98,7 +98,7 @@ ControladorAlquilerTest {
         DatosAlquiler datosAlquiler = new DatosAlquiler();
 
         // Llama al método del controlador
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(datosAlquiler);
+        ModelAndView modelAndView = controladorAlquiler.misAlquileres();
 
         // Verifica que el modelo contenga los valores esperados
         Assertions.assertEquals(usuarioMock, modelAndView.getModel().get("usuario"));
@@ -113,15 +113,14 @@ ControladorAlquilerTest {
     public void siVoyAMisAlquileresNoTengoAlquileresParaMostrar() {
         // preparación
         Usuario usuarioMock = mock(Usuario.class);
-        DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
-        when(datosAlquilerMock.getUsuario()).thenReturn(usuarioMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
 
         // ejecución
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(datosAlquilerMock);
+        ModelAndView modelAndView = controladorAlquiler.misAlquileres();
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-alquileres"));
         assertTrue(isEmpty((List<Alquiler>) modelAndView.getModel().get("alquileres")));
-        verify(servicioAlquilerMock, times(1)).obtenerAlquileresDelUsuario(datosAlquilerMock);
+        verify(servicioAlquilerMock, times(1)).obtenerAlquileresDelUsuario(usuarioMock);
     }
 }

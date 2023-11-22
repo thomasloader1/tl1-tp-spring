@@ -1,12 +1,14 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.dominio.entidad.*;
+import com.tallerwebi.dominio.entidad.Alquiler;
+import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Condition;
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.dominio.servicios.ServicioAlquilerImpl;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
-import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +28,7 @@ public class ServicioAlquilerTest {
     public void init() {
         repositorioAlquilerMock = mock(RepositorioAlquiler.class);
         repositorioBicicletaMock = mock(RepositorioBicicleta.class);
-        servicioAlquiler = new ServicioAlquilerImpl(repositorioAlquilerMock,repositorioBicicletaMock);
+        servicioAlquiler = new ServicioAlquilerImpl(repositorioAlquilerMock, repositorioBicicletaMock);
     }
 
     @Test
@@ -57,7 +59,6 @@ public class ServicioAlquilerTest {
 //
 //        // validación
 //        when(alquilerMock.getEstadoAlquiler()).thenReturn(EstadoBicicleta.DISPONIBLE);
-//        verify(repositorioAlquilerMock, times(1)).eliminarAlquiler(alquilerMock);
 //        assertEquals(EstadoBicicleta.DISPONIBLE, alquilerMock.getEstadoAlquiler());
 //    }
 

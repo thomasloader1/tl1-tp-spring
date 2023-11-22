@@ -47,11 +47,6 @@ public class RepositorioAlquilerImpl implements RepositorioAlquiler {
     }
 
     @Override
-    public void eliminarAlquiler(Alquiler alquiler){
-        sessionFactory.getCurrentSession().delete(alquiler);
-    }
-
-    @Override
     public List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(Bicicleta bicicleta) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT r FROM Alquiler r WHERE r.bicicleta = :bicicleta");

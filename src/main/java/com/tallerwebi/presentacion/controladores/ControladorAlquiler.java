@@ -69,7 +69,7 @@ public class ControladorAlquiler {
     }
 
     @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
-    public ModelAndView verAlquiler(@ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
+    public ModelAndView misAlquileres() {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
             Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
@@ -80,8 +80,7 @@ public class ControladorAlquiler {
                 return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
             }
             ModelMap modelo = new ModelMap();
-            datosAlquiler.setUsuario(usuario);
-            List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDelUsuario(datosAlquiler);
+            List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDelUsuario(usuario);
             modelo.put("usuario", usuario);
             modelo.put("alquileres", alquileres);
             return new ModelAndView("mis-alquileres", modelo);

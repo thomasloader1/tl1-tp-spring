@@ -1,9 +1,6 @@
 package com.tallerwebi.dominio.servicios;
 
-import com.tallerwebi.dominio.entidad.Alquiler;
-import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.Condition;
-import com.tallerwebi.dominio.entidad.EstadoBicicleta;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
@@ -51,7 +48,6 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
         alquiler.setEstadoAlquiler(EstadoBicicleta.DISPONIBLE);
         repositorioBicicleta.updateEstado(alquiler.getBicicleta().getId(), EstadoBicicleta.DISPONIBLE);
-        repositorioAlquiler.eliminarAlquiler(alquiler);
     }
 
     @Override
@@ -61,8 +57,8 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public List<Alquiler> obtenerAlquileresDelUsuario(DatosAlquiler datosAlquiler) {
-        return repositorioAlquiler.obtenerAlquilerPorUsuario(datosAlquiler.getUsuario());
+    public List<Alquiler> obtenerAlquileresDelUsuario(Usuario usuario) {
+        return repositorioAlquiler.obtenerAlquilerPorUsuario(usuario);
     }
 
     @Override

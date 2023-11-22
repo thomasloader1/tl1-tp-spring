@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.servicios;
 
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
 
@@ -16,7 +17,7 @@ public interface ServicioAlquiler {
 
     Bicicleta obtenerBicicletaPorIdDeAlquiler(Long id);
 
-    List<Alquiler> obtenerAlquileresDelUsuario(DatosAlquiler datosAlquiler);
+    List<Alquiler> obtenerAlquileresDelUsuario(Usuario usuario);
 
     List<Alquiler> obtenerTodosLosAlquileresDeUnaBicicleta(DatosAlquiler datosAlquiler);
 }
