@@ -4,7 +4,6 @@ import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Condition;
 import com.tallerwebi.dominio.entidad.Usuario;
-import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
 import com.tallerwebi.dominio.servicios.ServicioAlquilerImpl;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +30,7 @@ public class ServicioAlquilerTest {
     }
 
     @Test
-    public void queSePuedaCrearUnAlquiler() throws AlquilerValidacion {
+    public void queSePuedaCrearUnAlquiler() {
         // preparación
 
         Alquiler alquilerMock = mock(Alquiler.class);
@@ -78,7 +76,7 @@ public class ServicioAlquilerTest {
     }
 
     @Test
-    public void queSePuedaObtenerUnaListaDeTodosLosAlquileresDeUnaBicicleta() throws AlquilerValidacion {
+    public void queSePuedaObtenerUnaListaDeTodosLosAlquileresDeUnaBicicleta() {
         // preparación
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         Bicicleta bicicletaMock = mock(Bicicleta.class);
@@ -98,21 +96,5 @@ public class ServicioAlquilerTest {
         verify(repositorioAlquilerMock, times(1)).obtenerTodosLosAlquileresDeUnaBicicleta(bicicletaMock);
         assertEquals(1, alquileres.size());
         assertEquals(datosAlquilerMock.getBicicleta(), alquileres.get(0).getBicicleta());
-    }
-
-    @Test
-    public void queLanceUnaExcepcionSiLaCantidadDeHorasDeAlquilerEsMenorAUnoYNoSePuedeCrearElAlquiler() {
-        // preparación
-        DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
-
-        Bicicleta bicicletaMock = mock(Bicicleta.class);
-        Usuario usuarioMock = mock(Usuario.class);
-        when(datosAlquilerMock.getBicicleta()).thenReturn(bicicletaMock);
-        when(datosAlquilerMock.getUsuario()).thenReturn(usuarioMock);
-        when(datosAlquilerMock.getCantidadHoras()).thenReturn(0);
-
-        // ejecución y validación
-        assertThrows(AlquilerValidacion.class, () -> servicioAlquiler.comenzarAlquiler(datosAlquilerMock));
-        verify(repositorioAlquilerMock, times(0)).crearAlquiler(any(Alquiler.class));
     }
 }

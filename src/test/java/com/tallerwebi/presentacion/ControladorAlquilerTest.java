@@ -58,7 +58,7 @@ ControladorAlquilerTest {
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
-
+        when(datosAlquilerMock.getCantidadHoras()).thenReturn(1);
         Alquiler alquilerMock = mock(Alquiler.class);
         when(servicioAlquilerMock.comenzarAlquiler(datosAlquilerMock)).thenReturn(alquilerMock);
 
@@ -94,9 +94,6 @@ ControladorAlquilerTest {
 
     @Test
     public void testVerAlquiler() {
-        // Crea un usuario y un objeto de datos de alquiler para las pruebas
-        DatosAlquiler datosAlquiler = new DatosAlquiler();
-
         // Llama al método del controlador
         ModelAndView modelAndView = controladorAlquiler.misAlquileres();
 

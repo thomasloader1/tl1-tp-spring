@@ -11,7 +11,7 @@ import java.util.List;
 public interface ServicioAlquiler {
     void crearAlquiler(Alquiler alquiler) throws AlquilerValidacion;
 
-    Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion;
+    Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler);
 
     void finalizarAlquiler(Long id);
 

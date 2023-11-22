@@ -11,23 +11,46 @@
     <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
         <div th:replace="~{partials/nav}"></div>
         <div class="w-full my-5 sm:my-0 sm:h-full sm:flex sm:flex-col sm:items-center sm:justify-center">
-            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Alquileres</p>
+            <p class="my-5 sm:my-10 text-3xl font-bold text-gray-900 text-center">Mis Alquileres</p>
             <div class="flex flex-wrap justify-center">
                 <div th:if="${#lists.isEmpty(alquileres)}">
                     <p class="font-medium text-gray-900 text-center text-lg">No tenés alquileres registrados</p>
                 </div>
-                <div th:each="alquiler: ${alquileres}">
-                    <form class="bg-white rounded-lg px-2 py-3"
-                          th:action="@{/alquiler/{idAlquiler}/finalizar-alquiler(idAlquiler=${alquiler.id})}">
-                        <p th:text="${alquiler.id}"></p>
-                        <p th:text="${alquiler.cantidadHoras}"></p>
-                        <p th:text="${alquiler.bicicleta.descripcion}"></p>
-                        <button class="px-3 py-2 bg-primary" type="submit">Finalizar Alquiler</button>
-                    </form>
+                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                    <div class="group relative" th:each="alquiler: ${alquileres}">
+                        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                            <img alt="Bicicleta"
+                                 class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                 th:src="${alquiler.bicicleta.urlImagen}"/>
+                        </div>
+                        <div class="mt-4 flex justify-between">
+                            <div>
+                                <h3 class="fechaAlquiler text-sm text-gray-700"
+                                    th:data="${alquiler.fechaAlquiler}"></h3>
+                            </div>
+                            <p class="text-sm font-medium text-gray-900" th:text="'$' + ${alquiler.precioAlquiler}"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
 </main>
+<script th:inline="javascript">
+    Array.from(document.getElementsByClassName('fechaAlquiler')).forEach(element => {
+        const fecha = element.getAttribute('data');
+        const fechaFormateada = formatearFecha(fecha);
+        element.innerText = fechaFormateada;
+    });
+
+    function formatearFecha(fecha) {
+        const dateObject = new Date(fecha);
+        const dd = dateObject.getDate().toString().padStart(2, '0');
+        const mm = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+        const yyyy = dateObject.getFullYear();
+        return `${dd}/${mm}/${yyyy}`;
+    }
+</script>
 </body>
 </html>

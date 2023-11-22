@@ -43,10 +43,13 @@ public class ControladorAlquiler {
         Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
         datosAlquiler.setBicicleta(bicicleta);
         datosAlquiler.setUsuario(usuario);
+        if (datosAlquiler.getCantidadHoras() == null || datosAlquiler.getCantidadHoras() < 1) {
+            modelo.put("error", "La cantidad de horas debe ser mayor a 0");
+            return new ModelAndView("redirect:/bicicleta/" + bicicleta.getId() + "/detalle", modelo);
+        }
         Alquiler alquiler = servicioAlquiler.comenzarAlquiler(datosAlquiler);
         session.setAttribute("alquilerAux", alquiler);
         DatosPreferencia preference = servicioMercadoPago.crearPreferenciaPago(alquiler);
-        modelo.put("idPreferencia", preference);
         return new ModelAndView("redirect:" + preference.urlCheckout, modelo);
     }
 
