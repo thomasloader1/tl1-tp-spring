@@ -6,6 +6,7 @@ import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.ResenaPuntajeValidacion;
 import com.tallerwebi.dominio.excepcion.ResenaValidacion;
 import com.tallerwebi.dominio.servicios.ServicioResenaImpl;
+import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
 import com.tallerwebi.infraestructura.repositorios.RepositorioResena;
 import com.tallerwebi.presentacion.dto.DatosResena;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,11 +22,13 @@ public class ServicioResenaTest {
     private ServicioResenaImpl servicioResena;
     private RepositorioResena repositorioResenaMock;
     private Bicicleta bicicletaMock;
+    private RepositorioBicicleta repositorioBicicletaMock;
 
     @BeforeEach
     public void init() {
         repositorioResenaMock = mock(RepositorioResena.class);
-        servicioResena = new ServicioResenaImpl(repositorioResenaMock);
+        repositorioBicicletaMock = mock(RepositorioBicicleta.class);
+        servicioResena = new ServicioResenaImpl(repositorioResenaMock, repositorioBicicletaMock);
         bicicletaMock = mock(Bicicleta.class);
     }
 

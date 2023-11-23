@@ -1,9 +1,11 @@
 package com.tallerwebi.dominio.entidad;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.persistence.*;
 
 @Entity
-public class Bicicleta {
+public class Bicicleta implements Comparable<Bicicleta> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,6 +15,7 @@ public class Bicicleta {
     private String urlImagen;
     private double precioAlquilerPorHora;
     private double precioVenta;
+    private int puntaje;
     @ManyToOne
     private Usuario usuario;
     @OneToOne
@@ -109,5 +112,30 @@ public class Bicicleta {
     }
     public void setPrecioAlquilerPorHora(double precioAlquilerPorHora) {
         this.precioAlquilerPorHora = precioAlquilerPorHora;
+    }
+
+    public int getPuntaje() {
+        return puntaje;
+    }
+
+    public void setPuntaje(int puntaje) {
+        this.puntaje = puntaje;
+    }
+
+    @Override
+    public int compareTo(Bicicleta otraBicicleta) {
+        if(this.puntaje == otraBicicleta.getPuntaje()){
+            return 0;
+        }
+
+        if(this.puntaje < otraBicicleta.getPuntaje()){
+            return -1;
+        }
+
+        if(this.puntaje > otraBicicleta.getPuntaje()){
+            return  1;
+        }
+
+        return 0;
     }
 }
