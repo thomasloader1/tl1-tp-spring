@@ -1,10 +1,6 @@
 package com.tallerwebi.dominio.servicios;
 
-import com.tallerwebi.dominio.entidad.Alquiler;
-import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.Condition;
-import com.tallerwebi.dominio.entidad.EstadoBicicleta;
-import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.infraestructura.repositorios.RepositorioAlquiler;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
@@ -36,12 +32,8 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler) throws AlquilerValidacion {
+    public Alquiler comenzarAlquiler(DatosAlquiler datosAlquiler) {
         Alquiler alquiler = new Alquiler(datosAlquiler.getCantidadHoras(), datosAlquiler.getBicicleta(), datosAlquiler.getUsuario());
-
-        if (datosAlquiler.getCantidadHoras() < 1) {
-            throw new AlquilerValidacion();
-        }
         alquiler.setPrecioAlquiler(calcularPrecioAlquiler(datosAlquiler));
         return alquiler;
     }
@@ -51,7 +43,6 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
         Alquiler alquiler = repositorioAlquiler.obtenerAlquilerporId(id);
         alquiler.setEstadoAlquiler(EstadoBicicleta.DISPONIBLE);
         repositorioBicicleta.updateEstado(alquiler.getBicicleta().getId(), EstadoBicicleta.DISPONIBLE);
-        repositorioAlquiler.eliminarAlquiler(alquiler);
     }
 
     @Override
@@ -61,8 +52,8 @@ public class ServicioAlquilerImpl implements ServicioAlquiler {
     }
 
     @Override
-    public List<Alquiler> obtenerAlquileresDelUsuario(DatosAlquiler datosAlquiler) {
-        return repositorioAlquiler.obtenerAlquilerPorUsuario(datosAlquiler.getUsuario());
+    public List<Alquiler> obtenerAlquileresDelUsuario(Usuario usuario) {
+        return repositorioAlquiler.obtenerAlquilerPorUsuario(usuario);
     }
 
     @Override

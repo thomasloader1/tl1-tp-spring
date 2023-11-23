@@ -43,10 +43,13 @@ public class ControladorAlquiler {
         Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
         datosAlquiler.setBicicleta(bicicleta);
         datosAlquiler.setUsuario(usuario);
+        if (datosAlquiler.getCantidadHoras() == null || datosAlquiler.getCantidadHoras() < 1) {
+            modelo.put("error", "La cantidad de horas debe ser mayor a 0");
+            return new ModelAndView("redirect:/bicicleta/" + bicicleta.getId() + "/detalle", modelo);
+        }
         Alquiler alquiler = servicioAlquiler.comenzarAlquiler(datosAlquiler);
         session.setAttribute("alquilerAux", alquiler);
         DatosPreferencia preference = servicioMercadoPago.crearPreferenciaPago(alquiler);
-        modelo.put("idPreferencia", preference);
         return new ModelAndView("redirect:" + preference.urlCheckout, modelo);
     }
 
@@ -69,7 +72,7 @@ public class ControladorAlquiler {
     }
 
     @RequestMapping(path = "/mis-alquileres", method = RequestMethod.GET)
-    public ModelAndView verAlquiler(@ModelAttribute("datosAlquiler") DatosAlquiler datosAlquiler) {
+    public ModelAndView misAlquileres() {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
             Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
@@ -80,8 +83,7 @@ public class ControladorAlquiler {
                 return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
             }
             ModelMap modelo = new ModelMap();
-            datosAlquiler.setUsuario(usuario);
-            List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDelUsuario(datosAlquiler);
+            List<Alquiler> alquileres = servicioAlquiler.obtenerAlquileresDelUsuario(usuario);
             modelo.put("usuario", usuario);
             modelo.put("alquileres", alquileres);
             return new ModelAndView("mis-alquileres", modelo);

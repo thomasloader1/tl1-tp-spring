@@ -13,7 +13,7 @@ import com.tallerwebi.dominio.servicios.ServicioBicicletaImpl;
 import com.tallerwebi.dominio.servicios.ServicioVehicleStatus;
 import com.tallerwebi.dominio.servicios.ServicioVehicleStatusIMP;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
-import com.tallerwebi.infraestructura.repositorios.RepositorioUsuario;
+import com.tallerwebi.infraestructura.repositorios.RepositorioResena;
 import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +27,7 @@ public class VehicleStatusTest {
     private RepositorioVehicleStatus vehicleStatusRepositorio;
     private ServicioBicicleta servicioBicicleta;
     private RepositorioBicicleta repositorioBicicletaMock;
+    private RepositorioResena repositorioResenaMock;
 
 
     @BeforeEach
@@ -35,7 +36,7 @@ public class VehicleStatusTest {
         vehicleStatusRepositorio = mock(RepositorioVehicleStatus.class);
         when(vehicleStatusRepositorio.getData(any())).thenReturn(makeStatus());
         repositorioBicicletaMock = mock(RepositorioBicicleta.class);
-        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock, vehicleStatusRepositorio, servicioVehicleStatus);
+        servicioBicicleta = new ServicioBicicletaImpl(repositorioBicicletaMock, vehicleStatusRepositorio, servicioVehicleStatus, repositorioResenaMock);
     }
 
     @Test

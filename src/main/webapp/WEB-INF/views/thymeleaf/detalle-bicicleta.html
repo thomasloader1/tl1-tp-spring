@@ -6,92 +6,83 @@
     <title>Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
     <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
         <div th:replace="~{partials/nav :: nav}"></div>
-        <h1 class="text-4xl font-bold text-center text-gray-900 mb-3">Detalle Bicicleta</h1>
-
-
-            <div class="grid grid-cols-1 md:grid-rows-[2fr_auto] gap-4 md:grid-cols-2 ">
-
-                <div class="grid grid-cols-1 md:grid-cols-2 md:col-start-1 md:col-end-3">
+        <div class="grid grid-cols-1 md:grid-rows-[2fr_auto] gap-4 md:grid-cols-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 md:col-start-1 md:col-end-3">
+                <div>
+                    <img alt="" class="w-64 sm:w-80 mb-2.5 h-auto rounded-t-lg img-fluid"
+                         th:src="${bicicleta.urlImagen}"/>
+                    <span th:text="${bicicleta.descripcion}"></span>
+                </div>
+                <form class="w-full bg-white px-3 py-2 shadow-lg rounded-lg" method="POST"
+                      th:action="@{/bicicleta/{bicicletaId}/crear-alquiler(bicicletaId=${bicicleta.id})}"
+                      th:object="${datosAlquiler}">
                     <div>
-                        <img alt="" class="w-64 sm:w-80 h-auto rounded-t-lg img-fluid" th:src="${bicicleta.urlImagen}"/>
+                        <h3 class="mb-2 text-1xl">Estado: <span
+                                class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"
+                                th:text="${bicicleta.getEstadoBicicleta()}"></span></h3>
+                        <h3 class="mb-3 text-1xl" for="precioPorHora">Precio por hora<span
+                                class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"
+                                id="precioPorHora" th:text="'$' + ${bicicleta.precioAlquilerPorHora}"></span></h3>
                     </div>
 
-                    <form class="w-full bg-white px-3 py-2 shadow-lg rounded-lg" method="POST"
-                          th:action="@{/bicicleta/{bicicletaId}/crear-alquiler(bicicletaId=${bicicleta.id})}"
-                          th:object="${datosAlquiler}">
-                        <div>
-                            <h3 class="mb-2  text-1xl">Estado: <span class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getEstadoBicicleta()}"></span></h3>
-                            <h3 class="mb-3 text-1xl">Descripcion: <span class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2" th:text="${bicicleta.getDescripcion()}"></span></h3>
-                            <h3 class="mb-3 text-1xl" for="precioPorHora">Precio por hora:<span
-                                    class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"
-                                    id="precioPorHora" th:text="${bicicleta.getPrecioAlquilerPorHora()}"></span></h3>
-
-                        </div>
-                        <div class="w-80 mx-auto mb-6">
-
-                            <label class="block mb-2 text-m font-medium text-gray-900" for="cantidadHoras">Horas a
-                                alquilar</label>
-                            <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                   id="cantidadHoras" name="cantidadHoras" th:field="*{cantidadHoras}" type="number"/>
-                        </div>
-
-                        <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900" for="precioFinal">Precio final
-                                del alquiler:</label>
-                            <p class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                               id="precioFinal"></p>
-
-                        </div>
-
-                        <div class="text-center">
-                            <button class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center"
-                                    type="submit">
-                                Comenzar alquilacion
-                            </button>
-                        </div>
-
-                        <div class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg"
-                             role="alert"
-                             th:if="${param.error != null}">
-                            <span class="font-medium" th:text="${param.error}"></span>
-                        </div>
-                    </form>
-                </div>
-
-                <section class="grid grid-cols-1 col-span-2 md:grid-cols-3 gap-4">
-                    <article class="bg-white px-3 py-2 shadow-lg rounded-lg " th:each="resena : ${resenas}">
-                        <p th:text="${resena.comentario}"></p>
-                        <p th:text="${resena.fecha}"></p>
-                        <p th:text="${resena.usuario.email}"></p>
-                    </article>
-                </section>
-
+                    <div class="w-80 mx-auto mb-6">
+                        <label class="block mb-2 text-m font-medium text-gray-900" for="cantidadHoras">Horas a
+                            alquilar</label>
+                        <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5"
+                               id="cantidadHoras" name="cantidadHoras" th:field="*{cantidadHoras}" type="number"/>
+                    </div>
+                    <div class="w-80 mx-auto mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900" for="precioFinal">Precio final
+                            del alquiler:</label>
+                        <p class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5"
+                           id="precioFinal"></p>
+                    </div>
+                    <div class="text-center">
+                        <button class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center"
+                                type="submit">
+                            Ir a pagar
+                        </button>
+                    </div>
+                    <div class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg"
+                         role="alert"
+                         th:if="${param.error != null}">
+                        <span class="font-medium" th:text="${param.error}"></span>
+                    </div>
+                </form>
             </div>
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Reseñas</h2>
+                <div class="flex flex-col items-center sm:mx-3 sm:my-10">
+                    <div class="w-64 sm:w-96 shadow-sm rounded-md my-1 p-2" th:each="resena : ${resenas}">
+                        <div class="flex items-center gap-[16px]">
+                            <div th:each="i : ${#numbers.sequence(1, resena.puntaje)}">
+                                <i class="fa-solid fa-star text-orange-500 text-xl"></i>
+                            </div>
 
-        <div th:if="${usuario.getRol() == 'Propietario'}">
-            <p class="text-3xl font-bold text-gray-900">Vista Propietario</p>
+                        </div>
+                        <span th:text="${resena.comentario}"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </main>
 <script th:inline="javascript">
-var cantidadHorasInput = document.getElementById("cantidadHoras");
-var precioFinalOutPut= document.getElementById("precioFinal");
-var precioPorHora =  [[${bicicleta.getPrecioAlquilerPorHora()}]];
-var idPreferencia = "[[${idPreferencia}]]";
+    var cantidadHorasInput = document.getElementById("cantidadHoras");
+    var precioFinalOutPut = document.getElementById("precioFinal");
+    var precioPorHora = [[${bicicleta.getPrecioAlquilerPorHora()}]];
 
-cantidadHoras.addEventListener("input", function () {
-    var cantidadHoras = parseFloat(cantidadHorasInput.value);
-    var precioFinal = cantidadHoras * precioPorHora;
-    precioFinalOutPut.innerHTML   = precioFinal.toFixed(2);
-});
-
+    cantidadHoras.addEventListener("input", function () {
+        var cantidadHoras = parseFloat(cantidadHorasInput.value);
+        var precioFinal = cantidadHoras * precioPorHora;
+        precioFinalOutPut.innerHTML = precioFinal.toFixed(2);
+    });
 </script>
-
 </body>
 </html>

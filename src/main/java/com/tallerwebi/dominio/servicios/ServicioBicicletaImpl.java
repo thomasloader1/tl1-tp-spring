@@ -8,12 +8,15 @@ import com.tallerwebi.dominio.excepcion.BicicletaNoDisponible;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.excepcion.BicicletaValidacion;
 import com.tallerwebi.infraestructura.repositorios.RepositorioBicicleta;
+import com.tallerwebi.infraestructura.repositorios.RepositorioResena;
 import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosBicicleta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -24,23 +27,26 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     private final RepositorioBicicleta repositorioBicicleta;
     private final RepositorioVehicleStatus repositorioVehicleStatus;
     private final ServicioVehicleStatus servicioVehicleStatus;
+    private final RepositorioResena repositorioResena;
 
     @Autowired
-    public ServicioBicicletaImpl(RepositorioBicicleta repositorioBicicleta, RepositorioVehicleStatus repositorioVehicleStatus, ServicioVehicleStatus servicioVehicleStatus) {
+    public ServicioBicicletaImpl(RepositorioBicicleta repositorioBicicleta, RepositorioVehicleStatus repositorioVehicleStatus, ServicioVehicleStatus servicioVehicleStatus, RepositorioResena repositorioResena) {
         this.repositorioBicicleta = repositorioBicicleta;
         this.repositorioVehicleStatus = repositorioVehicleStatus;
         this.servicioVehicleStatus = servicioVehicleStatus;
+        this.repositorioResena = repositorioResena;
     }
 
     @Override
     public void darDeAltaUnaBicicleta(DatosBicicleta datosBicicleta) throws BicicletaValidacion {
-        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty()|| datosBicicleta.getPrecioVenta() <= 0) {
+        if (datosBicicleta.getEstadoBicicleta() == null || datosBicicleta.getDescripcion().isEmpty() || datosBicicleta.getPrecioVenta() <= 0) {
             throw new BicicletaValidacion();
         }
-        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen(),datosBicicleta.getPrecioVenta(), datosBicicleta.getPrecioAlquilerPorHora());
+        Bicicleta bicicleta = new Bicicleta(datosBicicleta.getEstadoBicicleta(), datosBicicleta.getDescripcion(), datosBicicleta.getUsuario(), datosBicicleta.getUrlImagen(), datosBicicleta.getPrecioVenta(), datosBicicleta.getPrecioAlquilerPorHora());
 
         bicicleta.setPrecioVenta(datosBicicleta.getPrecioVenta());
         bicicleta.setCondicion(Condition.PERFECTO_ESTADO);
+        bicicleta.setPuntaje(3);
         repositorioBicicleta.registrarBicicleta(bicicleta);
     }
 
@@ -91,7 +97,7 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             if (!fallos.isEmpty()) {
                 // Si hay fallos, cambia el estado a "requiere reparación"
                 bicicleta.setEstadoBicicleta(EstadoBicicleta.REQUIERE_REPARACION);
-                repositorioBicicleta.updateEstado(bicicleta.getId(),bicicleta.getEstadoBicicleta());
+                repositorioBicicleta.updateEstado(bicicleta.getId(), bicicleta.getEstadoBicicleta());
             }
         }
         return bicicleta;
@@ -117,8 +123,14 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     }
 
     public List<Bicicleta> obtenerBicicletasDisponibles() {
-          List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
-          return bicicleta;
+        List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
+        return bicicleta;
     }
+
+    @Override
+    public void ordenarBicicletasDescendente(List<Bicicleta> bicicletas){
+        Collections.sort(bicicletas, Collections.reverseOrder());
+    };
+
 
 }

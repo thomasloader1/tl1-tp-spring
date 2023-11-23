@@ -153,6 +153,13 @@ public class ControladorLogin {
         }
         ModelMap model = new ModelMap();
         List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
+
+        for (Bicicleta bicicleta : bicicletas) {
+            bicicleta.setPuntaje(servicioResena.calcularPuntaje(bicicleta));
+        }
+
+        servicioBicicleta.ordenarBicicletasDescendente(bicicletas);
+
         List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
         List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());

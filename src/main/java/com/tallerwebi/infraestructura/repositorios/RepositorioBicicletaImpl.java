@@ -69,6 +69,12 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
     }
 
     @Override
+    public void actualizarPuntajeBici(Bicicleta bicicleta) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(bicicleta);
+    }
+
+    @Override
     public void updateEstado(Long id, EstadoBicicleta estadoBicicleta) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.id = :id");

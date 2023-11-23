@@ -2,10 +2,10 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Reseñas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
@@ -13,13 +13,13 @@
         <div th:replace="~{partials/nav :: nav}"></div>
         <p class="mt-5 sm:mt-10 text-center text-3xl font-bold text-gray-900">Reseñas de la bicicleta</p>
         <div class="flex flex-col sm:flex-row">
-            <img src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476"
-                 alt=""
-                 class="w-64 sm:w-96 h-fit my-5 sm:my-10 sm:mx-3 h-auto rounded-lg">
+            <img alt="Bicicleta"
+                 class="w-64 sm:w-96 h-fit my-5 sm:my-10 sm:mx-3 h-auto rounded-lg"
+                 src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476">
             <div class="flex flex-col items-center sm:mx-3 sm:my-10">
-                <div th:each="resena : ${resenas}" class="w-64 sm:w-96 shadow-sm rounded-md my-1 p-2">
+                <div class="w-64 sm:w-96 shadow-sm rounded-md my-1 p-2" th:each="resena : ${resenas}">
                     <div class="flex items-center gap-[16px]">
-                        <div th:each="i : ${#numbers.sequence(0, resena.puntaje - 1)}">
+                        <div th:each="i : ${#numbers.sequence(1, resena.puntaje)}">
                             <i class="fa-solid fa-star text-orange-500 text-xl"></i>
                         </div>
                     </div>
