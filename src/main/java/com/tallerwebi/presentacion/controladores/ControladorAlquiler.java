@@ -50,6 +50,7 @@ public class ControladorAlquiler {
         Alquiler alquiler = servicioAlquiler.comenzarAlquiler(datosAlquiler);
         session.setAttribute("alquilerAux", alquiler);
         DatosPreferencia preference = servicioMercadoPago.crearPreferenciaPago(alquiler);
+        modelo.put("idPreferencia", preference);
         return new ModelAndView("redirect:" + preference.urlCheckout, modelo);
     }
 
