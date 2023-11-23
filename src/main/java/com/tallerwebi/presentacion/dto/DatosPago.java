@@ -24,7 +24,7 @@ public class DatosPago {
         back_urls.pending = "http://localhost:8080/validar-pago";
         back_urls.failure = "http://localhost:8080/validar-pago";
         auto_return = "all";
-       // external_reference = pack;
+
 
     }
 
