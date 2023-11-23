@@ -26,4 +26,6 @@ public interface RepositorioBicicleta {
     List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id);
 
     List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id);
+
+    void actualizarPuntajeBici(Bicicleta bicicleta);
 }

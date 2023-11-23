@@ -48,6 +48,7 @@ VALUES (null, 'Excelente.', current_timestamp, 5, 1, 11);
 INSERT INTO Resena(id, comentario, fecha, puntaje, bicicleta_id, usuario_id)
 VALUES (null, 'No me gustó.', current_timestamp, 1, 1, 11);
 
+
 INSERT INTO Alquiler(id, cantidadHoras, estadoAlquiler, bicicleta_id, usuario_id)
 VALUES (1, 2, 'EN_USO', 1, 3);
 INSERT INTO Alquiler(id, cantidadHoras, estadoAlquiler, bicicleta_id, usuario_id)

@@ -13,4 +13,6 @@ public interface RepositorioResena {
     List<Resena> obtenerResenasDeUnaClientePorIdPuntajeBueno(Long id);
     List<Resena> obtenerResenasDeUnaClientePorIdPuntajeRegular(Long id);
     List<Resena> obtenerResenasDeUnaClientePorIdPuntajeMalo(Long id);
+
+    int obtenerCantidadDeResenasParaUnaBicicleta(Bicicleta bicicleta);
 }
