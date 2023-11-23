@@ -1,47 +1,29 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-    <div class="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition duration-300 ease-in-out"
-         th:each="bicicleta : ${bicicletas}">
-        <img alt="" class="max-w-64 max-h-64 h-auto rounded-t-lg img-fluid" th:src="${bicicleta.urlImagen}"/>
-
-        <div>
-            <span class="text-gray-700" th:text="${bicicleta.descripcion}"></span>
-        </div>
-
-
-        <div>
-            <div th:if="${bicicleta.condicion == T(com.tallerwebi.dominio.entidad.Condition).PERFECTO_ESTADO}">
-                <p style="background: #00ff39d1; padding: 4px; border-radius: 8px; display: inline-block;">Perfecto Estado</p>
+<div class="flex flex-wrap justify-center">
+    <h2 class="text-3xl font-bold text-gray-900 text-center">Bicicletas disponibles</h2>
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div class="group relative" th:each="bicicleta : ${bicicletas}">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <img alt="Bicicleta"
+                     class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                     th:src="${bicicleta.urlImagen}"/>
             </div>
-
-            <div th:if="${bicicleta.condicion == T(com.tallerwebi.dominio.entidad.Condition).BUENO_ESTADO}">
-                <p style="background: #ffa700d1; padding: 4px; border-radius: 8px; display: inline-block;">Buen Estado</p>
+            <div class="mt-4 flex justify-between">
+                <div>
+                    <h3 class="fechaAlquiler text-md text-gray-700"
+                        th:text="${bicicleta.descripcion}"></h3>
+                </div>
+                <p class="text-md font-medium text-gray-900" th:text="'$' + ${bicicleta.precioAlquilerPorHora}"></p>
             </div>
-
-            <div th:if="${bicicleta.condicion == T(com.tallerwebi.dominio.entidad.Condition).MAL_ESTADO}">
-                <p style="background: #ff0000d1; padding: 4px; border-radius: 8px; display: inline-block;">Mal Estado</p>
+            <div class="text-center mt-4">
+                <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none"
+                   th:href="@{/bicicleta/{id}/resenas(id=${bicicleta.id})}">
+                    Reseñas
+                </a>
+                <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none"
+                   th:href="@{/bicicleta/{id}/detalle(id=${bicicleta.id})}">
+                    Detalle
+                </a>
             </div>
-
-
-        </div>
-
-        <div style="display:flex">
-            <div>
-                <span th:each="i : ${#numbers.sequence(1, bicicleta.puntaje)}">
-                    <i class="fa-solid fa-star text-orange-500 text-xl"></i>
-                </</span>
-            </div>
-        </div>
-
-        <div class="text-center mt-4">
-            <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none"
-               th:href="@{/bicicleta/{id}/resenas(id=${bicicleta.id})}">
-                Reseñas
-            </a>
-            <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none"
-               th:href="@{/bicicleta/{id}/detalle(id=${bicicleta.id})}">
-                Detalle
-            </a>
         </div>
     </div>
 </div>

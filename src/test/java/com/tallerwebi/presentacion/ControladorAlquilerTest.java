@@ -58,7 +58,7 @@ ControladorAlquilerTest {
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
-
+        when(datosAlquilerMock.getCantidadHoras()).thenReturn(1);
         Alquiler alquilerMock = mock(Alquiler.class);
         when(servicioAlquilerMock.comenzarAlquiler(datosAlquilerMock)).thenReturn(alquilerMock);
 
@@ -94,11 +94,8 @@ ControladorAlquilerTest {
 
     @Test
     public void testVerAlquiler() {
-        // Crea un usuario y un objeto de datos de alquiler para las pruebas
-        DatosAlquiler datosAlquiler = new DatosAlquiler();
-
         // Llama al método del controlador
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(datosAlquiler);
+        ModelAndView modelAndView = controladorAlquiler.misAlquileres();
 
         // Verifica que el modelo contenga los valores esperados
         Assertions.assertEquals(usuarioMock, modelAndView.getModel().get("usuario"));
@@ -113,15 +110,14 @@ ControladorAlquilerTest {
     public void siVoyAMisAlquileresNoTengoAlquileresParaMostrar() {
         // preparación
         Usuario usuarioMock = mock(Usuario.class);
-        DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
-        when(datosAlquilerMock.getUsuario()).thenReturn(usuarioMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
 
         // ejecución
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(datosAlquilerMock);
+        ModelAndView modelAndView = controladorAlquiler.misAlquileres();
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-alquileres"));
         assertTrue(isEmpty((List<Alquiler>) modelAndView.getModel().get("alquileres")));
-        verify(servicioAlquilerMock, times(1)).obtenerAlquileresDelUsuario(datosAlquilerMock);
+        verify(servicioAlquilerMock, times(1)).obtenerAlquileresDelUsuario(usuarioMock);
     }
 }
