@@ -73,7 +73,9 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
     public List<Bicicleta> obtenerBicicletasDisponiblesPorIdUsuario(Long id) {
         return repositorioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(id);
     }
-
+    public List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id){
+        return repositorioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(id);
+    };
     @Override
     public List<Bicicleta> obtenerTodasLasBicicleta() {
         return repositorioBicicleta.obtenerBicicletas();
@@ -114,9 +116,14 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
             throw new BicicletaNoEncontrada("No se encontró la bicicleta con el ID proporcionado.");
         }
     }
+    @Override
+    public List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id) {
+        return repositorioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(id);
+    }
 
     public List<Bicicleta> obtenerBicicletasDisponibles() {
         List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
         return bicicleta;
     }
+
 }

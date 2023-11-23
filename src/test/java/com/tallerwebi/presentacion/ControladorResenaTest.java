@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
 public class ControladorResenaTest {
-    private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ControladorResena controladorResena;
     private ServicioResena servicioResenaMock;
@@ -32,24 +30,23 @@ public class ControladorResenaTest {
 
     @BeforeEach
     public void init() {
-        requestMock = mock(HttpServletRequest.class);
         sessionMock = mock(HttpSession.class);
         servicioResenaMock = mock(ServicioResena.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
-        controladorResena = new ControladorResena(servicioResenaMock, servicioBicicletaMock);
+        controladorResena = new ControladorResena(servicioResenaMock, servicioBicicletaMock, sessionMock);
         usuarioMock = mock(Usuario.class);
         sessionMock.setAttribute("usuario", usuarioMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
     }
 
     @Test
     public void irACrearResenaDeUnaBicicletaDebeDevolverLaVistaConElFormularioDeResenaVacio() {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
-        when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
 
         // ejecución
-        ModelAndView modelAndView = controladorResena.irACrearResena(bicicletaMock.getId(), usuarioMock);
+        ModelAndView modelAndView = controladorResena.irACrearResena(bicicletaMock.getId());
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("crear-resena"));
@@ -61,11 +58,10 @@ public class ControladorResenaTest {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         DatosResena datosResenaMock = mock(DatosResena.class);
-        when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
 
         // ejecución
-        ModelAndView modelAndView = controladorResena.subirResena(bicicletaMock.getId(), usuarioMock, datosResenaMock);
+        ModelAndView modelAndView = controladorResena.subirResena(bicicletaMock.getId(), datosResenaMock);
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/home"));
@@ -77,12 +73,11 @@ public class ControladorResenaTest {
         // preparacion
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         DatosResena datosResenaMock = mock(DatosResena.class);
-        when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
         doThrow(ResenaValidacion.class).when(servicioResenaMock).subirResena(datosResenaMock);
 
         // ejecucion
-        ModelAndView modelAndView = controladorResena.subirResena(bicicletaMock.getId(), usuarioMock, datosResenaMock);
+        ModelAndView modelAndView = controladorResena.subirResena(bicicletaMock.getId(), datosResenaMock);
 
         // validacion
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("crear-resena"));
@@ -95,15 +90,16 @@ public class ControladorResenaTest {
         // preparación
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         when(servicioBicicletaMock.obtenerBicicletaPorId(anyLong())).thenReturn(bicicletaMock);
-        when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
 
         // ejecución
-        ModelAndView modelAndView = controladorResena.irAResenasDeUnaBicicleta(usuarioMock, bicicletaMock.getId());
+        ModelAndView modelAndView = controladorResena.irAResenasDeUnaBicicleta(bicicletaMock.getId());
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("resenas"));
         assertThat(modelAndView.getModel().get("resenas"), instanceOf(List.class));
         verify(servicioResenaMock, times(1)).obtenerResenasDeUnaBicicleta(bicicletaMock);
     }
+
 }

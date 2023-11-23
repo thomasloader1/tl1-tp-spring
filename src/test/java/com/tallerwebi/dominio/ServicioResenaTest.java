@@ -5,15 +5,11 @@ import com.tallerwebi.dominio.entidad.Resena;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.ResenaPuntajeValidacion;
 import com.tallerwebi.dominio.excepcion.ResenaValidacion;
-import com.tallerwebi.dominio.servicios.*;
-import com.tallerwebi.infraestructura.repositorios.RepositorioBicicletaImpl;
+import com.tallerwebi.dominio.servicios.ServicioResenaImpl;
 import com.tallerwebi.infraestructura.repositorios.RepositorioResena;
-import com.tallerwebi.infraestructura.repositorios.RepositorioVehicleStatus;
 import com.tallerwebi.presentacion.dto.DatosResena;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.List;
 
@@ -25,15 +21,12 @@ public class ServicioResenaTest {
     private ServicioResenaImpl servicioResena;
     private RepositorioResena repositorioResenaMock;
     private Bicicleta bicicletaMock;
-    private ServicioBicicleta servicioBicicleta;
 
     @BeforeEach
     public void init() {
         repositorioResenaMock = mock(RepositorioResena.class);
         servicioResena = new ServicioResenaImpl(repositorioResenaMock);
         bicicletaMock = mock(Bicicleta.class);
-        servicioBicicleta = new ServicioBicicletaImpl(mock(RepositorioBicicletaImpl.class), mock(RepositorioVehicleStatus.class), new ServicioVehicleStatusIMP(), repositorioResenaMock);
-
     }
 
     @Test
@@ -127,57 +120,36 @@ public class ServicioResenaTest {
         assertEquals(1, resenas.size());
         assertEquals(resenaMock, resenas.get(0));
     }
-
     @Test
-    public void queCuandoSeSubaUnaResenaSeIncrementeElPuntajeTotalEnLaBici() throws ResenaValidacion, ResenaPuntajeValidacion {
-        Bicicleta bicicleta = new Bicicleta();
-        bicicleta.setPuntaje(10);
+    public void queSePuedaObtenerUnaListaDeLasResenasDeUnCliente(){
+        //preparacion
+        Resena resenaMock = mock(Resena.class);
+        Resena resenaMock2 = mock(Resena.class);
+        Usuario usuarioMock = mock(Usuario.class);
+        when(repositorioResenaMock.obtenerResenasDeUnaClientePorId(usuarioMock.getId())).thenReturn(List.of(resenaMock, resenaMock2));
 
-        servicioResena.subirResena(new DatosResena(5, "Comentario",bicicleta,new Usuario()));
-
-        assertEquals(15, bicicleta.getPuntaje());
+        // ejecucion
+        List <Resena> resenasPorId = servicioResena.obtenerResenasDeUnaClientePorId(usuarioMock.getId());
+        // validacion
+        verify(repositorioResenaMock ,times(1)).obtenerResenasDeUnaClientePorId(usuarioMock.getId());
+        assertEquals(2,resenasPorId.size());
+        assertEquals(resenaMock, resenasPorId.get(0));
     }
-
     @Test
-    public void queSeACtualiceCorrectamenteElNuevoPuntajeCuandoSeGuardanVariasResenas() throws ResenaValidacion, ResenaPuntajeValidacion {
-        final int ESPERADO_1 = 4;
-        final int ESPERADO_2 = 3;
-        final int ESPERADO_3 = 4;
-        final int CANT_RESENAS_INICIAL = 7;
+    public void queSePuedaObtenerUnaListaDeLasResenasIgualesACincoEnPuntajeDeUnCliente(){
+        //preparacion
+        Resena resenaMock = mock(Resena.class);
+        resenaMock.setPuntaje(5);
+        Resena resenaMock2 = mock(Resena.class);
+        resenaMock2.setPuntaje(5);
+        Usuario usuarioMock = mock(Usuario.class);
+        when(repositorioResenaMock.obtenerResenasDeUnaClientePorIdPuntajeBueno(usuarioMock.getId())).thenReturn(List.of(resenaMock, resenaMock2));
 
-        Bicicleta bicicleta = new Bicicleta();
-        bicicleta.setPuntaje(26);
-        Answer<Integer> mockAnswer = CrearNuevaRespuestaMock(CANT_RESENAS_INICIAL);
-        when(repositorioResenaMock.obtenerCantidadDeResenasParaUnaBicicleta(any())).thenAnswer(mockAnswer);
-
-        DatosResena datosResena = new DatosResena(4,"Comentario",bicicleta, new Usuario());
-
-        servicioResena.subirResena(datosResena);
-        int puntajeObtenido_1 = servicioResena.calcularPuntaje(bicicleta);
-
-        datosResena.setPuntaje(1);
-        servicioResena.subirResena(datosResena);
-        int puntajeObtenido_2 = servicioResena.calcularPuntaje(bicicleta);
-
-        datosResena.setPuntaje(5);
-        servicioResena.subirResena(datosResena);
-        int puntajeObtenido_3 = servicioResena.calcularPuntaje(bicicleta);
-
-        assertEquals(ESPERADO_1, puntajeObtenido_1);
-        assertEquals(ESPERADO_2, puntajeObtenido_2);
-        assertEquals(ESPERADO_3, puntajeObtenido_3);
-    }
-
-    /* Creo atente contra el tratado de Ginebra haciendo esto ☻*/
-    /* Sirve para mockear un valor dinamico*/
-    private Answer<Integer> CrearNuevaRespuestaMock(int valorInicial) {
-        return new Answer<Integer>() {
-            private int valorDinamico = valorInicial;
-
-            @Override
-            public Integer answer(InvocationOnMock invocation) throws Throwable {
-                return this.valorDinamico++;
-            }
-        };
+        // ejecucion
+        List <Resena> resenasPorId = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeBueno(usuarioMock.getId());
+        // validacion
+        verify(repositorioResenaMock ,times(1)).obtenerResenasDeUnaClientePorIdPuntajeBueno(usuarioMock.getId());
+        assertEquals(2,resenasPorId.size());
+        assertEquals(resenaMock, resenasPorId.get(0));
     }
 }

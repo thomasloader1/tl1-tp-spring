@@ -51,6 +51,22 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         query.setParameter("estado", EstadoBicicleta.DISPONIBLE);
         return (List<Bicicleta>) query.list();
     }
+    public List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id){
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.usuario.id = :id AND b.estadoBicicleta = :estado");
+        query.setParameter("id", id);
+        query.setParameter("estado", EstadoBicicleta.REQUIERE_REPARACION);
+        return (List<Bicicleta>) query.list();
+    }
+
+    @Override
+    public List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.usuario.id = :id AND b.estadoBicicleta = :estado");
+        query.setParameter("id", id);
+        query.setParameter("estado", EstadoBicicleta.EN_USO);
+        return (List<Bicicleta>) query.list();
+    }
 
     @Override
     public void updateEstado(Long id, EstadoBicicleta estadoBicicleta) {
@@ -62,7 +78,6 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
         bicicleta.setEstadoBicicleta(estadoBicicleta);
         session.update(bicicleta);
     }
-
     public List<Bicicleta> obtenerBicicletas() {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT b FROM Bicicleta b");
@@ -73,22 +88,11 @@ public class RepositorioBicicletaImpl implements RepositorioBicicleta {
     public List<Bicicleta> obtenerBicicletasDisponibles() {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
-        query.setParameter("estado", EstadoBicicleta.DISPONIBLE);
+        query.setParameter("estado",EstadoBicicleta.DISPONIBLE);
 
         return (List<Bicicleta>) query.list();
     }
 
-    @Override
-    public List<Bicicleta> obtenerBiciclestasEnReparacion() {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("SELECT b FROM Bicicleta b WHERE b.estadoBicicleta = :estado");
-        query.setParameter("estado", EstadoBicicleta.REQUIERE_REPARACION);
-        return (List<Bicicleta>) query.list();
-    }
 
-    @Override
-    public void actualizarPuntajeBici(Bicicleta bicicleta) {
-        Session session = sessionFactory.getCurrentSession();
-        session.update(bicicleta);
-    }
+
 }

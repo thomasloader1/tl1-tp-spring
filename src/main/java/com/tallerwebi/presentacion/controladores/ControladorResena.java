@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion.controladores;
 
+import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
@@ -23,21 +24,23 @@ import javax.servlet.http.HttpSession;
 public class ControladorResena {
     private final ServicioResena servicioResena;
     private final ServicioBicicleta servicioBicicleta;
+    private final HttpSession session;
 
     @Autowired
-    public ControladorResena(ServicioResena servicioResena, ServicioBicicleta servicioBicicleta) {
+    public ControladorResena(ServicioResena servicioResena, ServicioBicicleta servicioBicicleta, HttpSession session) {
         this.servicioResena = servicioResena;
         this.servicioBicicleta = servicioBicicleta;
-    }
-
-    @ModelAttribute("usuario")
-    public Usuario obtenerUsuarioDeSesion(HttpSession session) {
-        return (Usuario) session.getAttribute("usuario");
+        this.session = session;
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/crear-resena", method = RequestMethod.GET)
-    public ModelAndView irACrearResena(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario) {
+    public ModelAndView irACrearResena(@PathVariable Long idBicicleta) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
+            Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+            if (alquiler != null) {
+                return new ModelAndView("redirect:/mapa");
+            }
             ModelMap modelo = new ModelMap();
             try {
                 servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
@@ -45,7 +48,7 @@ public class ControladorResena {
                 return new ModelAndView("pagina-no-encontrada");
             }
             modelo.put("datosResena", new DatosResena());
-            modelo.put("rol", usuario.getRol());
+            modelo.put("usuario", usuario);
             modelo.put("idBicicleta", idBicicleta);
             return new ModelAndView("crear-resena", modelo);
         }
@@ -53,7 +56,8 @@ public class ControladorResena {
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/subir-resena", method = RequestMethod.POST)
-    public ModelAndView subirResena(@PathVariable Long idBicicleta, @ModelAttribute("usuario") Usuario usuario, @ModelAttribute("datosResena") DatosResena datosResena) {
+    public ModelAndView subirResena(@PathVariable Long idBicicleta, @ModelAttribute("datosResena") DatosResena datosResena) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         ModelMap modelo = new ModelMap();
         try {
             Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
@@ -70,15 +74,25 @@ public class ControladorResena {
             modelo.put("error", "Error al crear la reseña");
             return new ModelAndView("crear-resena", modelo);
         }
+        session.removeAttribute("resena");
         return new ModelAndView("redirect:/home");
     }
 
     @RequestMapping(path = "/bicicleta/{idBicicleta}/resenas", method = RequestMethod.GET)
-    public ModelAndView irAResenasDeUnaBicicleta(@ModelAttribute("usuario") Usuario usuario, @PathVariable Long idBicicleta) {
+    public ModelAndView irAResenasDeUnaBicicleta(@PathVariable Long idBicicleta) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (usuario != null) {
+            Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+            if (alquiler != null) {
+                return new ModelAndView("redirect:/mapa");
+            }
+            if (session.getAttribute("resena") != null) {
+                return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+            }
             ModelMap modelo = new ModelMap();
             try {
                 Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
+                modelo.put("usuario", usuario);
                 modelo.put("resenas", servicioResena.obtenerResenasDeUnaBicicleta(bicicleta));
             } catch (BicicletaNoEncontrada e) {
                 return new ModelAndView("pagina-no-encontrada");

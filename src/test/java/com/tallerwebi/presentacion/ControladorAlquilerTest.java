@@ -1,13 +1,18 @@
 package com.tallerwebi.presentacion;
 
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
 import com.tallerwebi.dominio.entidad.Alquiler;
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.dominio.excepcion.AlquilerValidacion;
+import com.tallerwebi.dominio.excepcion.BicicletaNoEncontrada;
 import com.tallerwebi.dominio.servicios.ServicioAlquiler;
 import com.tallerwebi.dominio.servicios.ServicioBicicleta;
+import com.tallerwebi.dominio.servicios.ServicioMercadoPago;
 import com.tallerwebi.presentacion.controladores.ControladorAlquiler;
 import com.tallerwebi.presentacion.dto.DatosAlquiler;
+import com.tallerwebi.presentacion.dto.DatosPreferencia;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +28,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-public class ControladorAlquilerTest {
+public class
+ControladorAlquilerTest {
     private ControladorAlquiler controladorAlquiler;
     private HttpServletRequest requestMock;
     private HttpSession sessionMock;
     private ServicioBicicleta servicioBicicletaMock;
     private ServicioAlquiler servicioAlquilerMock;
+    private ServicioMercadoPago servicioMercadoPagoMock;
     private Usuario usuarioMock;
 
     @BeforeEach
@@ -37,28 +44,34 @@ public class ControladorAlquilerTest {
         sessionMock = mock(HttpSession.class);
         servicioBicicletaMock = mock(ServicioBicicleta.class);
         servicioAlquilerMock = mock(ServicioAlquiler.class);
+        servicioMercadoPagoMock = mock(ServicioMercadoPago.class);
+        controladorAlquiler = new ControladorAlquiler(servicioAlquilerMock, servicioBicicletaMock, servicioMercadoPagoMock, sessionMock);
         usuarioMock = mock(Usuario.class);
-
         sessionMock.setAttribute("usuario", usuarioMock);
-
-        controladorAlquiler = new ControladorAlquiler(servicioAlquilerMock, servicioBicicletaMock);
+        when(sessionMock.getAttribute("usuario")).thenReturn(usuarioMock);
     }
 
     @Test
-    public void QueSePuedaCrearUnAlquiler() throws AlquilerValidacion {
+    public void QueSePuedaCrearUnAlquiler() throws AlquilerValidacion, MPException, MPApiException, BicicletaNoEncontrada {
         // preparación
-
         Bicicleta bicicletaMock = mock(Bicicleta.class);
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         when(requestMock.getSession()).thenReturn(sessionMock);
         when(usuarioMock.getRol()).thenReturn("Cliente");
 
+        Alquiler alquilerMock = mock(Alquiler.class);
+        when(servicioAlquilerMock.comenzarAlquiler(datosAlquilerMock)).thenReturn(alquilerMock);
+
+        DatosPreferencia preferenceMock = mock(DatosPreferencia.class);
+        when(servicioMercadoPagoMock.crearPreferenciaPago(alquilerMock)).thenReturn(preferenceMock);
+
         // ejecución
-        ModelAndView modelAndView = controladorAlquiler.crearAlquiler(bicicletaMock.getId(), usuarioMock, datosAlquilerMock);
+        controladorAlquiler.crearAlquiler(bicicletaMock.getId(), datosAlquilerMock);
 
         // validación
-        assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/mapa"));
-        verify(servicioAlquilerMock, times(1)).crearAlquiler(datosAlquilerMock);
+        verify(servicioAlquilerMock, times(1)).comenzarAlquiler(datosAlquilerMock);
+        verify(requestMock.getSession(), times(1)).setAttribute(eq("alquilerAux"), any(Alquiler.class));
+        verify(servicioMercadoPagoMock, times(1)).crearPreferenciaPago(alquilerMock);
     }
 
     @Test
@@ -68,12 +81,10 @@ public class ControladorAlquilerTest {
         Alquiler alquilerMock = mock(Alquiler.class);
         when(bicicletaMock.getId()).thenReturn(1L);
         when(servicioAlquilerMock.obtenerBicicletaPorIdDeAlquiler(anyLong())).thenReturn(bicicletaMock);
-        when(requestMock.getSession()).thenReturn(sessionMock);
-
+        when(sessionMock.getAttribute("alquiler")).thenReturn(alquilerMock);
 
         // ejecución
         ModelAndView modelAndView = controladorAlquiler.finalizarAlquiler(alquilerMock.getId());
-
 
         // validación
         String viewName = "redirect:/bicicleta/" + bicicletaMock.getId() + "/crear-resena";
@@ -81,41 +92,16 @@ public class ControladorAlquilerTest {
         verify(servicioAlquilerMock, times(1)).finalizarAlquiler(alquilerMock.getId());
     }
 
-
-    /*@Test
-    public void testVerAlquilerExitoso() {
-        // Configura tus objetos de prueba, como idBicicleta, usuario, datosAlquiler, bicicleta y alquileres
-        Usuario usuario = new Usuario();
-        usuario.setId(1L);
-
-        DatosAlquiler datosAlquiler = new DatosAlquiler();
-        List<Alquiler> alquileres = new ArrayList<>();
-
-        // Configura el comportamiento simulado para obtener una bicicleta y alquileres exitosamente
-        Mockito.when(servicioAlquilerMock.obtenerAlquileresDeUnaBicicleta(Mockito.eq(datosAlquiler))).thenReturn(alquileres);
-
-        // Llama al método del controlador
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(usuario, datosAlquiler);
-
-        Usuario userInModel = (Usuario) modelAndView.getModel().get("usuario");
-
-        // Verifica las aserciones
-        Assertions.assertEquals("mis-alquileres", modelAndView.getViewName());
-        Assertions.assertSame(usuario.getId(), userInModel.getId());
-        Assertions.assertSame(alquileres, modelAndView.getModel().get("alquileres"));
-    }*/
-
     @Test
     public void testVerAlquiler() {
         // Crea un usuario y un objeto de datos de alquiler para las pruebas
-        Usuario usuario = new Usuario();
         DatosAlquiler datosAlquiler = new DatosAlquiler();
 
         // Llama al método del controlador
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(usuario, datosAlquiler);
+        ModelAndView modelAndView = controladorAlquiler.verAlquiler(datosAlquiler);
 
         // Verifica que el modelo contenga los valores esperados
-        Assertions.assertEquals(usuario, modelAndView.getModel().get("usuario"));
+        Assertions.assertEquals(usuarioMock, modelAndView.getModel().get("usuario"));
         List<Alquiler> alquileres = (List<Alquiler>) modelAndView.getModel().get("alquileres");
         Assertions.assertNotNull(alquileres);
 
@@ -129,9 +115,9 @@ public class ControladorAlquilerTest {
         Usuario usuarioMock = mock(Usuario.class);
         DatosAlquiler datosAlquilerMock = mock(DatosAlquiler.class);
         when(datosAlquilerMock.getUsuario()).thenReturn(usuarioMock);
-        
+
         // ejecución
-        ModelAndView modelAndView = controladorAlquiler.verAlquiler(usuarioMock, datosAlquilerMock);
+        ModelAndView modelAndView = controladorAlquiler.verAlquiler(datosAlquilerMock);
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("mis-alquileres"));

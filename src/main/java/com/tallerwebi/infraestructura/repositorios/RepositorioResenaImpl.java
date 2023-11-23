@@ -15,9 +15,6 @@ public class RepositorioResenaImpl implements RepositorioResena {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    private RepositorioBicicleta repositorioBicicleta;
-
-    @Autowired
     public RepositorioResenaImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -25,10 +22,6 @@ public class RepositorioResenaImpl implements RepositorioResena {
     @Override
     public void subirResena(Resena resena) {
         sessionFactory.getCurrentSession().save(resena);
-        Bicicleta bicicleta = resena.getBicicleta();
-        bicicleta.setPuntaje(bicicleta.getPuntaje() + resena.getPuntaje());
-
-        repositorioBicicleta.actualizarPuntajeBici(bicicleta);
     }
 
     @Override
@@ -40,11 +33,35 @@ public class RepositorioResenaImpl implements RepositorioResena {
     }
 
     @Override
-    public int obtenerCantidadDeResenasParaUnaBicicleta(Bicicleta bicicleta) {
+    public List<Resena> obtenerResenasDeUnaClientePorId(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("SELECT COUNT(*) FROM Resena r WHERE r.bicicleta = :bicicleta");
-        query.setParameter("bicicleta", bicicleta);
-        return ((Long)query.uniqueResult()).intValue() ;
+        Query query = session.createQuery( "SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId");
+        query.setParameter("clienteId", id);
+      return  (List<Resena>) query.list();
     }
 
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorIdPuntajeBueno(Long id) {
+
+            Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId AND r.puntaje >= 5");
+            query.setParameter("clienteId", id);
+            return  (List<Resena>) query.list();
+    }
+
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorIdPuntajeRegular(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId AND (r.puntaje >= 3 AND r.puntaje <= 4)");
+        query.setParameter("clienteId", id);
+        return  (List<Resena>) query.list();
+    }
+
+    @Override
+    public List<Resena> obtenerResenasDeUnaClientePorIdPuntajeMalo(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId AND r.puntaje <= 2 ");
+        query.setParameter("clienteId", id);
+        return  (List<Resena>) query.list();
+    }
 }

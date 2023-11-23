@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.entidad.Bicicleta;
 import com.tallerwebi.dominio.entidad.Resena;
+import com.tallerwebi.dominio.entidad.Usuario;
 import com.tallerwebi.infraestructura.repositorios.RepositorioResenaImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,15 +40,10 @@ public class RepositorioResenaTest {
         when(resenaMock.getId()).thenReturn(1L);
         when(sessionMock.get(Resena.class, resenaMock.getId())).thenReturn(resenaMock);
 
-        when(resenaMock.getPuntaje()).thenReturn(10);
-        Bicicleta bicicleta = new Bicicleta();
-        bicicleta.setPuntaje(5);
-        when(resenaMock.getBicicleta()).thenReturn(bicicleta);
-
         // ejecución
         repositorioResena.subirResena(resenaMock);
 
-        // validaciónAntonell@101097
+        // validación
         verify(sessionMock, times(1)).save(resenaMock);
     }
 
@@ -71,5 +67,23 @@ public class RepositorioResenaTest {
         verify(queryMock).list();
         assertEquals(0, resenas.size());
     }
+    @Test
+    @Rollback
+    @Transactional
+    public void queSePuedaObtenerUnaListaDeTodasLasReseñasDeUnUsuario(){
+        Usuario usuarioMock = mock(Usuario.class);
+        Query queryMock = mock(Query.class);
+        when(sessionMock.createQuery(anyString())).thenReturn(queryMock);
+        when(queryMock.list()).thenReturn(List.of());
 
+        // ejecucion
+        List<Resena>ListaReseñasDeUnPropietario = repositorioResena.obtenerResenasDeUnaClientePorId(usuarioMock.getId());
+
+        //validacion
+        verify(sessionMock, times(1)).createQuery(anyString());
+        verify(sessionMock).createQuery("SELECT r FROM Resena r JOIN r.bicicleta b JOIN b.usuario c WHERE c.id = :clienteId");
+        verify(queryMock).setParameter("clienteId", usuarioMock.getId());
+        verify(queryMock).list();
+        assertEquals(0, ListaReseñasDeUnPropietario.size());
+    }
 }

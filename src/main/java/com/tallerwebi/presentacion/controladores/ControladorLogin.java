@@ -3,9 +3,7 @@ package com.tallerwebi.presentacion.controladores;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tallerwebi.dominio.entidad.Bicicleta;
-import com.tallerwebi.dominio.entidad.Coordenada;
-import com.tallerwebi.dominio.entidad.Usuario;
+import com.tallerwebi.dominio.entidad.*;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import com.tallerwebi.dominio.excepcion.UsuarioSinDireccion;
 import com.tallerwebi.dominio.excepcion.UsuarioSinRol;
@@ -69,6 +67,11 @@ public class ControladorLogin {
             apiUrl += "&country=" + datosUsuario.getPais();
         }
         return apiUrl;
+    }
+
+    @ModelAttribute("alquiler")
+    public Alquiler obtenerAlquilerDeSesion(HttpSession session) {
+        return (Alquiler) session.getAttribute("alquiler");
     }
 
     @RequestMapping("/login")
@@ -138,18 +141,36 @@ public class ControladorLogin {
     @RequestMapping(path = "/home", method = RequestMethod.GET)
     public ModelAndView irAHome(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-        ModelMap model = new ModelMap();
-        List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
-
-        for(Bicicleta bicicleta : bicicletas){
-          bicicleta.setPuntaje(servicioResena.calcularPuntaje(bicicleta));
-        }
-
         if (usuario == null) {
             return new ModelAndView("redirect:/login");
         }
+        Alquiler alquiler = (Alquiler) session.getAttribute("alquiler");
+        if (alquiler != null) {
+            return new ModelAndView("redirect:/mapa");
+        }
+        if (session.getAttribute("resena") != null) {
+            return new ModelAndView("redirect:/bicicleta/" + session.getAttribute("resena") + "/crear-resena");
+        }
+        ModelMap model = new ModelMap();
+        List<Bicicleta> bicicletas = servicioBicicleta.obtenerTodasLasBicicletasDisponibles();
+        List<Bicicleta> bicicletasPropDispo = servicioBicicleta.obtenerBicicletasDisponiblesPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasPropEnRepa = servicioBicicleta.obtenerBicicletasEnReparacionPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasPropEnUso = servicioBicicleta.obtenerBicicletasEnUsoPorIdUsuario(usuario.getId());
+        List<Bicicleta> bicicletasDelUsuarioTotal = servicioBicicleta.obtenerBicicletasDelUsuario(usuario);
+        List<Resena> resenasTotales = servicioResena.obtenerResenasDeUnaClientePorId(usuario.getId());
+        List<Resena> resenasBuenas = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeBueno(usuario.getId());
+        List<Resena> resenasMalas = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeMalo(usuario.getId());
+        List<Resena> resenasRegulares = servicioResena.obtenerResenasDeUnaClientePorIdPuntajeRegular(usuario.getId());
 
-        model.put("bicicletas" , bicicletas);
+        model.put("resenasTotales", resenasTotales);
+        model.put("resenasBuenas", resenasBuenas);
+        model.put("resenasRegulares", resenasRegulares);
+        model.put("resenasMalas", resenasMalas);
+        model.put("bicicletasDelUsuarioTotal", bicicletasDelUsuarioTotal);
+        model.put("bicicletasPropEnUso", bicicletasPropEnUso);
+        model.put("bicicletasPropEnRepa", bicicletasPropEnRepa);
+        model.put("bicicletasPropDispo", bicicletasPropDispo);
+        model.put("bicicletas", bicicletas);
         model.put("usuario", usuario);
         return new ModelAndView("home", model);
     }

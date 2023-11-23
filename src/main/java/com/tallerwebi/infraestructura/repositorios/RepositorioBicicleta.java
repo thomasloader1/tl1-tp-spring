@@ -23,7 +23,7 @@ public interface RepositorioBicicleta {
 
     List<Bicicleta> obtenerBicicletasDisponibles();
 
-    List<Bicicleta> obtenerBiciclestasEnReparacion();
+    List<Bicicleta> obtenerBicicletasEnReparacionPorIdUsuario(Long id);
 
-    void actualizarPuntajeBici(Bicicleta bicicleta);
+    List<Bicicleta> obtenerBicicletasEnUsoPorIdUsuario(Long id);
 }
