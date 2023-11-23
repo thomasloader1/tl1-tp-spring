@@ -30,6 +30,7 @@
                                 class="py-2 px-3 shadow-md rounded-full bg-blue text-black font-semibold text-sm bg-success mr-2"
                                 id="precioPorHora" th:text="'$' + ${bicicleta.precioAlquilerPorHora}"></span></h3>
                     </div>
+
                     <div class="w-80 mx-auto mb-6">
                         <label class="block mb-2 text-m font-medium text-gray-900" for="cantidadHoras">Horas a
                             alquilar</label>
@@ -48,7 +49,7 @@
                             Ir a pagar
                         </button>
                     </div>
-                    <div class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                    <div class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg"
                          role="alert"
                          th:if="${param.error != null}">
                         <span class="font-medium" th:text="${param.error}"></span>
@@ -63,6 +64,7 @@
                             <div th:each="i : ${#numbers.sequence(1, resena.puntaje)}">
                                 <i class="fa-solid fa-star text-orange-500 text-xl"></i>
                             </div>
+
                         </div>
                         <span th:text="${resena.comentario}"></span>
                     </div>
