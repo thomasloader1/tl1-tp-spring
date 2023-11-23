@@ -64,4 +64,12 @@ public class RepositorioResenaImpl implements RepositorioResena {
         query.setParameter("clienteId", id);
         return  (List<Resena>) query.list();
     }
+
+    @Override
+    public int obtenerCantidadDeResenasParaUnaBicicleta(Bicicleta bicicleta) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("SELECT COUNT(*) FROM Resena r WHERE r.bicicleta = :bicicleta");
+        query.setParameter("bicicleta", bicicleta);
+        return ((Long)query.uniqueResult()).intValue() ;
+    }
 }

@@ -25,11 +25,6 @@
 
         </div>
 
-        <div>
-            <span th:text="${bicicleta.puntaje}"></span>
-
-        </div>
-
         <div style="display:flex">
             <div>
                 <span th:each="i : ${#numbers.sequence(1, bicicleta.puntaje)}">

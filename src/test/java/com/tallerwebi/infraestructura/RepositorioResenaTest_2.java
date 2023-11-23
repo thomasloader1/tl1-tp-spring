@@ -59,7 +59,7 @@ public class RepositorioResenaTest_2 {
     @Test
     @Transactional
     @Rollback
-    public void queAlGuardarUnaResenaTambienSeActualiceElPuntajeDeLaBici(){
+    public void queAlGuardarUnaResenaTambienSeActualiceElPuntajeDeLaBici() {
         Resena resena = new Resena();
         Bicicleta bicicleta = new Bicicleta();
 
@@ -69,6 +69,10 @@ public class RepositorioResenaTest_2 {
         resena.setPuntaje(5);
 
         sessionFactory.getCurrentSession().save(bicicleta);
+
+        //Simula lo que hace el sercico porque ahi esta la suma
+        resena.getBicicleta().setPuntaje(resena.getBicicleta().getPuntaje() + resena.getPuntaje());
+
         repositorioResena.subirResena(resena);
 
         Bicicleta biciObtenida = repositorioBicicleta.obtenerBicicletaPorId(1L);

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -125,5 +126,11 @@ public class ServicioBicicletaImpl implements ServicioBicicleta {
         List<Bicicleta> bicicleta = repositorioBicicleta.obtenerBicicletasDisponibles();
         return bicicleta;
     }
+
+    @Override
+    public void ordenarBicicletasDescendente(List<Bicicleta> bicicletas){
+        Collections.sort(bicicletas, Collections.reverseOrder());
+    };
+
 
 }
