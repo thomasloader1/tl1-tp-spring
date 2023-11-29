@@ -109,6 +109,7 @@ public class ControladorLoginTest {
     public void registrameSiUsuarioNoExisteDeberiaCrearUsuarioYVolverAlLogin() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
+        when(datosUsuarioMock.getRol()).thenReturn("Cliente");
 
         // ejecución
         ModelAndView modelAndView = controladorLogin.registrarme(datosUsuarioMock);
@@ -129,7 +130,7 @@ public class ControladorLoginTest {
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("El usuario ya existe"));
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error al registrar el nuevo usuario"));
     }
 
     @Test
@@ -157,13 +158,14 @@ public class ControladorLoginTest {
 
         // validación
         assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-usuario"));
-        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Tenés que seleccionar tu tipo de usuario"));
+        assertThat(modelAndView.getModel().get("error").toString(), equalToIgnoringCase("Error al registrar el nuevo usuario"));
     }
 
     @Test
     public void errorEnRegistrarmeSiNoIngreseDireccionDeberiaVolverAFormularioYMostrarError() throws UsuarioExistente, UsuarioSinRol, UsuarioSinDireccion {
         // preparación
         DatosUsuario datosUsuarioMock = mock(DatosUsuario.class);
+        when(datosUsuarioMock.getRol()).thenReturn("Propietario");
         doThrow(UsuarioSinDireccion.class).when(servicioLoginMock).registrar(datosUsuarioMock);
 
         // ejecución

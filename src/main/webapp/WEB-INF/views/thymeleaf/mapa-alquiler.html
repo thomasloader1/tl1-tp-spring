@@ -37,6 +37,7 @@
         </div>
     </div>
 </div>
+<div th:replace="~{components/footer}"></div>
 <script th:inline="javascript">
     let map;
 
@@ -67,7 +68,7 @@
         if (tiempoDiferencia < 3600) {
             tiempoDiferencia = Math.max(0, tiempoDiferencia);
         }
-        
+
         let horas = Math.floor(tiempoDiferencia / 3600);
         let minutos = Math.floor((tiempoDiferencia % 3600) / 60);
         let segundos = Math.floor(tiempoDiferencia % 60);

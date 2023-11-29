@@ -5,18 +5,16 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 <main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
-    <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+    <div class="w-[90%] min-h-[90%] my-6 pt-3 flex flex-col items-center bg-slate-50 rounded">
         <div th:replace="~{partials/nav}"></div>
-        <div th:if="${usuario.getRol() == 'Propietario'}">
-            <br>
+        <div class="my-24" th:if="${usuario.getRol() == 'Propietario'}">
             <div class="grid grid-cols-4 gap-4">
                 <div>
-
-                    <a class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-slate-900		 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                    <a class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-amber-400	 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
                        href="#">
                         <h5 class="mb-2 text-center text-5xl font-bold tracking-tight text-gray-900 dark:text-white"
                             th:text="${#lists.size(bicicletasDelUsuarioTotal)}"></h5>
@@ -90,6 +88,7 @@
         <div th:if="${usuario.getRol() == 'Cliente'}">
             <div th:replace="~{components/listaBicicletas}"></div>
         </div>
+        <div th:replace="~{components/footer}"></div>
     </div>
 </main>
 </body>

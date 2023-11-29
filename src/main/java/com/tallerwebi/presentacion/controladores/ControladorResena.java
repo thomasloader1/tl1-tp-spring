@@ -93,6 +93,7 @@ public class ControladorResena {
             try {
                 Bicicleta bicicleta = servicioBicicleta.obtenerBicicletaPorId(idBicicleta);
                 modelo.put("usuario", usuario);
+                modelo.put("bicicleta", bicicleta);
                 modelo.put("resenas", servicioResena.obtenerResenasDeUnaBicicleta(bicicleta));
             } catch (BicicletaNoEncontrada e) {
                 return new ModelAndView("pagina-no-encontrada");

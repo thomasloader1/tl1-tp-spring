@@ -9,12 +9,13 @@
 </head>
 <body>
 <main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
-    <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
+    <div class="absolute w-[90%] min-h-[90%] pt-3 flex flex-col items-center bg-slate-50 rounded">
         <p class="mt-5 sm:mt-10 text-center text-3xl font-bold text-gray-900">¿Qué te pareció la bicicleta?</p>
         <img alt="" class="w-64 sm:w-96 my-5 sm:my-10 h-auto rounded-lg"
              src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476">
         <form action="#" method="POST"
-              th:action="@{/bicicleta/{idBicicleta}/subir-resena(idBicicleta=${idBicicleta})}" th:object="${datosResena}">
+              th:action="@{/bicicleta/{idBicicleta}/subir-resena(idBicicleta=${idBicicleta})}"
+              th:object="${datosResena}">
             <div class="w-80 sm:w-96 mx-auto mb-6">
                 <span class="block mb-2 text-sm font-medium text-gray-900">Puntaje</span>
                 <div class="relative w-80 sm:w-96 mx-auto mb-6">
@@ -43,7 +44,8 @@
                 </div>
                 <label class="block mb-2 text-sm font-medium text-gray-900"
                        for="comentario">Comentario</label>
-                <textarea autocomplete="off" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                <textarea autocomplete="off"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           id="comentario"
                           required rows="4" th:field="*{comentario}"></textarea>
             </div>
@@ -59,6 +61,7 @@
                 </button>
             </div>
         </form>
+        <div th:replace="~{components/footer}"></div>
     </div>
 </main>
 <script>

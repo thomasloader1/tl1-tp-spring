@@ -105,7 +105,7 @@ public class ControladorLogin {
     public ModelAndView registrarme(@ModelAttribute("datosUsuario") DatosUsuario datosUsuario) {
         ModelMap model = new ModelMap();
         try {
-            if (datosUsuario.getDireccion() != null) {
+            if (datosUsuario.getRol().equals("Propietario") && datosUsuario.getDireccion() != null) {
                 Coordenada coordenada = obtenerCoordenadas(datosUsuario);
                 datosUsuario.setLatitud(coordenada.getLatitude());
                 datosUsuario.setLongitud(coordenada.getLongitude());

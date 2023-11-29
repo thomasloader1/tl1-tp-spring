@@ -35,11 +35,16 @@ public class ServicioLoginImpl implements ServicioLogin {
         if (datosUsuario.getRol() == null) {
             throw new UsuarioSinRol();
         }
-        if (datosUsuario.getRol() != null && datosUsuario.getDireccion() == null) {
+        if (datosUsuario.getRol().equals("Propietario") && datosUsuario.getDireccion() == null) {
             throw new UsuarioSinDireccion();
         }
 
-        Usuario usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getNombre(), datosUsuario.getPassword(), datosUsuario.getRol(), datosUsuario.getLatitud(), datosUsuario.getLongitud());
+        Usuario usuario;
+        if (datosUsuario.getRol().equals("Propietario")) {
+            usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getNombre(), datosUsuario.getPassword(), datosUsuario.getRol(), datosUsuario.getLatitud(), datosUsuario.getLongitud());
+        } else {
+            usuario = new Usuario(datosUsuario.getEmail(), datosUsuario.getNombre(), datosUsuario.getPassword(), datosUsuario.getRol());
+        }
         servicioLoginDao.guardar(usuario);
     }
 }

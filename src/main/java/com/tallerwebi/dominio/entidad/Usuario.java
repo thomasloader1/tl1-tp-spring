@@ -20,6 +20,13 @@ public class Usuario {
     public Usuario() {
     }
 
+    public Usuario(String email, String nombre, String password, String rol) {
+        this.email = email;
+        this.nombre = nombre;
+        this.password = password;
+        this.rol = rol;
+    }
+
     public Usuario(String email, String nombre, String password, String rol, Double latitud, Double longitud) {
         this.email = email;
         this.nombre = nombre;
