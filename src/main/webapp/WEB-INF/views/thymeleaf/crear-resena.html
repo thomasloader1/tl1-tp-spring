@@ -2,60 +2,59 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Crear reseña</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <main class="bg-[url('https://wallpapers.com/images/hd/red-fixie-bike-photography-vefktg61dhju37ur.jpg')] opacity-90 bg-no-repeat bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
     <div class="absolute w-[90%] min-h-[90%] p-2 sm:p-4 flex flex-col items-center bg-slate-50 rounded">
-        <div th:replace="~{partials/nav}"></div>
         <p class="mt-5 sm:mt-10 text-center text-3xl font-bold text-gray-900">¿Qué te pareció la bicicleta?</p>
-        <img src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476" alt=""
-             class="w-64 sm:w-96 my-5 sm:my-10 h-auto rounded-lg">
-        <form action="#" th:action="@{/bicicleta/{idBicicleta}/subir-resena(idBicicleta=${idBicicleta})}"
-              th:object="${datosResena}" method="POST">
+        <img alt="" class="w-64 sm:w-96 my-5 sm:my-10 h-auto rounded-lg"
+             src="https://www.brooklynbicycleco.com/cdn/shop/files/Screenshot_2023-03-09_193412.jpg?v=1678408476">
+        <form action="#" method="POST"
+              th:action="@{/bicicleta/{idBicicleta}/subir-resena(idBicicleta=${idBicicleta})}" th:object="${datosResena}">
             <div class="w-80 sm:w-96 mx-auto mb-6">
                 <span class="block mb-2 text-sm font-medium text-gray-900">Puntaje</span>
                 <div class="relative w-80 sm:w-96 mx-auto mb-6">
                     <div class="stars flex items-center gap-[16px]">
-                        <input type="radio" id="star1" th:field="*{puntaje}" value="1" class="hidden">
+                        <input class="hidden" id="star1" th:field="*{puntaje}" type="radio" value="1">
                         <label for="star1">
                             <i class="fa-solid fa-star text-gray-300 text-xl cursor-pointer transition-[color] duration-[0.2s] ease-[ease]"></i>
                         </label>
-                        <input type="radio" id="star2" th:field="*{puntaje}" value="2" class="hidden">
+                        <input class="hidden" id="star2" th:field="*{puntaje}" type="radio" value="2">
                         <label for="star2">
                             <i class="fa-solid fa-star text-gray-300 text-xl cursor-pointer transition-[color] duration-[0.2s] ease-[ease]"></i>
                         </label>
-                        <input type="radio" id="star3" th:field="*{puntaje}" value="3" class="hidden">
+                        <input class="hidden" id="star3" th:field="*{puntaje}" type="radio" value="3">
                         <label for="star3">
                             <i class="fa-solid fa-star text-gray-300 text-xl cursor-pointer transition-[color] duration-[0.2s] ease-[ease]"></i>
                         </label>
-                        <input type="radio" id="star4" th:field="*{puntaje}" value="4" class="hidden">
+                        <input class="hidden" id="star4" th:field="*{puntaje}" type="radio" value="4">
                         <label for="star4">
                             <i class="fa-solid fa-star text-gray-300 text-xl cursor-pointer transition-[color] duration-[0.2s] ease-[ease]"></i>
                         </label>
-                        <input type="radio" id="star5" th:field="*{puntaje}" value="5" class="hidden">
+                        <input class="hidden" id="star5" th:field="*{puntaje}" type="radio" value="5">
                         <label for="star5">
                             <i class="fa-solid fa-star text-gray-300 text-xl cursor-pointer transition-[color] duration-[0.2s] ease-[ease]"></i>
                         </label>
                     </div>
                 </div>
-                <label for="comentario"
-                       class="block mb-2 text-sm font-medium text-gray-900">Comentario</label>
-                <textarea th:field="*{comentario}" id="comentario"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                          autocomplete="off" rows="4" required></textarea>
+                <label class="block mb-2 text-sm font-medium text-gray-900"
+                       for="comentario">Comentario</label>
+                <textarea autocomplete="off" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          id="comentario"
+                          required rows="4" th:field="*{comentario}"></textarea>
             </div>
-            <div th:if="${error != null}"
-                 class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
-                 role="alert">
-                <span th:text="${error}" class="font-medium"></span>
+            <div class="w-80 mx-auto p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50"
+                 role="alert"
+                 th:if="${error != null}">
+                <span class="font-medium" th:text="${error}"></span>
             </div>
             <div class="text-center">
-                <button type="submit"
-                        class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center">
+                <button class="w-72 sm:w-80 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm my-2 mb-2 px-5 py-2.5 text-center"
+                        type="submit">
                     Enviar
                 </button>
             </div>

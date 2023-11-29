@@ -14,6 +14,13 @@
                 </div>
                 <p class="text-md font-medium text-gray-900" th:text="'$' + ${bicicleta.precioAlquilerPorHora}"></p>
             </div>
+            <div style="display:flex">
+                <div>
+                    <span th:each="i : ${#numbers.sequence(1, bicicleta.puntaje)}">
+                        <i class="fa-solid fa-star text-orange-500 text-xl"></i>
+                    </span>
+                </div>
+            </div>
             <div class="text-center mt-4">
                 <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 m-2 focus:outline-none"
                    th:href="@{/bicicleta/{id}/resenas(id=${bicicleta.id})}">
